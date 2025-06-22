@@ -13,7 +13,7 @@ jobs:
       CIBW_SKIP: "pp36-* pp37-* pp38-*"
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019, macos-12]
+        os: [ubuntu-24.04, windows-2025, macos-14]
     steps:
       - name: GitHub Checkout
         uses: actions/checkout@v4
@@ -25,28 +25,29 @@ jobs:
         run: echo "CIBW_SKIP=pp36-* pp37-* pp38-*" >> $GITHUB_ENV
 
       - name: Check ENV
-        if: matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-24.04'
         run: echo $PATH
 
       - name: Build wheels Linux
-        if: matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-24.04'
         uses: pypa/cibuildwheel@v2.16.5
         env:
           CIBW_BEFORE_ALL: "bash dev/tools/github/install_rust.sh"
 
       - name: Build wheels Mac
-        if: matrix.os == 'macos-12'
+        if: matrix.os == 'macos-14'
         uses: pypa/cibuildwheel@v2.16.5
 
       - name: Build wheels Windows
-        if: matrix.os == 'windows-2019'
+        if: matrix.os == 'windows-2025'
         uses: pypa/cibuildwheel@v2.16.5
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: artifact-${{ matrix.os }}
           path: ./wheelhouse/*.whl
-          overwrite: true
+          #overwrite: true
 
   build_sdist:
     name: Build source distribution
@@ -78,16 +79,23 @@ jobs:
           name: artifact
           path: dist
 
+      - name: Move all artifacts into dist_upload/
+        run: |
+          rm -rf dist_upload
+          mkdir -p dist_upload
+          find dist -name '*.whl' -exec cp {} dist_upload/ \;
+          find dist -name '*.tar.gz' -exec cp {} dist_upload/ \;
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           body: |
-            Please read the [CHANGELOG](https://unicorn-binance-websocket-api.docs.lucit.tech/changelog.html) for further information.
+            Please read the [CHANGELOG](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/changelog.html) for further information.
           discussion_category_name: releases
           draft: false
           files: | 
-            dist/*.tar.gz
-            dist/*.whl
+            dist_upload/*.tar.gz
+            dist_upload/*.whl
           generate_release_notes: true
           name: unicorn-binance-websocket-api
           prerelease: false
@@ -97,5 +105,6 @@ jobs:
       - name: Create PyPi Release
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
+          packages-dir: dist_upload
           verbose: true
           print-hash: true

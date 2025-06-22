@@ -4,13 +4,12 @@
 # File: example_monitoring.py
 #
 # Part of ‘UNICORN Binance WebSocket API’
-# Project website: https://www.lucit.tech/unicorn-binance-websocket-api.html
-# Github: https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api
-# Documentation: https://unicorn-binance-websocket-api.docs.lucit.tech
+# Project website: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
+# Github: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
+# Documentation: https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api
 # PyPI: https://pypi.org/project/unicorn-binance-websocket-api
-# LUCIT Online Shop: https://shop.lucit.services/software
 #
-# Author: LUCIT Systems and Development
+# Author: Oliver Zehentleitner
 #
 # Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
 # All rights reserved.
@@ -128,5 +127,5 @@ ubwa.start_monitoring_api()
 # ubwa.start_monitoring_api(host="0.0.0.0", port=80)
 
 print("18 websockets started!")
-print("Continue here: https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/"
+print("Continue here: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/"
       "UNICORN-Monitoring-API-Service")

@@ -4,13 +4,12 @@
 # File: example_apache_kafka.py
 #
 # Part of ‘UNICORN Binance WebSocket API’
-# Project website: https://www.lucit.tech/unicorn-binance-websocket-api.html
-# Github: https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api
-# Documentation: https://unicorn-binance-websocket-api.docs.lucit.tech
+# Project website: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
+# Github: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
+# Documentation: https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api
 # PyPI: https://pypi.org/project/unicorn-binance-websocket-api
-# LUCIT Online Shop: https://shop.lucit.services/software
 #
-# Author: LUCIT Systems and Development
+# Author: Oliver Zehentleitner
 #
 # Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
 # All rights reserved.
@@ -32,7 +31,7 @@
 # IN THE SOFTWARE.
 
 # How to:
-# https://medium.lucit.tech/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka-570541574655
+# https://technopathy.club/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka-570541574655
 
 # Info:
 # depends on: https://pypi.org/project/kafka-python/

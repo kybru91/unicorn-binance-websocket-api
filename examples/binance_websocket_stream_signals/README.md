@@ -5,7 +5,7 @@ currently "blind" and you may want to close open positions to be on the safe sid
 incorrect values or that you have to reload the missing data via REST as an alternative. 
 
 For this purpose, the UNICORN Binance WebSocket API provides so-called 
-[`stream_signals`](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/%60stream_signals%60)
+[`stream_signals`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_signals%60)
 , which are used to tell your code in real time when a stream is connected, when it received its first data record, when 
 it was disconnected and stopped, and when the stream cannot be restored.
 
@@ -37,4 +37,4 @@ The script employs logging to provide insights into its operation and to assist 
 file named after the script with a .log extension.
 
 For further assistance or to report issues, please [contact our support team](https://www.lucit.tech/get-support.html) 
-or [visit our GitHub repository](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api).
+or [visit our GitHub repository](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api).

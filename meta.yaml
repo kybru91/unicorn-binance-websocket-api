@@ -26,9 +26,8 @@ requirements:
   host:
     - python
     - mypy
-    - lucit::lucit-licensing-python >=1.8.2
-    - lucit::unicorn-fy >=0.14.2
-    - lucit::unicorn-binance-rest-api >=2.5.1
+    - lucit::unicorn-fy >=0.15.0
+    - lucit::unicorn-binance-rest-api >=2.7.0
     - cheroot
     - colorama
     - Cython
@@ -44,9 +43,8 @@ requirements:
     - typing_extensions
   run:
     - python
-    - lucit::lucit-licensing-python >=1.8.2
-    - lucit::unicorn-fy >=0.14.2
-    - lucit::unicorn-binance-rest-api >=2.5.1
+    - lucit::unicorn-fy >=0.15.0
+    - lucit::unicorn-binance-rest-api >=2.7.0
     - cheroot
     - colorama
     - Cython
@@ -75,34 +73,32 @@ test:
 
 about:
   summary: | 
-    A Python SDK by LUCIT to use the Binance Websocket API`s (com+testnet, com-margin+testnet, 
+    A Python SDK to use the Binance Websocket API`s (com+testnet, com-margin+testnet, 
     com-isolated_margin+testnet, com-futures+testnet, com-coin_futures, us, tr, dex/chain+testnet) 
     in a simple, fast, flexible, robust and fully-featured way.
   description: |
-    [![Get a UNICORN Binance Suite License](https://raw.githubusercontent.com/LUCIT-Systems-and-Development/unicorn-binance-suite/master/images/logo/LUCIT-UBS-License-Offer.png)](https://shop.lucit.services)
-    
-    [![GitHub Release](https://img.shields.io/github/release/LUCIT-Systems-and-Development/unicorn-binance-websocket-api.svg?label=github)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/releases)
-    [![GitHub Downloads](https://img.shields.io/github/downloads/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/total?color=blue)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/releases)
+    [![GitHub Release](https://img.shields.io/github/release/LUCIT-Systems-and-Development/unicorn-binance-websocket-api.svg?label=github)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases)
+    [![GitHub Downloads](https://img.shields.io/github/downloads/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/total?color=blue)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases)
     ![Anaconda Release](https://img.shields.io/conda/v/lucit/unicorn-binance-websocket-api?color=blue)
     ![Anaconda Downloads](https://img.shields.io/conda/dn/lucit/unicorn-binance-websocket-api?color=blue)
     [![PyPi Release](https://img.shields.io/pypi/v/unicorn-binance-websocket-api?color=blue)](https://pypi.org/project/unicorn-binance-websocket-api/)
     [![PyPi Downloads](https://pepy.tech/badge/unicorn-binance-websocket-api)](https://pepy.tech/project/unicorn-binance-websocket-api)
-    [![License](https://img.shields.io/badge/license-LSOSL-blue)](https://unicorn-binance-websocket-api.docs.lucit.tech/license.html)
+    [![License](https://img.shields.io/badge/license-LSOSL-blue)](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/license.html)
     [![Supported Python Version](https://img.shields.io/pypi/pyversions/unicorn_binance_websocket_api.svg)](https://www.python.org/downloads/)
-    [![PyPI - Status](https://img.shields.io/pypi/status/unicorn_binance_websocket_api.svg)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/issues)
+    [![PyPI - Status](https://img.shields.io/pypi/status/unicorn_binance_websocket_api.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues)
     [![codecov](https://codecov.io/gh/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/branch/master/graph/badge.svg?token=5I03AZ3F5S)](https://codecov.io/gh/LUCIT-Systems-and-Development/unicorn-binance-websocket-api)
-    [![CodeQL](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/actions/workflows/codeql-analysis.yml)
-    [![Unit Tests](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml)
-    [![Build and Publish GH+PyPi](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml/badge.svg)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml)
-    [![Build and Publish Anaconda](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/actions/workflows/build_conda.yml/badge.svg)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/actions/workflows/build_conda.yml)
-    [![Read the Docs](https://img.shields.io/badge/read-%20docs-yellow)](https://unicorn-binance-websocket-api.docs.lucit.tech)
-    [![Read How To`s](https://img.shields.io/badge/read-%20howto-yellow)](https://medium.lucit.tech)
-    [![Github](https://img.shields.io/badge/source-github-cbc2c8)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api)
+    [![CodeQL](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/codeql-analysis.yml)
+    [![Unit Tests](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml)
+    [![Build and Publish GH+PyPi](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml)
+    [![Build and Publish Anaconda](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_conda.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_conda.yml)
+    [![Read the Docs](https://img.shields.io/badge/read-%20docs-yellow)](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api)
+    [![Read How To`s](https://img.shields.io/badge/read-%20howto-yellow)](https://technopathy.club)
+    [![Github](https://img.shields.io/badge/source-github-cbc2c8)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
     [![Telegram](https://img.shields.io/badge/community-telegram-41ab8c)](https://t.me/unicorndevs)
     [![Gitter](https://img.shields.io/badge/community-gitter-41ab8c)](https://gitter.im/unicorn-binance-suite/unicorn-binance-websocket-api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
     [![Get Free Professional Support](https://img.shields.io/badge/chat-lucit%20support-004166)](https://www.lucit.tech/get-support.html)
     
-    [![LUCIT-UBWA-Banner](https://raw.githubusercontent.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/master/images/logo/LUCIT-UBWA-Banner-Readme.png)](https://www.lucit.tech/unicorn-binance-websocket-api.html)
+    [![LUCIT-UBWA-Banner](https://raw.githubusercontent.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/master/images/logo/LUCIT-UBWA-Banner-Readme.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
     
     # UNICORN Binance WebSocket API
     
@@ -111,21 +107,15 @@ about:
     [Notifications](#receive-notifications) | [Bugs](#how-to-report-bugs-or-suggest-improvements) | 
     [Contributing](#contributing) | [Disclaimer](#disclaimer) | [Commercial Support](#commercial-support)
     
-    A Python SDK by [LUCIT](https://www.lucit.tech) to use the Binance Websocket API`s (com+testnet, com-margin+testnet, 
+    A Python SDK to use the Binance Websocket API`s (com+testnet, com-margin+testnet, 
     com-isolated_margin+testnet, com-futures+testnet, com-coin_futures, us, tr, dex/chain+testnet) 
     in a simple, fast, flexible, robust and fully-featured way. 
     
-    Part of '[UNICORN Binance Suite](https://www.lucit.tech/unicorn-binance-suite.html)'.
-    
-    [Get help](https://www.lucit.tech/get-support.html) with the integration of the `UNICORN Binance Suite` modules!
-    
-    ## Get a UNICORN Binance Suite License
-    
-    To run modules of the *UNICORN Binance Suite* you need a [valid license](https://medium.lucit.tech/how-to-obtain-and-use-a-unicorn-binance-suite-license-key-and-run-the-ubs-module-according-to-best-87b0088124a8#4ca4)!
+    Part of '[UNICORN Binance Suite](https://github.com/oliver-zehentleitner/unicorn-binance-suite)'.
     
     ## Receive Data from Binance WebSockets
     
-    ### [Create a multiplex websocket connection](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream) to Binance with a [`stream_buffer`](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/%60stream_buffer%60) with just 3 lines of code
+    ### [Create a multiplex websocket connection](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream) to Binance with a [`stream_buffer`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_buffer%60) with just 3 lines of code
     
     ```
     from unicorn_binance_websocket_api import BinanceWebSocketApiManager
@@ -143,7 +133,7 @@ about:
             print(oldest_data_from_stream_buffer)
     ```
     
-    ### Or with a [callback function](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html?highlight=process_stream_data#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream) just do
+    ### Or with a [callback function](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html?highlight=process_stream_data#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream) just do
     
     ```
     from unicorn_binance_websocket_api import BinanceWebSocketApiManager
@@ -157,7 +147,7 @@ about:
                        process_stream_data=process_new_receives)
     ```
     
-    ### Or with an [async callback function](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html?highlight=process_stream_data#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream) just do
+    ### Or with an [async callback function](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html?highlight=process_stream_data#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream) just do
     
     ```
     from unicorn_binance_websocket_api import BinanceWebSocketApiManager
@@ -219,7 +209,7 @@ about:
     ubwa.create_stream(['trade'], ['btcusdt'], output="UnicornFy")
     ```
     
-    ## [Subscribe](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.subscribe_to_stream) / [unsubscribe](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.unsubscribe_from_stream) new markets and channels
+    ## [Subscribe](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.subscribe_to_stream) / [unsubscribe](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.unsubscribe_from_stream) new markets and channels
     
     ```
     markets = ['engbtc', 'zileth']
@@ -233,7 +223,7 @@ about:
     ```
     
     ## Send Requests to Binance WebSocket API
-    ### [Place orders](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.BinanceWebSocketApiApi.create_order), [cancel orders](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.BinanceWebSocketApiApi.cancel_order) or [send other requests](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#module-unicorn_binance_websocket_api.api) via WebSocket
+    ### [Place orders](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.BinanceWebSocketApiApi.create_order), [cancel orders](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.BinanceWebSocketApiApi.cancel_order) or [send other requests](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#module-unicorn_binance_websocket_api.api) via WebSocket
     
     ```
     from unicorn_binance_websocket_api import BinanceWebSocketApiManager
@@ -266,9 +256,9 @@ about:
     ubwa.api.cancel_order(orig_client_order_id=orig_client_order_id, symbol="BUSDUSDT")                                   
     ```
     
-    [Here](https://medium.lucit.tech/create-and-cancel-orders-via-websocket-on-binance-7f828831404) you can find a complete 
+    [Here](https://technopathy.club/create-and-cancel-orders-via-websocket-on-binance-7f828831404) you can find a complete 
     guide on 
-    [how to process requests via the Binance WebSocket API](https://medium.lucit.tech/create-and-cancel-orders-via-websocket-on-binance-7f828831404)!
+    [how to process requests via the Binance WebSocket API](https://technopathy.club/create-and-cancel-orders-via-websocket-on-binance-7f828831404)!
     
     ## Stop `ubwa` after usage to avoid memory leaks
     
@@ -291,7 +281,7 @@ about:
     incorrect values or that you have to reload the missing data via REST as an alternative. 
     
     For this purpose, the UNICORN Binance WebSocket API provides so-called 
-    [`stream_signals`](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/%60stream_signals%60), 
+    [`stream_signals`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_signals%60), 
     which are used to tell your code in real time when a stream is connected, when it received its first data record, when 
     it was disconnected and stopped, and when the stream cannot be restored.
     
@@ -312,17 +302,17 @@ about:
     
     ## More?
     
-    [Discover even more possibilities](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html), 
-    [use this script](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/blob/master/examples/_archive/example_stream_everything.py) 
+    [Discover even more possibilities](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html), 
+    [use this script](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_stream_everything.py) 
     to stream everything from "binance.com" or try our [examples](#examples)!
     
     This should be known by everyone using this lib: 
     
-    - [Best practice solutions for a maximum stable connection](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/Best-practice-solutions-for-a-maximum-stable-connection!)
-    - [Do you want consistent data from binance?](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/discussions/254)
+    - [Best practice solutions for a maximum stable connection](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/Best-practice-solutions-for-a-maximum-stable-connection!)
+    - [Do you want consistent data from binance?](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/discussions/254)
     
     ## Description
-    The Python package [UNICORN Binance WebSocket API](https://www.lucit.tech/unicorn-binance-websocket-api.html) 
+    The Python package [UNICORN Binance WebSocket API](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api) 
     provides an API to the Binance Websocket API`s of 
     [Binance](https://github.com/binance-exchange/binance-official-api-docs) 
     ([+Testnet](https://testnet.binance.vision/)), 
@@ -340,29 +330,29 @@ about:
     to the [Binance Websocket API](https://developers.binance.com/docs/binance-trading-api/websocket_api) and the streaming 
     of all public streams like trade, kline, ticker, depth, bookTicker, forceOrder, compositeIndex, blockheight etc. and 
     also all private userData streams which needs to be used with a valid 
-    [api_key and api_secret](https://medium.lucit.tech/how-to-create-a-binance-api-key-and-api-secret-3bb5f47e360d)
+    [api_key and api_secret](https://technopathy.club/how-to-create-a-binance-api-key-and-api-secret-3bb5f47e360d)
     from the Binance Exchange [www.binance.com](https://www.binance.com/), 
     [testnet.binance.vision](https://testnet.binance.vision/) or 
     [www.binance.us](https://www.binance.us) - for the DEX you need a user address from 
     [www.binance.org](https://www.binance.org/en/create) or [testnet.binance.org](https://testnet.binance.org/en/create), 
     and you can [get funds](https://www.binance.vision/tutorials/binance-dex-funding-your-testnet-account) for the testnet.
     
-    Use the [UNICORN Binance REST API](https://www.lucit.tech/unicorn-binance-rest-api.html) in combination. 
+    Use the [UNICORN Binance REST API](https://github.com/oliver-zehentleitner/unicorn-binance-rest-api) in combination. 
     
     ### What are the benefits of the UNICORN Binance WebSocket API?
     - Fully managed websockets and 100% auto-reconnect! Also handles maintenance windows!
     
     - No memory leaks from Python version 3.8 to 3.12!
     
-    - The full [UBS stack](https://www.lucit.tech/unicorn-binance-suite.html) is delivered as a compiled C extension for 
+    - The full [UBS stack](https://github.com/oliver-zehentleitner/unicorn-binance-suite) is delivered as a compiled C extension for 
       maximum performance.
     
     - Support for [Binance Websocket API](https://developers.binance.com/docs/binance-trading-api/websocket_api), send 
-      requests like [create_order](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.ws_api.BinanceWebSocketApiWsApi.create_order),
-      [cancel_open_orders](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.ws_api.BinanceWebSocketApiWsApi.cancel_open_orders)
-      and [many more](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#module-unicorn_binance_websocket_api.ws_api) directly over websocket!
+      requests like [create_order](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.ws_api.BinanceWebSocketApiWsApi.create_order),
+      [cancel_open_orders](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.ws_api.BinanceWebSocketApiWsApi.cancel_open_orders)
+      and [many more](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#module-unicorn_binance_websocket_api.ws_api) directly over websocket!
     
-    - [Supported exchanges](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/Binance-websocket-endpoint-configuration-overview): 
+    - [Supported exchanges](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/Binance-websocket-endpoint-configuration-overview): 
     
     | Exchange                                                           | Exchange string                       | WS                                                                                                                                   | WS API                                                                                                                               |
     |--------------------------------------------------------------------|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
@@ -382,72 +372,72 @@ about:
     
     - Streams are processing asynchronous/concurrent (Python asyncio) and each stream is started in a separate thread, so 
     you don't need to deal with asyncio in your code! But you can consume with 
-    [`await`](https://unicorn-binance-websocket-api.docs.lucit.tech/readme.html#or-await-the-webstream-data-in-an-asyncio-task)
+    [`await`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#or-await-the-webstream-data-in-an-asyncio-task)
     , if you want!
     
     - Supports 
-    [subscribe](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.subscribe_to_stream)/[unsubscribe](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.unsubscribe_from_stream)
-    on all exchanges! (Take a look to the max supported subscriptions per stream in the [endpoint configuration overview](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/Binance-websocket-endpoint-configuration-overview)!)
+    [subscribe](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.subscribe_to_stream)/[unsubscribe](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.unsubscribe_from_stream)
+    on all exchanges! (Take a look to the max supported subscriptions per stream in the [endpoint configuration overview](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/Binance-websocket-endpoint-configuration-overview)!)
     
-    - [UNICORN Binance WebSocket API](https://www.lucit.tech/unicorn-binance-websocket-api.html) respects Binance's API guidelines and protects you from avoidable reconnects and bans.
+    - [UNICORN Binance WebSocket API](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api) respects Binance's API guidelines and protects you from avoidable reconnects and bans.
     
     - Support for multiple private `!userData` streams with different `api_key` and `api_secret`. 
-      ([example_multiple_userdata_streams.py](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/blob/master/examples/_archive/example_multiple_userdata_streams.py))
+      ([example_multiple_userdata_streams.py](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_multiple_userdata_streams.py))
     
-    - [Pick up the received data from the `stream_buffer`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html?highlight=get_stream_info#unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager.BinanceWebSocketApiManager.pop_stream_data_from_stream_buffer) ([FIFO or LIFO](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/%60stream_buffer%60)) - 
+    - [Pick up the received data from the `stream_buffer`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html?highlight=get_stream_info#unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager.BinanceWebSocketApiManager.pop_stream_data_from_stream_buffer) ([FIFO or LIFO](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_buffer%60)) - 
     if you can not store your data in cause of a temporary technical issue, you can 
-    [kick back the data to the `stream_buffer`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html?highlight=get_stream_info#unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager.BinanceWebSocketApiManager.add_to_stream_buffer) 
+    [kick back the data to the `stream_buffer`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html?highlight=get_stream_info#unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager.BinanceWebSocketApiManager.add_to_stream_buffer) 
     which stores the receives in the RAM till you are able to process the data in the normal way again. 
-    [Learn more!](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/%60stream_buffer%60)
+    [Learn more!](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_buffer%60)
     
     - Use separate `stream_buffers` for 
-    [specific streams](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/blob/master/examples/_archive/example_stream_buffer_extended.py) 
+    [specific streams](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_stream_buffer_extended.py) 
     or 
-    [users](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/blob/master/examples/_archive/example_multiple_userdata_streams.py)!
+    [users](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_multiple_userdata_streams.py)!
     
     - Watch the `stream_signals` to receive `CONNECT`, `FIRST_RECEIVED_DATA`, `DISCONNECT`, `STOP` and 
-      `STREAM_UNREPAIRABLE` signals from your streams! [Learn more!](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/%60stream_signals%60)
+      `STREAM_UNREPAIRABLE` signals from your streams! [Learn more!](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_signals%60)
     
     - Get the received data unchanged as received, as Python dictionary or converted with 
-    [UnicornFy](https://github.com/LUCIT-Systems-and-Development/unicorn-fy) into well-formed Python dictionaries. Use the `output`
+    [UnicornFy](https://github.com/oliver-zehentleitner/unicorn-fy) into well-formed Python dictionaries. Use the `output`
     parameter of 
-    [`create_stream()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html?highlight=create_stream#unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager.BinanceWebSocketApiManager.create_stream) 
+    [`create_stream()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html?highlight=create_stream#unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager.BinanceWebSocketApiManager.create_stream) 
     to control the output format.
     
     - Helpful management features like 
-    [`clear_asyncio_queue()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.clear_asyncio_queue), 
-    [`clear_stream_buffer()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.clear_stream_buffer), 
-    [`get_binance_api_status()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_binance_api_status), 
-    [`get_current_receiving_speed()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_current_receiving_speed), 
-    [`get_errors_from_endpoints()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_errors_from_endpoints), 
-    [`get_limit_of_subscriptions_per_stream()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_limit_of_subscriptions_per_stream), 
-    [`get_request_id()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_request_id), 
-    [`get_result_by_request_id()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_result_by_request_id),
-    [`get_results_from_endpoints()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_results_from_endpoints), 
-    [`get_stream_buffer_length()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_buffer_length), 
-    [`get_stream_info()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_info), 
-    [`get_stream_list()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_list), 
-    [`get_stream_id_by_label()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_id_by_label), 
-    [`get_stream_statistic()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_statistic), 
-    [`get_stream_subscriptions()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_subscriptions), 
-    [`get_version()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_version), 
-    [`is_update_available()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_update_availabe), 
-    [`get_stream_data_from_asyncio_queue()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_data_from_asyncio_queue), 
-    [`pop_stream_data_from_stream_buffer()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.pop_stream_data_from_stream_buffer), 
-    [`print_summary()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.print_summary), 
-    [`replace_stream()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.replace_stream), 
-    [`set_stream_label()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_stream_label), 
-    [`set_ringbuffer_error_max_size()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_ringbuffer_error_max_size), 
-    [`subscribe_to_stream()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.subscribe_to_stream), 
-    [`stop_stream()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.stop_stream),
-    [`unsubscribe_from_stream()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.unsubscribe_from_stream), 
-    [`wait_till_stream_has_started()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.wait_till_stream_has_started) 
-    and many more! Explore them [here](https://unicorn-binance-websocket-api.docs.lucit.tech/modules.html).
+    [`clear_asyncio_queue()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.clear_asyncio_queue), 
+    [`clear_stream_buffer()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.clear_stream_buffer), 
+    [`get_binance_api_status()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_binance_api_status), 
+    [`get_current_receiving_speed()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_current_receiving_speed), 
+    [`get_errors_from_endpoints()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_errors_from_endpoints), 
+    [`get_limit_of_subscriptions_per_stream()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_limit_of_subscriptions_per_stream), 
+    [`get_request_id()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_request_id), 
+    [`get_result_by_request_id()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_result_by_request_id),
+    [`get_results_from_endpoints()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_results_from_endpoints), 
+    [`get_stream_buffer_length()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_buffer_length), 
+    [`get_stream_info()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_info), 
+    [`get_stream_list()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_list), 
+    [`get_stream_id_by_label()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_id_by_label), 
+    [`get_stream_statistic()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_statistic), 
+    [`get_stream_subscriptions()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_subscriptions), 
+    [`get_version()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_version), 
+    [`is_update_available()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_update_availabe), 
+    [`get_stream_data_from_asyncio_queue()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_data_from_asyncio_queue), 
+    [`pop_stream_data_from_stream_buffer()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.pop_stream_data_from_stream_buffer), 
+    [`print_summary()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.print_summary), 
+    [`replace_stream()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.replace_stream), 
+    [`set_stream_label()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_stream_label), 
+    [`set_ringbuffer_error_max_size()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_ringbuffer_error_max_size), 
+    [`subscribe_to_stream()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.subscribe_to_stream), 
+    [`stop_stream()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.stop_stream),
+    [`unsubscribe_from_stream()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.unsubscribe_from_stream), 
+    [`wait_till_stream_has_started()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.wait_till_stream_has_started) 
+    and many more! Explore them [here](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/modules.html).
     
     - Monitor the status of the created `BinanceWebSocketApiManager()` instance within your code with 
-    [`get_monitoring_status_plain()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html?highlight=plain#unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager.BinanceWebSocketApiManager.get_monitoring_status_plain)
+    [`get_monitoring_status_plain()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html?highlight=plain#unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager.BinanceWebSocketApiManager.get_monitoring_status_plain)
     and specific streams with 
-    [`get_stream_info()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_info).
+    [`get_stream_info()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_info).
     
     - Available as a package via `pip` and `conda` as precompiled C extension with stub files for improved Intellisense 
       functions and source code for easier debugging of the source code. [To the installation.](#installation-and-upgrade)
@@ -455,17 +445,17 @@ about:
     - Nice to use with [iPython](https://ipython.org/): 
     "IPython (Interactive Python) is a command shell for interactive computing that offers introspection, 
     rich media, shell syntax, tab completion, and history." 
-    ([example_interactive_mode.py](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/blob/master/examples/_archive/example_interactive_mode.py)) 
-    [![iPython](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ipython.png)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/blob/master/examples/_archive/example_interactive_mode.py) 
+    ([example_interactive_mode.py](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_interactive_mode.py)) 
+    [![iPython](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ipython.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_interactive_mode.py) 
     
-    - Also, nice to use with the [Jupyter Notebook](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/tree/master/ipynb) :)
+    - Also, nice to use with the [Jupyter Notebook](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/ipynb) :)
     
-    - [Monitoring API service](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service) 
+    - [Monitoring API service](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service) 
     and a [check_command](https://exchange.icinga.com/LUCIT/check_lucit_collector) 
     for [ICINGA](https://exchange.icinga.com/LUCIT/check_lucit_collector)/Nagios 
-    [![icinga2-demo](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/icinga.png)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service)
+    [![icinga2-demo](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/icinga.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service)
     
-    - Integration of [test cases](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml) and [examples](#examples).
+    - Integration of [test cases](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml) and [examples](#examples).
     
     - Customizable base URL.
     
@@ -475,15 +465,15 @@ about:
       ubwa = BinanceWebSocketApiManager(exchange="binance.com", socks5_proxy_server="127.0.0.1:9050") 
       ```
       
-      Read the [docs](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager)
+      Read the [docs](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager)
       or this [how to](https://medium.com/@oliverzehentleitner/how-to-connect-to-binance-com-websockets-using-python-via-a-socks5-proxy-3c5a3e063f12) 
       for more information or try 
-      [example_socks5_proxy.py](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/blob/master/examples/_archive/example_socks5_proxy.py).
+      [example_socks5_proxy.py](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_socks5_proxy.py).
     
     - Excessively tested on Linux, Mac and Windows on x86, arm32, arm64, ...
     
-    If you like the project, please [![star](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/star.png)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/stargazers) it on 
-    [GitHub](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api)!
+    If you like the project, please [![star](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/star.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/stargazers) it on 
+    [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)!
     
     ## Live Demo
     This live demo script is streaming from [binance.com](https://www.binance.com) and runs on a *CCX13* virtual 
@@ -502,15 +492,15 @@ about:
     
     For the PyPy interpreter we offer packages via PyPi only from Python version 3.9 and higher.
     
-    The current dependencies are listed [here](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/blob/master/requirements.txt).
+    The current dependencies are listed [here](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/requirements.txt).
     
-    If you run into errors during the installation take a look [here](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-suite/wiki/Installation).
+    If you run into errors during the installation take a look [here](https://github.com/oliver-zehentleitner/unicorn-binance-suite/wiki/Installation).
     
     ### Packages are created automatically with GitHub Actions
     When a new release is to be created, we start two GitHubActions: 
     
-    - [Build and Publish Anaconda](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/actions/workflows/build_conda.yml)
-    - [Build and Publish GH+PyPi](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml) 
+    - [Build and Publish Anaconda](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_conda.yml)
+    - [Build and Publish GH+PyPi](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml) 
     
     Both start virtual Windows/Linux/Mac servers provided by GitHub in the cloud with preconfigured environments and 
     create the respective compilations and stub files, pack them into wheels and conda packages and then publish them on 
@@ -561,47 +551,47 @@ about:
     #### Update
     `conda update -c lucit unicorn-binance-websocket-api`
     
-    ### From source of the latest release with PIP from [GitHub](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api)
+    ### From source of the latest release with PIP from [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
     #### Linux, macOS, ...
     Run in bash:
     
-    `pip install https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/archive/$(curl -s https://api.github.com/repos/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")').tar.gz --upgrade`
+    `pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/$(curl -s https://api.github.com/repos/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")').tar.gz --upgrade`
     
     #### Windows
     Use the below command with the version (such as 2.9.0) you determined 
-    [here](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/releases/latest):
+    [here](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest):
     
-    `pip install https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/archive/2.9.0.tar.gz --upgrade`
-    ### From the latest source (dev-stage) with PIP from [GitHub](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api)
+    `pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.9.0.tar.gz --upgrade`
+    ### From the latest source (dev-stage) with PIP from [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
     This is not a release version and can not be considered to be stable!
     
-    `pip install https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/tarball/master --upgrade`
+    `pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tarball/master --upgrade`
     
     ## Change Log
-    [https://unicorn-binance-websocket-api.docs.lucit.tech/changelog.html](https://unicorn-binance-websocket-api.docs.lucit.tech/changelog.html)
+    [https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/changelog.html](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/changelog.html)
     
     ## Documentation
-    - [General](https://unicorn-binance-websocket-api.docs.lucit.tech)
-    - [Modules](https://unicorn-binance-websocket-api.docs.lucit.tech/modules.html)
+    - [General](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api)
+    - [Modules](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/modules.html)
     
     ## Examples
-    - [Look here!](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/tree/master/examples/)
+    - [Look here!](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/examples/)
     
     ## Howto
-    - [How to Obtain and Use a Unicorn Binance Suite License Key and Run the UBS Module According to Best Practice](https://medium.lucit.tech/how-to-obtain-and-use-a-unicorn-binance-suite-license-key-and-run-the-ubs-module-according-to-best-87b0088124a8)
-    - [Create and Cancel Orders via WebSocket on Binance](https://medium.lucit.tech/create-and-cancel-orders-via-websocket-on-binance-7f828831404)
-    - [How to Download Klines from Binance using Python?](https://medium.lucit.tech/how-to-download-data-from-binance-using-python-8f1b6e8f19f3)
-    - [Passing Binance Market Data to Apache Kafka in Python with aiokafka](https://medium.lucit.tech/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka-570541574655)
-    - [How to Connect to binance.com Websockets using Python via a Socks5 Proxy](https://medium.lucit.tech/how-to-connect-to-binance-com-websockets-using-python-via-a-socks5-proxy-3c5a3e063f12)
+    - [How to Obtain and Use a Unicorn Binance Suite License Key and Run the UBS Module According to Best Practice](https://technopathy.club/how-to-obtain-and-use-a-unicorn-binance-suite-license-key-and-run-the-ubs-module-according-to-best-87b0088124a8)
+    - [Create and Cancel Orders via WebSocket on Binance](https://technopathy.club/create-and-cancel-orders-via-websocket-on-binance-7f828831404)
+    - [How to Download Klines from Binance using Python?](https://technopathy.club/how-to-download-data-from-binance-using-python-8f1b6e8f19f3)
+    - [Passing Binance Market Data to Apache Kafka in Python with aiokafka](https://technopathy.club/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka-570541574655)
+    - [How to Connect to binance.com Websockets using Python via a Socks5 Proxy](https://technopathy.club/how-to-connect-to-binance-com-websockets-using-python-via-a-socks5-proxy-3c5a3e063f12)
     
     ## Project Homepage
-    [https://www.lucit.tech/unicorn-binance-websocket-api.html](https://www.lucit.tech/unicorn-binance-websocket-api.html)
+    [https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
     
     ## Wiki
-    [https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki)
+    [https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki)
     
     ## Social
-    - [Discussions](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/discussions)
+    - [Discussions](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/discussions)
     - [Gitter](https://gitter.im/unicorn-binance-suite/unicorn-binance-websocket-api)
     - [https://t.me/unicorndevs](https://t.me/unicorndevs)
     - [https://dev.binance.vision](https://dev.binance.vision)
@@ -609,13 +599,13 @@ about:
     
     ## Receive Notifications
     To receive notifications on available updates you can 
-    [![watch](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/watch.png)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/watchers) 
-    the repository on [GitHub](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api), write your 
-    [own script](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/blob/master/examples/_archive/example_version_of_this_package.py) 
+    [![watch](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/watch.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/watchers) 
+    the repository on [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api), write your 
+    [own script](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_version_of_this_package.py) 
     with using 
-    [`is_update_available()`](https://unicorn-binance-websocket-api.docs.lucit.tech/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_update_availabe) 
+    [`is_update_available()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_update_availabe) 
     or you use the 
-    [monitoring API service](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service).
+    [monitoring API service](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service).
     
     Follow us on [LinkedIn](https://www.linkedin.com/company/lucit-systems-and-development), 
     [X](https://twitter.com/LUCIT_SysDev) or [Facebook](https://www.facebook.com/lucit.systems.and.development)!
@@ -629,23 +619,23 @@ about:
     - [https://t.me/BinanceExchange](https://t.me/BinanceExchange)
     
     ## How to report Bugs or suggest Improvements?
-    [List of planned features](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) - click ![thumbs-up](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/thumbup.png) if you need one of them or suggest a new feature!
+    [List of planned features](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) - click ![thumbs-up](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/thumbup.png) if you need one of them or suggest a new feature!
     
-    Before you report a bug, [try the latest release](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api#installation-and-upgrade). If the issue still exists, provide the error trace, OS 
+    Before you report a bug, [try the latest release](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api#installation-and-upgrade). If the issue still exists, provide the error trace, OS 
     and Python version and explain how to reproduce the error. A demo script is appreciated.
     
-    If you don't find an issue related to your topic, please open a new [issue](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/issues)!
+    If you don't find an issue related to your topic, please open a new [issue](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues)!
     
-    [Report a security bug!](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/security/policy)
+    [Report a security bug!](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/security/policy)
     
     ## Contributing
-    [UNICORN Binance WebSocket API](https://www.lucit.tech/unicorn-binance-websocket-api.html) is an open 
+    [UNICORN Binance WebSocket API](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api) is an open 
     source project which welcomes contributions which can be anything from simple documentation fixes and reporting dead links to new features. To 
     contribute follow 
-    [this guide](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/blob/master/CONTRIBUTING.md).
+    [this guide](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/CONTRIBUTING.md).
      
     ### Contributors
-    [![Contributors](https://contributors-img.web.app/image?repo=oliver-zehentleitner/unicorn-binance-websocket-api)](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/graphs/contributors)
+    [![Contributors](https://contributors-img.web.app/image?repo=oliver-zehentleitner/unicorn-binance-websocket-api)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/graphs/contributors)
     
     We ![love](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/heart.png) open source!
     
@@ -677,9 +667,9 @@ about:
     ***Do you need a developer, operator or consultant?*** [Contact us](https://www.lucit.tech/contact.html) for a non-binding initial consultation!
 
 
-  dev_url: https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api
-  doc_url: https://unicorn-binance-websocket-api.docs.lucit.tech
-  home: https://www.lucit.tech/unicorn-binance-websocket-api.html
+  dev_url: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
+  doc_url: https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api
+  home: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
   license: LSOSL
   license_file: LICENSE
 

@@ -26,8 +26,8 @@ Binance features into diverse applications.
 2. PROJECT INFORMATION
 
 - Project name: UNICORN Binance WebSocket API
-- Project page: https://www.lucit.tech/unicorn-binance-websocket-api.html
-- GitHub repository: https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api
+- Project page: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
+- GitHub repository: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
 - PyPI repository: https://pypi.org/project/unicorn-binance-websocket-api
 - Get a license: https://shop.lucit.services/software
 
@@ -43,7 +43,7 @@ The software may be used and distributed without restriction, the only condition
 license from LUCIT (https://shop.lucit.services/software) and must be operated with such a license.
 
 For transparency, our licensing client module is available on GitHub:
-https://github.com/LUCIT-Systems-and-Development/lucit-licensing-python
+https://github.com/oliver-zehentleitner/lucit-licensing-python
 
 
 4. LICENSE PURCHASE

@@ -20,7 +20,7 @@ class BinanceDataProcessor:
 
     async def main(self):
         print(f"In the Wiki you will find detailed information about the respective stream signal types: "
-              f"https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/%60stream_signals%60")
+              f"https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_signals%60")
         print(f"\r\nExample of invalid API credentials:")
         self.ubwa.create_stream(channels="arr", markets="!userData", stream_label="INVALID_CREDENTIALS",
                                 api_key="something", api_secret="wrong")

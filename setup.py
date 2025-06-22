@@ -4,19 +4,38 @@
 # File: setup.py
 #
 # Part of ‘UNICORN Binance WebSocket API’
-# Project website: https://www.lucit.tech/unicorn-binance-websocket-api.html
-# Github: https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api
-# Documentation: https://unicorn-binance-websocket-api.docs.lucit.tech
+# Project website: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
+# Github: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
+# Documentation: https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api
 # PyPI: https://pypi.org/project/unicorn-binance-websocket-api
-# LUCIT Online Shop: https://shop.lucit.services/software
 #
-# License: LSOSL - LUCIT Synergetic Open Source License
-# https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/blob/master/LICENSE
+# License: MIT
+# https://github.com/oliver-zehentleitner/unicorn-binance-rest-api/blob/master/LICENSE
 #
-# Author: LUCIT Systems and Development
+# Author: Oliver Zehentleitner
 #
-# Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
+# Copyright (c) 2019-2025, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)
+#
 # All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish, dis-
+# tribute, sublicense, and/or sell copies of the Software, and to permit
+# persons to whom the Software is furnished to do so, subject to the fol-
+# lowing conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABIL-
+# ITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+# SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+# IN THE SOFTWARE.
 
 from Cython.Build import cythonize
 from setuptools import setup, find_packages, Extension
@@ -58,33 +77,29 @@ with open("README.md", "r") as fh:
 setup(
     name=name,
     version="2.9.0",
-    author="LUCIT Systems and Development",
-    author_email='info@lucit.tech',
-    url="https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api",
-    description="A Python SDK by LUCIT to use the Binance Websocket API`s (com+testnet, "
+    author="Oliver Zehentleitner",
+    url="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api",
+    description="A Python SDK to use the Binance Websocket API`s (com+testnet, "
                 "com-margin+testnet, com-isolated_margin+testnet, com-futures+testnet, com-coin_futures, us, tr, "
                 "dex/chain+testnet) in a simple, fast, flexible, robust and fully-featured way.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    license='LSOSL - LUCIT Synergetic Open Source License',
+    license='MIT',
     install_requires=['colorama', 'requests>=2.31.0', 'websocket-client', 'websockets==11.0.3', 'flask_restful',
-                      'cheroot', 'flask', 'lucit-licensing-python>=1.8.2', 'orjson', 'psutil', 'PySocks', 'simplejson',
-                      'unicorn-fy>=0.14.2', 'unicorn-binance-rest-api>=2.5.1', 'typing_extensions', 'Cython'],
+                      'cheroot', 'flask', 'orjson', 'psutil', 'PySocks', 'simplejson',
+                      'unicorn-fy>=0.15.0', 'unicorn-binance-rest-api>=2.7.0', 'typing_extensions', 'Cython'],
     keywords='binance, asyncio, async, asynchronous, concurrent, websocket-api, webstream-api, '
              'binance-websocket, binance-webstream, webstream, websocket, api, binance-dex, '
              'binance-futures, binance-margin, binance-us',
     project_urls={
-        'Howto': 'https://www.lucit.tech/unicorn-binance-websocket-api.html#howto',
-        'Documentation': 'https://unicorn-binance-websocket-api.docs.lucit.tech',
-        'Wiki': 'https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki',
-        'Author': 'https://www.lucit.tech',
-        'Changes': 'https://unicorn-binance-websocket-api.docs.lucit.tech/changelog.html',
-        'License': 'https://unicorn-binance-websocket-api.docs.lucit.tech/license.html',
-        'Issue Tracker': 'https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/issues',
-        'Chat': 'https://gitter.im/unicorn-binance-suite/unicorn-binance-websocket-api',
+        'Howto': 'https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api#howto',
+        'Documentation': 'https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api',
+        'Wiki': 'https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki',
+        'Author': 'https://www.linkedin.com/in/oliver-zehentleitner',
+        'Changes': 'https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/changelog.html',
+        'License': 'https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/license.html',
+        'Issue Tracker': 'https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues',
         'Telegram': 'https://t.me/unicorndevs',
-        'Get Support': 'https://www.lucit.tech/get-support.html',
-        'LUCIT Online Shop': 'https://shop.lucit.services/software',
     },
     packages=find_packages(exclude=[f"dev/{source_dir}"], include=[source_dir]),
     ext_modules=cythonize(extensions, compiler_directives={'language_level': "3"}),
@@ -98,6 +113,7 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Programming Language :: Cython",
         "License :: Other/Proprietary License",
         "Intended Audience :: Developers",

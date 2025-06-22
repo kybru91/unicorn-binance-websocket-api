@@ -77,7 +77,7 @@ class BinanceDataProcessor:
 
     def receive_stream_signal(self, signal_type=None, stream_id=None, data_record=None, error_msg=None):
         # More info about `stream_signals`:
-        # https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki/%60stream_signals%60
+        # https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_signals%60
         print(f"Received stream_signal for stream '{self.ubwa.get_stream_label(stream_id=stream_id)}': "
               f"{signal_type} - {stream_id} - {data_record} - {error_msg}")
 

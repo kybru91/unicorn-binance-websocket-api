@@ -5,15 +5,14 @@
 # File: lucit_licensing_python/licensing_manager.py
 #
 # Project website: https://www.lucit.tech/lucit-licensing-python.html
-# Github: https://github.com/LUCIT-Systems-and-Development/lucit-licensing-python
+# Github: https://github.com/oliver-zehentleitner/lucit-licensing-python
 # Documentation: https://lucit-licensing-python.docs.lucit.tech
 # PyPI: https://pypi.org/project/lucit-licensing-python
-# LUCIT Online Shop: https://shop.lucit.services/software
 #
 # License: LSOSL - LUCIT Synergetic Open Source License
-# https://github.com/LUCIT-Systems-and-Development/lucit-licensing-python/blob/master/LICENSE
+# https://github.com/oliver-zehentleitner/lucit-licensing-python/blob/master/LICENSE
 #
-# Author: LUCIT Systems and Development
+# Author: Oliver Zehentleitner
 #
 # Copyright (c) 2023-2023, LUCIT Systems and Development (https://www.lucit.tech)
 # All rights reserved.
@@ -182,7 +181,7 @@ class LucitLicensingManager(threading.Thread):
         license_token = license_token if license_token is not None else self.license_token
         if api_secret is None or license_token is None:
             info = f"Please provide the api secret and license token of your lucit license! Read this article for " \
-                   f"more information: https://medium.lucit.tech/87b0088124a8"
+                   f"more information: https://technopathy.club/87b0088124a8"
             self.process_licensing_error(info)
             return {"error": f"License Not Found - {info}"}
         params = {
@@ -420,12 +419,12 @@ class LucitLicensingManager(threading.Thread):
                     break
                 else:
                     logger.critical(f"Unknown error: {license_result['error']} - Please submit an issue on GitHub: "
-                                    f"https://github.com/LUCIT-Systems-and-Development/lucit-licensing-python/issues/"
+                                    f"https://github.com/oliver-zehentleitner/lucit-licensing-python/issues/"
                                     f"new?labels=bug&projects=&template=bug_report.yml")
                     break
             else:
                 logger.critical(f"Unknown error: {license_result} - Please submit an issue on GitHub: "
-                                f"https://github.com/LUCIT-Systems-and-Development/lucit-licensing-python/issues/"
+                                f"https://github.com/oliver-zehentleitner/lucit-licensing-python/issues/"
                                 f"new?labels=bug&projects=&template=bug_report.yml")
                 break
             connection_errors = 0

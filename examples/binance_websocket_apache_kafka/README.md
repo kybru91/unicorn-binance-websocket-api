@@ -1,7 +1,7 @@
 # Passing Binance Market Data to Apache Kafka in Python with aiokafka
 ## Overview
 Read this article:
-https://medium.lucit.tech/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka-570541574655
+https://technopathy.club/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka-570541574655
 
 ## Prerequisites
 Ensure you have Python 3.7+ installed on your system. 
@@ -30,4 +30,4 @@ The script employs logging to provide insights into its operation and to assist 
 file named after the script with a .log extension.
 
 For further assistance or to report issues, please [contact our support team](https://www.lucit.tech/get-support.html) 
-or [visit our GitHub repository](https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api).
+or [visit our GitHub repository](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api).

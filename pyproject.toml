@@ -1,26 +1,23 @@
 [tool.poetry]
 name = "unicorn-binance-websocket-api"
 version = "2.9.0"
-description = "A Python SDK by LUCIT to use the Binance Websocket API`s (com+testnet, com-margin+testnet, com-isolated_margin+testnet, com-futures+testnet, com-coin_futures, us, tr, dex/chain+testnet) in a simple, fast, flexible, robust and fully-featured way."
-authors = ["LUCIT Systems and Development <info@lucit.tech>"]
-license = "LSOSL - LUCIT Synergetic Open Source License"
+description = "A Python SDK to use the Binance Websocket API`s (com+testnet, com-margin+testnet, com-isolated_margin+testnet, com-futures+testnet, com-coin_futures, us, tr, dex/chain+testnet) in a simple, fast, flexible, robust and fully-featured way."
+authors = ["Oliver Zehentleitner"]
+license = "MIT"
 readme = "README.md"
-homepage = "https://www.lucit.tech/unicorn-binance-websocket-api.html"
-documentation = "https://unicorn-binance-websocket-api.docs.lucit.tech"
-repository = "https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api"
+homepage = "https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api"
+documentation = "https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api"
+repository = "https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api"
 
 [tool.poetry.urls]
-'Howto' = 'https://www.lucit.tech/unicorn-binance-websocket-api.html#howto'
-'Documentation' = 'https://unicorn-binance-websocket-api.docs.lucit.tech'
-'Wiki' = 'https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/wiki'
-'Author' = 'https://www.lucit.tech'
-'Changes' = 'https://unicorn-binance-websocket-api.docs.lucit.tech/changelog.html'
-'License' = 'https://unicorn-binance-websocket-api.docs.lucit.tech/license.html'
-'Issue Tracker' = 'https://github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/issues'
+'Howto' = 'https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api#howto'
+'Documentation' = 'https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api'
+'Wiki' = 'https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki'
+'Author' = 'https://www.linkedin.com/in/oliver-zehentleitner'
+'Changes' = 'https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/changelog.html'
+'License' = 'https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/license.html'
+'Issue Tracker' = 'https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues'
 'Telegram' = 'https://t.me/unicorndevs'
-'Chat' = 'https://app.gitter.im/#/room/#unicorn-binance-websocket-api:gitter.im'
-'Get Support' = 'https://www.lucit.tech/get-support.html'
-'LUCIT Online Shop' = 'https://shop.lucit.services/software/unicorn-binance-suite'
 
 [tool.poetry.dependencies]
 python = ">=3.8.0"
@@ -29,14 +26,13 @@ colorama = "*"
 Cython = "*"
 flask = "*"
 flask_restful = "*"
-lucit-licensing-python = ">=1.8.2"
 orjson = "*"
 psutil = "*"
 PySocks = "*"
 requests = ">=2.31.0"
 simplejson = "*"
-unicorn-fy = ">=0.14.2"
-unicorn-binance-rest-api = ">=2.5.1"
+unicorn-fy = ">=0.15.0"
+unicorn-binance-rest-api = ">=2.7.0"
 websocket-client = "*"
 websockets = "11.0.3"
 

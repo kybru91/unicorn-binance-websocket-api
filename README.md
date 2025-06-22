@@ -397,7 +397,7 @@ If you like the project, please [![star](https://raw.githubusercontent.com/olive
 ## Installation and Upgrade
 The module requires Python 3.8 and runs smoothly up to and including Python 3.12.
 
-Anaconda packages are available from Python version 3.8 and higher, but only in the latest version!
+[There is no conda support until the migration to conda-forge.](https://github.com/oliver-zehentleitner/unicorn-binance-suite/issues/17)
 
 For the PyPy interpreter we offer packages via PyPi only from Python version 3.9 and higher.
 
@@ -493,7 +493,6 @@ This is not a release version and can not be considered to be stable!
 - [Look here!](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/examples/)
 
 ## Howto
-- [How to Obtain and Use a Unicorn Binance Suite License Key and Run the UBS Module According to Best Practice](https://technopathy.club/how-to-obtain-and-use-a-unicorn-binance-suite-license-key-and-run-the-ubs-module-according-to-best-87b0088124a8)
 - [Create and Cancel Orders via WebSocket on Binance](https://technopathy.club/create-and-cancel-orders-via-websocket-on-binance-7f828831404)
 - [How to Download Klines from Binance using Python?](https://technopathy.club/how-to-download-data-from-binance-using-python-8f1b6e8f19f3)
 - [Passing Binance Market Data to Apache Kafka in Python with aiokafka](https://technopathy.club/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka-570541574655)

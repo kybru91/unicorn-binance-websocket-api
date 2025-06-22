@@ -59,5 +59,5 @@ cd dev/sphinx
 rm build/html
 ln -s ../../../docs build/html
 make html -d
-echo "Creating CNAME file for GitHub."
-echo "unicorn-binance-websocket-api.docs.lucit.tech" >> build/html/CNAME
+#echo "Creating CNAME file for GitHub."
+#echo "unicorn-binance-websocket-api.docs.lucit.tech" >> build/html/CNAME

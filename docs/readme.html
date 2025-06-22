@@ -3,7 +3,7 @@
 <html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>UNICORN Binance WebSocket API &#8212; unicorn-binance-websocket-api 2.9.1 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -19,7 +19,6 @@
     <link rel="next" title="unicorn_binance_websocket_api" href="modules.html" />
     <link rel="prev" title="Welcome to unicorn-binance-websocket-api’s documentation!" href="index.html" /><link rel="shortcut icon" type="image/png" href="_static/lucit.png" />
     <script async defer src="https://buttons.github.io/buttons.js"></script>
-    
             <script type="text/javascript" src="_static/copybutton.js"></script>
             <script type="text/javascript" src="_static/menu.js"></script> 
   </head>
@@ -183,7 +182,7 @@
     </div>
 </div>
   
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -200,10 +199,11 @@
              accesskey="P">previous</a> |</li>
               
                   
-              <li><img src="_static/github-logo.png" alt="GitHub Logo"
-                       style="vertical-align: middle; margin-top: -1px"/></li>
-              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
+              <li><img src="_static/lucit.png" alt="LUCIT Logo"
+                       style="vertical-align: middle; margin-top: -1px"/></li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Docs Index</a> | </li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
               
               
@@ -261,7 +261,7 @@ fully-featured way.</p>
 <h2>Receive Data from Binance WebSockets<a class="headerlink" href="#receive-data-from-binance-websockets" title="Link to this heading">¶</a></h2>
 <section id="create-a-multiplex-websocket-connection-to-binance-with-a-stream-buffer-with-just-3-lines-of-code">
 <h3><a class="reference external" href="https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream">Create a multiplex websocket connection</a> to Binance with a <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_buffer%60"><code class="docutils literal notranslate"><span class="pre">stream_buffer</span></code></a> with just 3 lines of code<a class="headerlink" href="#create-a-multiplex-websocket-connection-to-binance-with-a-stream-buffer-with-just-3-lines-of-code" title="Link to this heading">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">unicorn_binance_websocket_api</span> <span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_binance_websocket_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
 
 <span class="n">ubwa</span> <span class="o">=</span> <span class="n">BinanceWebSocketApiManager</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;binance.com&quot;</span><span class="p">)</span>
 <span class="n">ubwa</span><span class="o">.</span><span class="n">create_stream</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;trade&#39;</span><span class="p">,</span> <span class="s1">&#39;kline_1m&#39;</span><span class="p">],</span> <span class="n">markets</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;btcusdt&#39;</span><span class="p">,</span> <span class="s1">&#39;bnbbtc&#39;</span><span class="p">,</span> <span class="s1">&#39;ethbtc&#39;</span><span class="p">])</span>
@@ -279,9 +279,9 @@ fully-featured way.</p>
 </section>
 <section id="or-with-a-callback-function-just-do">
 <h3>Or with a <a class="reference external" href="https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html?highlight=process_stream_data#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream">callback function</a> just do<a class="headerlink" href="#or-with-a-callback-function-just-do" title="Link to this heading">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">unicorn_binance_websocket_api</span> <span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_binance_websocket_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
 
-<span class="k">def</span> <span class="nf">process_new_receives</span><span class="p">(</span><span class="n">stream_data</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_new_receives</span><span class="p">(</span><span class="n">stream_data</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">stream_data</span><span class="p">))</span>
 
 <span class="n">ubwa</span> <span class="o">=</span> <span class="n">BinanceWebSocketApiManager</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;binance.com&quot;</span><span class="p">)</span>
@@ -293,10 +293,10 @@ fully-featured way.</p>
 </section>
 <section id="or-with-an-async-callback-function-just-do">
 <h3>Or with an <a class="reference external" href="https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html?highlight=process_stream_data#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream">async callback function</a> just do<a class="headerlink" href="#or-with-an-async-callback-function-just-do" title="Link to this heading">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">unicorn_binance_websocket_api</span> <span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
-<span class="kn">import</span> <span class="nn">asyncio</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_binance_websocket_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 
-<span class="k">async</span> <span class="k">def</span> <span class="nf">process_new_receives</span><span class="p">(</span><span class="n">stream_data</span><span class="p">):</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_new_receives</span><span class="p">(</span><span class="n">stream_data</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">stream_data</span><span class="p">)</span>
     <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -311,11 +311,11 @@ fully-featured way.</p>
 <h3>Or await the stream data in an asyncio coroutine<a class="headerlink" href="#or-await-the-stream-data-in-an-asyncio-coroutine" title="Link to this heading">¶</a></h3>
 <p>All the methods of data collection presented have their own advantages and disadvantages. However, this is the
 generally recommended method for processing data from streams.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">unicorn_binance_websocket_api</span> <span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
-<span class="kn">import</span> <span class="nn">asyncio</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_binance_websocket_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 
-<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">process_asyncio_queue</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_asyncio_queue</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start processing the data from stream &#39;</span><span class="si">{</span><span class="n">ubwa</span><span class="o">.</span><span class="n">get_stream_label</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">)</span>
         <span class="k">while</span> <span class="n">ubwa</span><span class="o">.</span><span class="n">is_stop_request</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ubwa</span><span class="o">.</span><span class="n">get_stream_data_from_asyncio_queue</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span>
@@ -367,12 +367,12 @@ generally recommended method for processing data from streams.</p>
 <h2>Send Requests to Binance WebSocket API<a class="headerlink" href="#send-requests-to-binance-websocket-api" title="Link to this heading">¶</a></h2>
 <section id="place-orders-cancel-orders-or-send-other-requests-via-websocket">
 <h3><a class="reference external" href="https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.BinanceWebSocketApiApi.create_order">Place orders</a>, <a class="reference external" href="https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.BinanceWebSocketApiApi.cancel_order">cancel orders</a> or <a class="reference external" href="https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#module-unicorn_binance_websocket_api.api">send other requests</a> via WebSocket<a class="headerlink" href="#place-orders-cancel-orders-or-send-other-requests-via-websocket" title="Link to this heading">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">unicorn_binance_websocket_api</span> <span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_binance_websocket_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
 
 <span class="n">api_key</span> <span class="o">=</span> <span class="s2">&quot;YOUR_BINANCE_API_KEY&quot;</span>
 <span class="n">api_secret</span> <span class="o">=</span> <span class="s2">&quot;YOUR_BINANCE_API_SECRET&quot;</span>
 
-<span class="k">async</span> <span class="k">def</span> <span class="nf">process_api_responses</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_api_responses</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">while</span> <span class="n">ubwa</span><span class="o">.</span><span class="n">is_stop_request</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="n">stream_id</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ubwa</span><span class="o">.</span><span class="n">get_stream_data_from_asyncio_queue</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="n">stream_id</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -428,10 +428,10 @@ incorrect values or that you have to reload the missing data via REST as an alte
 <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_signals%60"><code class="docutils literal notranslate"><span class="pre">stream_signals</span></code></a>,
 which are used to tell your code in real time when a stream is connected, when it received its first data record, when
 it was disconnected and stopped, and when the stream cannot be restored.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">unicorn_binance_websocket_api</span> <span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_binance_websocket_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
-<span class="k">def</span> <span class="nf">process_stream_signals</span><span class="p">(</span><span class="n">signal_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_stream_signals</span><span class="p">(</span><span class="n">signal_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Received stream_signal for stream &#39;</span><span class="si">{</span><span class="n">ubwa</span><span class="o">.</span><span class="n">get_stream_label</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="n">stream_id</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;: &quot;</span>
           <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">signal_type</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">stream_id</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">data_record</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -872,7 +872,7 @@ companies from the US analyze binance.com market data - as long as they do not t
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
             <p class="logo">
                 <div style="text-align: center;">
@@ -1015,7 +1015,7 @@ companies from the US analyze binance.com market data - as long as they do not t
       </div>
       <div class="clearer"></div>
     </div>  
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -1032,10 +1032,11 @@ companies from the US analyze binance.com market data - as long as they do not t
              >previous</a> |</li>
               
                   
-              <li><img src="_static/github-logo.png" alt="GitHub Logo"
-                       style="vertical-align: middle; margin-top: -1px"/></li>
-              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
+              <li><img src="_static/lucit.png" alt="LUCIT Logo"
+                       style="vertical-align: middle; margin-top: -1px"/></li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Docs Index</a> | </li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
               
               
@@ -1059,17 +1060,15 @@ companies from the US analyze binance.com market data - as long as they do not t
       </ul>
     </div>  
     <div class="footer">
-    <a href="https://docs.lucit.tech">Index of all LUCIT Software Documentation</a><br />
+    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Jun 22 2025 at 20:02 (CET).
+    Last updated on Jun 22 2025 at 20:17 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
-        with <a href="https://github.com/LUCIT-Systems-and-Development/python-docs-theme-lucit">python-docs-theme-lucit</a>
-        by <a href="https://www.lucit.tech">LUCIT Systems and Development</a>.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+        with <a href="https://github.com/LUCIT-Systems-and-Development/python-docs-theme-lucit">python-docs-theme-lucit</a>.
     </div>
-    
 
   </body>
 </html>

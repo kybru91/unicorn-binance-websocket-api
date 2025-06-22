@@ -87,7 +87,7 @@ html_theme = 'python_docs_theme_lucit'
 html_context = {'github_user_name': 'oliver-zehentleitner',
                 'github_repo_name': 'unicorn-binance-websocket-api',
                 'project_name': project,
-                'lucit': False}
+                'lucit': True}
 
 myst_heading_anchors = 3
 

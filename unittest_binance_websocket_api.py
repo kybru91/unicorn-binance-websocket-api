@@ -41,7 +41,6 @@ from unicorn_binance_websocket_api.manager import BinanceWebSocketApiManager
 from unicorn_binance_websocket_api.exceptions import *
 from unicorn_binance_websocket_api.restserver import BinanceWebSocketApiRestServer
 from unicorn_binance_websocket_api.restclient import BinanceWebSocketApiRestclient
-from unicorn_binance_websocket_api.licensing_manager import LucitLicensingManager, NoValidatedLucitLicense
 from unicorn_binance_rest_api import BinanceRestApiManager
 import asyncio
 import logging
@@ -81,14 +80,6 @@ def handle_socket_message(data):
 
 def processing_of_new_data(data):
     print(f"`processing_of_new_data()` test - Received: {data}")
-
-
-def is_github_action_env():
-    try:
-        print(f"{os.environ[f'LUCIT_LICENSE_TOKEN']}")
-        return True
-    except KeyError:
-        return False
 
 
 class TestBinanceComManager(unittest.TestCase):
@@ -619,25 +610,6 @@ class TestBinanceOrgManager(unittest.TestCase):
             for thread in threading.enumerate():
                 print(thread.name)
             print(f"TestApiLive stopping:")
-
-    def test_lucitlicmgr(self):
-        print(f"License Manager ...")
-        ubwam = BinanceWebSocketApiManager(exchange='binance.com')
-        ubwam.llm.get_info()
-        ubwam.llm.get_module_version()
-        ubwam.llm.get_quotas()
-        ubwam.llm.get_timestamp()
-        ubwam.llm.get_version()
-        ubwam.llm.is_verified()
-        ubwam.llm.sync_time()
-        ubwam.llm.test()
-        ubwam.llm.process_licensing_error()
-        ubwam.llm.stop()
-        with self.assertRaises(NoValidatedLucitLicense):
-            llm = LucitLicensingManager(api_secret="wrong", license_token="credentials",
-                                        parent_shutdown_function=ubwam.stop_manager)
-            time.sleep(3)
-            llm.stop()
 
     def test_live_api_ws(self):
         print(f"Test Websocket API ...")

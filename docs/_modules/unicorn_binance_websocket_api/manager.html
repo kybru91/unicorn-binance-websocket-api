@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unicorn_binance_websocket_api.manager &#8212; unicorn-binance-websocket-api 2.9.1 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unicorn_binance_websocket_api.manager &#8212; unicorn-binance-websocket-api 2.10.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
     <link rel="stylesheet" type="text/css" href="../../_static/pydoctheme.css?v=fdf8e9ae" />
@@ -14,9 +14,8 @@
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /><link rel="shortcut icon" type="image/png" href="../../_static/lucit.png" />
+    <link rel="search" title="Search" href="../../search.html" /><link rel="shortcut icon" type="image/png" href="../../_static/py.png" />
     <script async defer src="https://buttons.github.io/buttons.js"></script>
-    
             <script type="text/javascript" src="../../_static/copybutton.js"></script>
             <script type="text/javascript" src="../../_static/menu.js"></script> 
   </head>
@@ -41,16 +40,8 @@
         <nav class="menu" role="navigation" aria-label="main navigation">
             <p class="logo">
                 <div style="text-align: center;">
-                    <a href="https://www.lucit.tech"><img src="https://www.lucit.tech/files/images/logos/LUCIT-LOGO.png"></a><br>
-                    <a href="https://shop.lucit.services/software/unicorn-binance-suite" style="font-size: 0.85em;font-weight: 900">Get a UNICORN Binance Suite License!</a><br>
+                    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite"><img src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-suite/refs/heads/master/images/logo/LUCIT-UBS-Logo.png"></a>
                     <br>
-                    <a href="https://github.com/LUCIT-Systems-and-Development" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-github-20.png"></a>
-                    <a href="https://fb.me/lucit.systems.and.development" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-facebook-20.png"></a>
-                    <a href="https://twitter.com/LUCIT_SysDev" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-twitter-20.png"></a>
-                    <a href="https://www.linkedin.com/company/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-linkedin-20.png"></a>
-                    <a href="https://www.xing.com/pages/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-xing-20.png"></a>
-                    <a href="https://medium.lucit.tech" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-medium-monogram-20.png"></a>
-                    <a href="https://www.youtube.com/channel/UCp57u8vaPqEWQTlfpYn-KnQ" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-youtube-20.png"></a>
                 </div>
             </p>
 <div id="searchbox" style="display: block" role="search">
@@ -93,7 +84,7 @@
     </div>
 </div>
   
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -104,10 +95,11 @@
              >modules</a> |</li>
               
                   
-              <li><img src="../../_static/github-logo.png" alt="GitHub Logo"
-                       style="vertical-align: middle; margin-top: -1px"/></li>
-              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
+              <li><img src="../../_static/py.png" alt="Python"
+                       style="vertical-align: middle; margin-top: -1px"/></li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Docs Index</a> | </li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
               
               
@@ -178,44 +170,44 @@
 <span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS</span>
 <span class="c1"># IN THE SOFTWARE.</span>
 
-<span class="kn">from</span> <span class="nn">.connection_settings</span> <span class="kn">import</span> <span class="n">CEX_EXCHANGES</span><span class="p">,</span> <span class="n">DEX_EXCHANGES</span><span class="p">,</span> <span class="n">CONNECTION_SETTINGS</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.restclient</span> <span class="kn">import</span> <span class="n">BinanceWebSocketApiRestclient</span>
-<span class="kn">from</span> <span class="nn">.restserver</span> <span class="kn">import</span> <span class="n">BinanceWebSocketApiRestServer</span>
-<span class="kn">from</span> <span class="nn">.sockets</span> <span class="kn">import</span> <span class="n">BinanceWebSocketApiSocket</span>
-<span class="kn">from</span> <span class="nn">.api.api</span> <span class="kn">import</span> <span class="n">WsApi</span>
-<span class="kn">from</span> <span class="nn">unicorn_binance_rest_api</span> <span class="kn">import</span> <span class="n">BinanceRestApiManager</span><span class="p">,</span> <span class="n">BinanceAPIException</span>
-<span class="kn">from</span> <span class="nn">unicorn_fy.unicorn_fy</span> <span class="kn">import</span> <span class="n">UnicornFy</span>
-<span class="kn">from</span> <span class="nn">cheroot</span> <span class="kn">import</span> <span class="n">wsgi</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">redirect</span>
-<span class="kn">from</span> <span class="nn">flask_restful</span> <span class="kn">import</span> <span class="n">Api</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Literal</span>
-<span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">colorama</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">cython</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">hmac</span>
-<span class="kn">import</span> <span class="nn">hashlib</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">platform</span>
-<span class="kn">import</span> <span class="nn">psutil</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">ssl</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">threading</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">traceback</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">import</span> <span class="nn">orjson</span>
-<span class="kn">import</span> <span class="nn">websockets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.connection_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">CEX_EXCHANGES</span><span class="p">,</span> <span class="n">DEX_EXCHANGES</span><span class="p">,</span> <span class="n">CONNECTION_SETTINGS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.restclient</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiRestclient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.restserver</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiRestServer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sockets</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiSocket</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.api.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">WsApi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_binance_rest_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceRestApiManager</span><span class="p">,</span> <span class="n">BinanceAPIException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_fy.unicorn_fy</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnicornFy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cheroot</span><span class="w"> </span><span class="kn">import</span> <span class="n">wsgi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask_restful</span><span class="w"> </span><span class="kn">import</span> <span class="n">Api</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Literal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">colorama</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cython</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hmac</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">platform</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ssl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">orjson</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">websockets</span>
 
 <span class="n">__app_name__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unicorn-binance-websocket-api&quot;</span>
-<span class="n">__version__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.9.1.dev&quot;</span>
+<span class="n">__version__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.10.0&quot;</span>
 <span class="n">__logger__</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;unicorn_binance_websocket_api&quot;</span><span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">__logger__</span>
@@ -223,7 +215,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager">[docs]</a>
-<span class="k">class</span> <span class="nc">BinanceWebSocketApiManager</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BinanceWebSocketApiManager</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A Python SDK to use the Binance Websocket API`s (com+testnet, com-margin+testnet,</span>
 <span class="sd">    com-isolated_margin+testnet, com-futures+testnet, com-coin_futures, us, &quot;tr&quot;, dex/chain+testnet) in a simple, fast,</span>
@@ -366,7 +358,7 @@
 <span class="sd">    :type ubra_manager: BinanceRestApiManager</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">process_stream_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">process_stream_data_async</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">process_asyncio_queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -566,17 +558,17 @@
                                                         <span class="n">warn_on_update</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">warn_on_update</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entering with-context of BinanceWebSocketApiManager() ...&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">error_traceback</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">error_traceback</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Leaving with-context of BinanceWebSocketApiManager() ...&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stop_manager</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">exc_type</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An exception occurred: </span><span class="si">{</span><span class="n">exc_type</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">exc_value</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">error_traceback</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_run_process_asyncio_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_run_process_asyncio_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Execute a provided coroutine within the loop and process the exception results asynchronously.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">stream_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -609,14 +601,14 @@
             <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_shutdown_asyncgens</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_shutdown_asyncgens</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">loop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiManager._shutdown_asyncgens(stream_id=</span><span class="si">{</span><span class="n">stream_id</span><span class="si">}</span><span class="s2">) started ...&quot;</span><span class="p">)</span>
         <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">shutdown_asyncgens</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_run_socket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_run_socket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_stop_request</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="n">stream_id</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> \
                 <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_crash_request</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="n">stream_id</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -702,7 +694,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_stream_data_from_asyncio_queue">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_data_from_asyncio_queue">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_stream_data_from_asyncio_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_data_from_asyncio_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves the oldest entry from the FIFO stack.</span>
 
@@ -722,7 +714,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.asyncio_queue_task_done">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.asyncio_queue_task_done">[docs]</a>
-    <span class="k">def</span> <span class="nf">asyncio_queue_task_done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">asyncio_queue_task_done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If `get_stream_data_from_asyncio_queue()` was used, `asyncio_queue_task_done()` must be executed at the end of</span>
 <span class="sd">        the loop.</span>
@@ -752,7 +744,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.send_stream_signal">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.send_stream_signal">[docs]</a>
-    <span class="k">def</span> <span class="nf">send_stream_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_stream_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Send a stream signal</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -773,7 +765,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.send_with_stream">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.send_with_stream">[docs]</a>
-    <span class="k">def</span> <span class="nf">send_with_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_with_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Send a payload with a specific stream.</span>
 
@@ -820,7 +812,7 @@
             <span class="k">return</span> <span class="kc">False</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_add_stream_to_stream_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_stream_to_stream_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                    <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">markets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -980,7 +972,7 @@
                     <span class="nb">str</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">markets</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">stream_label</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
                     <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">stream_buffer_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">stream_buffer_maxlen</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbols</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_create_stream_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_stream_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                               <span class="n">stream_id</span><span class="p">,</span>
                               <span class="n">channels</span><span class="p">,</span>
                               <span class="n">markets</span><span class="p">,</span>
@@ -1098,7 +1090,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.generate_signature">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.generate_signature">[docs]</a>
-    <span class="k">def</span> <span class="nf">generate_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Signe the request.</span>
 
@@ -1116,7 +1108,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.order_params">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.order_params">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">order_params</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">order_params</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert params to list with signature as last element</span>
 
@@ -1138,7 +1130,7 @@
         <span class="k">return</span> <span class="n">params</span></div>
 
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_auto_data_cleanup_stopped_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_auto_data_cleanup_stopped_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">interval</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">age</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_data_cleanup_stopped_streams</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
@@ -1173,7 +1165,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_frequent_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_frequent_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method gets started in a loop and is doing the frequent checks</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1315,7 +1307,7 @@
                 <span class="k">pass</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiManager._frequent_checks() - Leaving thread ...&quot;</span><span class="p">)</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_ping_listen_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_ping_listen_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiManager._ping_listen_key(stream_id=</span><span class="si">{</span><span class="n">stream_id</span><span class="si">}</span><span class="s2">) - asyncio task running!&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;markets&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream_list_lock</span><span class="p">:</span>
@@ -1369,7 +1361,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiManager._ping_listen_key(stream_id=</span><span class="si">{</span><span class="n">stream_id</span><span class="si">}</span><span class="s2">) - asyncio task stopped!&quot;</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_handle_task_result</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_task_result</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method is a callback for `loop.create_task()` to retrive the task exception and avoid the `Task exception</span>
 <span class="sd">        was never retrieved` traceback on stdout:</span>
@@ -1387,7 +1379,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiManager._handle_task_result() - Exception(</span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2">) raised by task &quot;</span>
                             <span class="sa">f</span><span class="s2">&quot;= </span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_start_monitoring_api_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">warn_on_update</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_start_monitoring_api_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">warn_on_update</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Threaded method that servces the monitoring api</span>
 
@@ -1405,7 +1397,7 @@
 
         <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
         <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/status/&#39;</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">redirect_to_wiki</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">redirect_to_wiki</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;BinanceWebSocketApiManager._start_monitoring_api_thread() 200 - &quot;</span>
                         <span class="s2">&quot;Visit https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-&quot;</span>
                         <span class="s2">&quot;Monitoring-API-Service for further information!&quot;</span><span class="p">)</span>
@@ -1442,7 +1434,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.add_payload_to_stream">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.add_payload_to_stream">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_payload_to_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_payload_to_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a payload to a stream by `stream_id`.</span>
 
@@ -1467,7 +1459,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.add_to_ringbuffer_error">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.add_to_ringbuffer_error">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_to_ringbuffer_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_to_ringbuffer_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add received error messages from websocket endpoints to the error ringbuffer</span>
 
@@ -1483,7 +1475,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.add_to_ringbuffer_result">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.add_to_ringbuffer_result">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_to_ringbuffer_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_to_ringbuffer_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add received result messages from websocket endpoints to the result ringbuffer</span>
 
@@ -1499,7 +1491,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.add_to_stream_buffer">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.add_to_stream_buffer">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_to_stream_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_data</span><span class="p">,</span> <span class="n">stream_buffer_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_to_stream_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_data</span><span class="p">,</span> <span class="n">stream_buffer_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Kick back data to the</span>
 <span class="sd">        `stream_buffer &lt;https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_buffer%60&gt;`__</span>
@@ -1531,7 +1523,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.add_to_stream_signal_buffer">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.add_to_stream_signal_buffer">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_to_stream_signal_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_to_stream_signal_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add signals about a stream to the</span>
 <span class="sd">        `stream_signal_buffer &lt;https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_signal_buffer%60&gt;`__</span>
@@ -1581,7 +1573,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.add_total_received_bytes">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.add_total_received_bytes">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_total_received_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_total_received_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add received bytes to the total received bytes statistic</span>
 
@@ -1594,7 +1586,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.clear_asyncio_queue">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.clear_asyncio_queue">[docs]</a>
-    <span class="k">def</span> <span class="nf">clear_asyncio_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_asyncio_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clear the asyncio queue of a specific stream.</span>
 
@@ -1620,7 +1612,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.clear_stream_buffer">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.clear_stream_buffer">[docs]</a>
-    <span class="k">def</span> <span class="nf">clear_stream_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_buffer_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_stream_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_buffer_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clear the</span>
 <span class="sd">        `stream_buffer &lt;https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_buffer%60&gt;`__</span>
@@ -1649,7 +1641,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.create_payload">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_payload">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">markets</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">markets</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the payload for subscriptions</span>
 
@@ -1812,7 +1804,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.create_stream">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                       <span class="n">channels</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">markets</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2069,7 +2061,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.create_websocket_uri">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_websocket_uri">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_websocket_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_websocket_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a websocket URI</span>
 
@@ -2312,7 +2304,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.delete_listen_key_by_stream_id">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.delete_listen_key_by_stream_id">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_listen_key_by_stream_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_listen_key_by_stream_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete a binance listen_key from a specific !userData stream</span>
 
@@ -2337,7 +2329,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.delete_stream_from_stream_list">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.delete_stream_from_stream_list">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_stream_from_stream_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_stream_from_stream_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete a stream from the stream_list</span>
 
@@ -2369,7 +2361,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.remove_all_data_of_stream_id">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.remove_all_data_of_stream_id">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_all_data_of_stream_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_all_data_of_stream_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete all remaining data within the UBWA instance of a stopped stream.</span>
 
@@ -2430,7 +2422,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.fill_up_space_left">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.fill_up_space_left">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">fill_up_space_left</span><span class="p">(</span><span class="n">demand_of_chars</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">filling</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fill_up_space_left</span><span class="p">(</span><span class="n">demand_of_chars</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">filling</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add whitespaces to `string` to a length of `demand_of_chars` on the left side</span>
 
@@ -2454,7 +2446,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.fill_up_space_centered">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.fill_up_space_centered">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">fill_up_space_centered</span><span class="p">(</span><span class="n">demand_of_chars</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">filling</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fill_up_space_centered</span><span class="p">(</span><span class="n">demand_of_chars</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">filling</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add whitespaces to `string` to a length of `demand_of_chars`</span>
 
@@ -2479,7 +2471,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.fill_up_space_right">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.fill_up_space_right">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">fill_up_space_right</span><span class="p">(</span><span class="n">demand_of_chars</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">filling</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fill_up_space_right</span><span class="p">(</span><span class="n">demand_of_chars</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">filling</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add whitespaces to `string` to a length of `demand_of_chars` on the right side</span>
 
@@ -2503,7 +2495,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_active_stream_list">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_active_stream_list">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_active_stream_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_active_stream_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a list of all active streams</span>
 
@@ -2529,7 +2521,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_all_receives_last_second">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_all_receives_last_second">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_all_receives_last_second</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_receives_last_second</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of all receives of the last second</span>
 
@@ -2552,7 +2544,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_binance_api_status">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_binance_api_status">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_binance_api_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_binance_api_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        `get_binance_api_status()` is obsolete and will be removed in future releases, please use `get_used_weight()`</span>
 <span class="sd">        instead!</span>
@@ -2566,7 +2558,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_debug_log">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_debug_log">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_debug_log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_debug_log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the debug log string.</span>
 
@@ -2582,7 +2574,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_timestamp">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_timestamp">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_timestamp</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_timestamp</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a Binance conform Timestamp.</span>
 
@@ -2594,7 +2586,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_timestamp_unix">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_timestamp_unix">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_timestamp_unix</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_timestamp_unix</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a Binance conform Timestamp.</span>
 
@@ -2605,7 +2597,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_used_weight">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_used_weight">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_used_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_used_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get used_weight, last status_code and the timestamp of the last status update</span>
 
@@ -2616,7 +2608,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_current_receiving_speed">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_current_receiving_speed">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_current_receiving_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_current_receiving_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the receiving speed of the last second in Bytes</span>
 
@@ -2646,7 +2638,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_current_receiving_speed_global">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_current_receiving_speed_global">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_current_receiving_speed_global</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_current_receiving_speed_global</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the receiving speed of the last second in Bytes from all streams!</span>
 
@@ -2676,7 +2668,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_date_of_timestamp">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_date_of_timestamp">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_date_of_timestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_date_of_timestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert a timestamp into a readable date/time format for humans</span>
 
@@ -2690,7 +2682,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_errors_from_endpoints">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_errors_from_endpoints">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_errors_from_endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_errors_from_endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get all the stored error messages from the ringbuffer sent by the endpoints.</span>
 
@@ -2701,7 +2693,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_event_loop_by_stream_id">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_event_loop_by_stream_id">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_event_loop_by_stream_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_event_loop_by_stream_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the asyncio event loop used by a specific stream.</span>
 
@@ -2719,7 +2711,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_exchange">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_exchange">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the name of the used exchange like &quot;binance.com&quot; or &quot;binance.org-testnet&quot;</span>
 
@@ -2731,7 +2723,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_human_bytesize">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_human_bytesize">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_human_bytesize</span><span class="p">(</span><span class="n">amount_bytes</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_human_bytesize</span><span class="p">(</span><span class="n">amount_bytes</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert the bytes to something readable</span>
 
@@ -2757,7 +2749,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_human_uptime">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_human_uptime">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_human_uptime</span><span class="p">(</span><span class="n">uptime</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_human_uptime</span><span class="p">(</span><span class="n">uptime</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert a timespan of seconds into hours, days, ...</span>
 
@@ -2790,7 +2782,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_latest_release_info">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_latest_release_info">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_latest_release_info</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_latest_release_info</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get infos about the latest available release</span>
 
@@ -2809,7 +2801,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_latest_release_info_check_command">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_latest_release_info_check_command">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_latest_release_info_check_command</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_latest_release_info_check_command</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get infos about the latest available `check_lucit_collector` release</span>
 <span class="sd">        </span>
@@ -2826,7 +2818,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_latest_version">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_latest_version">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_latest_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_latest_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the version of the latest available release (cache time 1 hour)</span>
 
@@ -2850,7 +2842,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_latest_version_check_command">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_latest_version_check_command">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_latest_version_check_command</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_latest_version_check_command</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the version of the latest available `check_lucit_collector.py` release (cache time 1 hour)</span>
 <span class="sd">        </span>
@@ -2872,7 +2864,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_limit_of_subscriptions_per_stream">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_limit_of_subscriptions_per_stream">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_limit_of_subscriptions_per_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_limit_of_subscriptions_per_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of allowed active subscriptions per stream (limit of binance API)</span>
 
@@ -2883,7 +2875,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_number_of_all_subscriptions">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_number_of_all_subscriptions">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_number_of_all_subscriptions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_number_of_all_subscriptions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the amount of all stream subscriptions</span>
 
@@ -2907,7 +2899,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_number_of_free_subscription_slots">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_number_of_free_subscription_slots">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_number_of_free_subscription_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_number_of_free_subscription_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of free subscription slots (max allowed subscriptions - subscriptions) of a specific stream</span>
 
@@ -2923,7 +2915,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_listen_key_from_restclient">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_listen_key_from_restclient">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_listen_key_from_restclient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_listen_key_from_restclient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a new or cached (&lt;30m) listen_key</span>
 
@@ -2972,7 +2964,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_most_receives_per_second">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_most_receives_per_second">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_most_receives_per_second</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_most_receives_per_second</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the highest total receives per second value</span>
 
@@ -2983,7 +2975,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_number_of_streams_in_stream_list">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_number_of_streams_in_stream_list">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_number_of_streams_in_stream_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_number_of_streams_in_stream_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of streams that are stored in the stream_list</span>
 
@@ -2994,7 +2986,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_number_of_subscriptions">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_number_of_subscriptions">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_number_of_subscriptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_number_of_subscriptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of subscriptions of a specific stream</span>
 
@@ -3032,7 +3024,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_keep_max_received_last_second_entries">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_keep_max_received_last_second_entries">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_keep_max_received_last_second_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_keep_max_received_last_second_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of how much received_last_second entries are stored till they get deleted</span>
 
@@ -3043,7 +3035,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_monitoring_status_icinga">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_monitoring_status_icinga">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_monitoring_status_icinga</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_command_version</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">warn_on_update</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_monitoring_status_icinga</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_command_version</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">warn_on_update</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get status and perfdata to monitor and collect metrics with ICINGA/Nagios</span>
 
@@ -3093,7 +3085,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_monitoring_status_plain">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_monitoring_status_plain">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_monitoring_status_plain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_command_version</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">warn_on_update</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_monitoring_status_plain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_command_version</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">warn_on_update</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get plain monitoring status data:</span>
 <span class="sd">        active_streams, crashed_streams, restarting_streams, stopped_streams, return_code, status_text,</span>
@@ -3214,7 +3206,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_new_uuid_id">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_new_uuid_id">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_new_uuid_id</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_new_uuid_id</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a new unique uuid in string format. This is used as &#39;stream_id&#39; or &#39;socket_id&#39;.</span>
 
@@ -3229,7 +3221,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_process_usage_memory">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_process_usage_memory">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_process_usage_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_process_usage_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the used memory of this process</span>
 
@@ -3243,7 +3235,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_process_usage_cpu">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_process_usage_cpu">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_process_usage_cpu</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_process_usage_cpu</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the used cpu power of this process</span>
 
@@ -3260,7 +3252,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_process_usage_threads">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_process_usage_threads">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_process_usage_threads</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_process_usage_threads</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the amount of threads that this process is using</span>
 
@@ -3272,7 +3264,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_reconnects">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_reconnects">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_reconnects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_reconnects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of total reconnects</span>
 
@@ -3283,7 +3275,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_request_id">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_request_id">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_request_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_request_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a unique `request_id`</span>
 
@@ -3298,7 +3290,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_result_by_request_id">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_result_by_request_id">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_result_by_request_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_result_by_request_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the result related to the provided `request_id`</span>
 
@@ -3323,7 +3315,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_results_from_endpoints">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_results_from_endpoints">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_results_from_endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_results_from_endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get all the stored result messages from the ringbuffer sent by the endpoints.</span>
 
@@ -3334,7 +3326,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_ringbuffer_error_max_size">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_ringbuffer_error_max_size">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ringbuffer_error_max_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ringbuffer_error_max_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        How many entries should be stored in the ringbuffer?</span>
 
@@ -3345,7 +3337,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_ringbuffer_result_max_size">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_ringbuffer_result_max_size">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ringbuffer_result_max_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ringbuffer_result_max_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        How many entries should be stored in the ringbuffer?</span>
 
@@ -3356,7 +3348,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_start_time">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_start_time">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_start_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_start_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the start_time of the  BinanceWebSocketApiManager instance</span>
 
@@ -3367,7 +3359,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_stream_buffer_byte_size">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_buffer_byte_size">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stream_buffer_byte_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_buffer_byte_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the current byte size estimation of the stream_buffer</span>
 
@@ -3384,7 +3376,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_stream_buffer_length">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_buffer_length">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stream_buffer_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_buffer_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_buffer_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_buffer_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the current number of items in all stream_buffer or of a specific stream_buffer</span>
 
@@ -3409,7 +3401,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_stream_id_by_label">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_id_by_label">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stream_id_by_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_id_by_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the stream_id of a specific stream by stream label</span>
 
@@ -3438,7 +3430,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_stream_info">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_info">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stream_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get all infos about a specific stream</span>
 
@@ -3481,7 +3473,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_stream_label">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_label">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stream_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the stream_label of a specific stream</span>
 
@@ -3501,7 +3493,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_stream_subscriptions">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_subscriptions">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stream_subscriptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">request_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_subscriptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">request_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a list of subscriptions of a specific stream from Binance endpoints - the result can be received via</span>
 <span class="sd">        the `stream_buffer` and is also added to the results ringbuffer - `get_results_from_endpoints()</span>
@@ -3550,7 +3542,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_stream_list">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_list">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stream_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a list of all streams</span>
 
@@ -3564,7 +3556,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_stream_buffer_maxlen">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_buffer_maxlen">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stream_buffer_maxlen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_buffer_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_buffer_maxlen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_buffer_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the maxlen value of the</span>
 <span class="sd">        `stream_buffer &lt;https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_buffer%60&gt;`__</span>
@@ -3594,7 +3586,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_stream_receives_last_second">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_receives_last_second">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stream_receives_last_second</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_receives_last_second</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of receives of specific stream from the last seconds</span>
 
@@ -3611,7 +3603,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_stream_statistic">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_stream_statistic">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stream_statistic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_statistic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the statistic of a specific stream</span>
 
@@ -3658,7 +3650,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_the_one_active_websocket_api">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_the_one_active_websocket_api">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_the_one_active_websocket_api</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_the_one_active_websocket_api</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function is needed to simplify the access to the websocket API, if only one API stream exists it is clear</span>
 <span class="sd">        that only this stream can be used for the requests and therefore will be used.</span>
@@ -3688,7 +3680,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_total_received_bytes">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_total_received_bytes">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_total_received_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_total_received_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get number of total received bytes</span>
 
@@ -3700,7 +3692,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_total_receives">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_total_receives">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_total_receives</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_total_receives</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of total receives</span>
 
@@ -3711,7 +3703,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_user_agent">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_user_agent">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_user_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_user_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the user_agent string &quot;lib name + lib version + python version&quot;</span>
 
@@ -3723,7 +3715,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_version">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_version">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the package/module version</span>
 
@@ -3735,13 +3727,13 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.get_version_unicorn_fy">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_version_unicorn_fy">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_version_unicorn_fy</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_version_unicorn_fy</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the package/module version of `UnicornFy &lt;https://github.com/oliver-zehentleitner/unicorn-fy&gt;`__</span>
 
 <span class="sd">        :return: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">unicorn_fy.unicorn_fy</span> <span class="kn">import</span> <span class="n">UnicornFy</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_fy.unicorn_fy</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnicornFy</span>
 
         <span class="n">unicorn_fy</span> <span class="o">=</span> <span class="n">UnicornFy</span><span class="p">()</span>
 
@@ -3751,7 +3743,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.help">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.help">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">help</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">help</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Help in iPython</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -3760,7 +3752,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.increase_received_bytes_per_second">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.increase_received_bytes_per_second">[docs]</a>
-    <span class="k">def</span> <span class="nf">increase_received_bytes_per_second</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">increase_received_bytes_per_second</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the amount of received bytes per second</span>
 
@@ -3791,7 +3783,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.increase_processed_receives_statistic">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.increase_processed_receives_statistic">[docs]</a>
-    <span class="k">def</span> <span class="nf">increase_processed_receives_statistic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">increase_processed_receives_statistic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the number of processed receives</span>
 
@@ -3828,7 +3820,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.increase_reconnect_counter">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.increase_reconnect_counter">[docs]</a>
-    <span class="k">def</span> <span class="nf">increase_reconnect_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">increase_reconnect_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Increase reconnect counter</span>
 
@@ -3846,7 +3838,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.increase_transmitted_counter">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.increase_transmitted_counter">[docs]</a>
-    <span class="k">def</span> <span class="nf">increase_transmitted_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">increase_transmitted_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Increase the counter of transmitted payloads</span>
 <span class="sd">        :param stream_id: id of a stream</span>
@@ -3864,7 +3856,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.is_manager_stopping">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_manager_stopping">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_manager_stopping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_manager_stopping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns `True` if the manager has a stop request, &#39;False&#39; if not.</span>
 
@@ -3878,7 +3870,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.is_exchange_type">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_exchange_type">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_exchange_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exchange_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_exchange_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exchange_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check the exchange type!</span>
 
@@ -3896,7 +3888,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.is_crash_request">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_crash_request">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_crash_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_crash_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Has a specific stream a crash_request?</span>
 
@@ -3916,7 +3908,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.is_stop_request">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_stop_request">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_stop_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_stop_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Has a specific stream a stop_request?</span>
 
@@ -3938,7 +3930,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.is_stream_signal_buffer_enabled">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_stream_signal_buffer_enabled">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_stream_signal_buffer_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_stream_signal_buffer_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Is the stream_signal_buffer enabled?</span>
 
@@ -3949,7 +3941,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.is_update_available">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_update_available">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_update_available</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_update_available</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Is a new release of this package available?</span>
 
@@ -3969,7 +3961,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.is_update_available_unicorn_fy">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_update_available_unicorn_fy">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_update_available_unicorn_fy</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_update_available_unicorn_fy</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Is a new release of `UnicornFy &lt;https://github.com/oliver-zehentleitner/unicorn-fy&gt;`__ available?</span>
 
@@ -3980,7 +3972,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.is_update_available_check_command">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_update_available_check_command">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_update_available_check_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_command_version</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_update_available_check_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_command_version</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Is a new release of `check_lucit_collector.py` available?</span>
 
@@ -4000,7 +3992,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.pop_stream_data_from_stream_buffer">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.pop_stream_data_from_stream_buffer">[docs]</a>
-    <span class="k">def</span> <span class="nf">pop_stream_data_from_stream_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_buffer_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;FIFO&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pop_stream_data_from_stream_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_buffer_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;FIFO&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get oldest or latest entry from</span>
 <span class="sd">        `stream_buffer &lt;https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_buffer%60&gt;`__</span>
@@ -4043,7 +4035,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.pop_stream_signal_from_stream_signal_buffer">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.pop_stream_signal_from_stream_signal_buffer">[docs]</a>
-    <span class="k">def</span> <span class="nf">pop_stream_signal_from_stream_signal_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pop_stream_signal_from_stream_signal_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the oldest entry from</span>
 <span class="sd">        `stream_signal_buffer &lt;https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/%60stream_signal_buffer%60&gt;`__</span>
@@ -4061,7 +4053,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.print_stream_info">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.print_stream_info">[docs]</a>
-    <span class="k">def</span> <span class="nf">print_stream_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">add_string</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">footer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_stream_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">add_string</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">footer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Print all infos about a specific stream, helps debugging :)</span>
 
@@ -4224,7 +4216,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.print_summary">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.print_summary">[docs]</a>
-    <span class="k">def</span> <span class="nf">print_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">add_string</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">disable_print</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">footer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">add_string</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">disable_print</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">footer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Print an overview of all streams</span>
 <span class="sd">        </span>
@@ -4435,7 +4427,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.print_summary_to_png">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.print_summary_to_png">[docs]</a>
-    <span class="k">def</span> <span class="nf">print_summary_to_png</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_summary_to_png</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                              <span class="n">print_summary_export_path</span><span class="p">,</span>
                              <span class="n">height_per_row</span><span class="o">=</span><span class="mf">12.5</span><span class="p">,</span>
                              <span class="n">add_string</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -4483,7 +4475,7 @@
 <div class="viewcode-block" id="BinanceWebSocketApiManager.remove_ansi_escape_codes">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.remove_ansi_escape_codes">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">remove_ansi_escape_codes</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_ansi_escape_codes</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove ansi escape codes from the text string!</span>
 
@@ -4503,7 +4495,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.replace_stream">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.replace_stream">[docs]</a>
-    <span class="k">def</span> <span class="nf">replace_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">replace_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                        <span class="n">stream_id</span><span class="p">,</span>
                        <span class="n">new_channels</span><span class="p">,</span>
                        <span class="n">new_markets</span><span class="p">,</span>
@@ -4594,7 +4586,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.run">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method overloads `threading.run()` and starts management functions</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4636,7 +4628,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.set_private_dex_config">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_private_dex_config">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_private_dex_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binance_dex_user_address</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_private_dex_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binance_dex_user_address</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set binance_dex_user_address</span>
 
@@ -4652,7 +4644,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.set_heartbeat">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_heartbeat">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set heartbeat for a specific thread (should only be done by the stream itself)</span>
 
@@ -4671,7 +4663,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.set_stop_request">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_stop_request">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_stop_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_stop_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set a stop request for a specific stream.</span>
 
@@ -4691,7 +4683,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.set_ringbuffer_error_max_size">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_ringbuffer_error_max_size">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_ringbuffer_error_max_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_size</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_ringbuffer_error_max_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_size</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        How many error messages should be kept in the ringbuffer?</span>
 
@@ -4704,7 +4696,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.set_ringbuffer_result_max_size">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_ringbuffer_result_max_size">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_ringbuffer_result_max_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_size</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_ringbuffer_result_max_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_size</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        How many result messages should be kept in the ringbuffer?</span>
 
@@ -4717,7 +4709,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.is_socket_ready">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_socket_ready">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_socket_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_socket_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set `socket_is_ready` for a specific stream to False.</span>
 
@@ -4733,7 +4725,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.set_socket_is_not_ready">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_socket_is_not_ready">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_socket_is_not_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_socket_is_not_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set `socket_is_ready` for a specific stream to False.</span>
 
@@ -4748,7 +4740,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.set_socket_is_ready">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_socket_is_ready">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_socket_is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_socket_is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set `socket_is_ready` for a specific stream to True.</span>
 
@@ -4763,7 +4755,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.set_stream_label">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_stream_label">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_stream_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">stream_label</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_stream_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">stream_label</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set a stream_label by stream_id</span>
 
@@ -4785,7 +4777,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.set_keep_max_received_last_second_entries">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.set_keep_max_received_last_second_entries">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_keep_max_received_last_second_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_max_entries</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_keep_max_received_last_second_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_max_entries</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set how much received_last_second entries are stored till they get deleted!</span>
 
@@ -4797,7 +4789,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.split_payload">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.split_payload">[docs]</a>
-    <span class="k">def</span> <span class="nf">split_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">max_items_per_request</span><span class="o">=</span><span class="mi">350</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">split_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">max_items_per_request</span><span class="o">=</span><span class="mi">350</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sending more than 8000 chars via websocket.send() leads to a connection loss, 350 list elements is a good limit</span>
 <span class="sd">        to keep the payload length under 8000 chars and avoid reconnects</span>
@@ -4843,7 +4835,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.start_monitoring_api">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.start_monitoring_api">[docs]</a>
-    <span class="k">def</span> <span class="nf">start_monitoring_api</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">64201</span><span class="p">,</span> <span class="n">warn_on_update</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_monitoring_api</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">64201</span><span class="p">,</span> <span class="n">warn_on_update</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Start the monitoring API server</span>
 
@@ -4867,7 +4859,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.stop_manager">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.stop_manager">[docs]</a>
-    <span class="k">def</span> <span class="nf">stop_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stop the BinanceWebSocketApiManager with all streams, monitoring and management threads</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4901,7 +4893,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.stop_manager_with_all_streams">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.stop_manager_with_all_streams">[docs]</a>
-    <span class="k">def</span> <span class="nf">stop_manager_with_all_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_manager_with_all_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stop the BinanceWebSocketApiManager with all streams, monitoring and management threads</span>
 
@@ -4915,7 +4907,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.stop_monitoring_api">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.stop_monitoring_api">[docs]</a>
-    <span class="k">def</span> <span class="nf">stop_monitoring_api</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_monitoring_api</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stop the monitoring API service</span>
 
@@ -4932,7 +4924,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.stop_stream">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.stop_stream">[docs]</a>
-    <span class="k">def</span> <span class="nf">stop_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">delete_listen_key</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">delete_listen_key</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stop a specific stream</span>
 
@@ -4965,7 +4957,7 @@
         <span class="k">return</span> <span class="kc">True</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_crash_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_crash_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loop inside: Stop a specific stream with &#39;crashed&#39; status</span>
 
@@ -4987,7 +4979,7 @@
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="nf">_stream_is_crashing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_stream_is_crashing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If a stream can not heal itself in cause of wrong parameter (wrong market, channel type) it calls this method</span>
 
@@ -5015,7 +5007,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">send_stream_signal</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="n">stream_id</span><span class="p">,</span> <span class="n">signal_type</span><span class="o">=</span><span class="s2">&quot;STREAM_UNREPAIRABLE&quot;</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="n">error_msg</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="nf">_stream_is_restarting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_stream_is_restarting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Streams report with this call their restarts</span>
 
@@ -5034,7 +5026,7 @@
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">_stream_is_stopping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_stream_is_stopping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Streams report with this call their shutdowns</span>
 
@@ -5056,7 +5048,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.subscribe_to_stream">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.subscribe_to_stream">[docs]</a>
-    <span class="k">def</span> <span class="nf">subscribe_to_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">markets</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">subscribe_to_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">markets</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Subscribe channels and/or markets to an existing stream</span>
 
@@ -5170,7 +5162,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.unsubscribe_from_stream">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.unsubscribe_from_stream">[docs]</a>
-    <span class="k">def</span> <span class="nf">unsubscribe_from_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">markets</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe_from_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">markets</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Unsubscribe channels and/or markets to an existing stream</span>
 
@@ -5259,7 +5251,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.wait_till_stream_has_started">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.wait_till_stream_has_started">[docs]</a>
-    <span class="k">def</span> <span class="nf">wait_till_stream_has_started</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wait_till_stream_has_started</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns `True` as soon a specific stream has started and received its first stream data</span>
 
@@ -5291,7 +5283,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.wait_till_stream_has_stopped">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.wait_till_stream_has_stopped">[docs]</a>
-    <span class="k">def</span> <span class="nf">wait_till_stream_has_stopped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wait_till_stream_has_stopped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns `True` as soon a specific stream has stopped itself</span>
 
@@ -5331,20 +5323,12 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
             <p class="logo">
                 <div style="text-align: center;">
-                    <a href="https://www.lucit.tech"><img src="https://www.lucit.tech/files/images/logos/LUCIT-LOGO.png"></a><br>
-                    <a href="https://shop.lucit.services/software/unicorn-binance-suite" style="font-size: 0.85em;font-weight: 900">Get a UNICORN Binance Suite License!</a><br>
+                    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite"><img src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-suite/refs/heads/master/images/logo/LUCIT-UBS-Logo.png"></a>
                     <br>
-                    <a href="https://github.com/LUCIT-Systems-and-Development" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-github-20.png"></a>
-                    <a href="https://fb.me/lucit.systems.and.development" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-facebook-20.png"></a>
-                    <a href="https://twitter.com/LUCIT_SysDev" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-twitter-20.png"></a>
-                    <a href="https://www.linkedin.com/company/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-linkedin-20.png"></a>
-                    <a href="https://www.xing.com/pages/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-xing-20.png"></a>
-                    <a href="https://medium.lucit.tech" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-medium-monogram-20.png"></a>
-                    <a href="https://www.youtube.com/channel/UCp57u8vaPqEWQTlfpYn-KnQ" target="_blank" style="text-decoration:none;"><img src="../../_static/icons8-youtube-20.png"></a>
                 </div>
             </p>
 <div id="searchbox" style="display: block" role="search">
@@ -5387,7 +5371,7 @@
       </div>
       <div class="clearer"></div>
     </div>  
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -5398,10 +5382,11 @@
              >modules</a> |</li>
               
                   
-              <li><img src="../../_static/github-logo.png" alt="GitHub Logo"
-                       style="vertical-align: middle; margin-top: -1px"/></li>
-              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
+              <li><img src="../../_static/py.png" alt="Python"
+                       style="vertical-align: middle; margin-top: -1px"/></li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Docs Index</a> | </li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
               
               
@@ -5426,17 +5411,15 @@
       </ul>
     </div>  
     <div class="footer">
-    <a href="https://docs.lucit.tech">Index of all LUCIT Software Documentation</a><br />
+    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Jun 22 2025 at 20:02 (CET).
+    Last updated on Jun 22 2025 at 20:35 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
-        with <a href="https://github.com/LUCIT-Systems-and-Development/python-docs-theme-lucit">python-docs-theme-lucit</a>
-        by <a href="https://www.lucit.tech">LUCIT Systems and Development</a>.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+        with <a href="https://github.com/LUCIT-Systems-and-Development/python-docs-theme-lucit">python-docs-theme-lucit</a>.
     </div>
-    
 
   </body>
 </html>

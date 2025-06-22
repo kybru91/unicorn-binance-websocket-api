@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.abspath('../../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'unicorn-binance-websocket-api'
-copyright = '2023-2023, LUCIT Systems and Development. All Rights Reserved.'
-author = 'LUCIT Systems and Development'
+copyright = '2019-2025, Oliver Zehentleitner All Rights Reserved.'
+author = 'Oliver Zehentleitner'
 
 # The short X.Y version
 version = ''
@@ -84,12 +84,10 @@ pygments_style = None
 # a list of builtin themes.
 
 html_theme = 'python_docs_theme_lucit'
-html_context = {'github_user_name': 'LUCIT-Systems-and-Development',
+html_context = {'github_user_name': 'oliver-zehentleitner',
                 'github_repo_name': 'unicorn-binance-websocket-api',
                 'project_name': project,
-                'matomo_url': "https://webmon.lucit.services/matomo.php?idsite=3&amp;rec=1",
-                'freshchat_src': "//eu.fw-cdn.com/10659511/361973.js",
-                'lucit': True}
+                'lucit': False}
 
 myst_heading_anchors = 3
 
@@ -145,7 +143,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'unicorn-binance-websocket-api.tex', 'unicorn-binance-websocket-api Documentation',
-     'LUCIT Systems and Development', 'manual'),
+     'Oliver Zehentleitner', 'manual'),
 ]
 
 

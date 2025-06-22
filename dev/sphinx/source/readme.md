@@ -1,46 +1,32 @@
-[![Get a UNICORN Binance Suite License](https://raw.githubusercontent.com/LUCIT-Systems-and-Development/unicorn-binance-suite/master/images/logo/LUCIT-UBS-License-Offer.png)](https://shop.lucit.services)
-
-[![GitHub Release](https://img.shields.io/github/release/LUCIT-Systems-and-Development/unicorn-binance-websocket-api.svg?label=github)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases)
-[![GitHub Downloads](https://img.shields.io/github/downloads/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/total?color=blue)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases)
-![Anaconda Release](https://img.shields.io/conda/v/lucit/unicorn-binance-websocket-api?color=blue)
-![Anaconda Downloads](https://img.shields.io/conda/dn/lucit/unicorn-binance-websocket-api?color=blue)
+[![GitHub Release](https://img.shields.io/github/release/oliver-zehentleitner/unicorn-binance-websocket-api.svg?label=github)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases)
+[![GitHub Downloads](https://img.shields.io/github/downloads/oliver-zehentleitner/unicorn-binance-websocket-api/total?color=blue)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases)
 [![PyPi Release](https://img.shields.io/pypi/v/unicorn-binance-websocket-api?color=blue)](https://pypi.org/project/unicorn-binance-websocket-api/)
 [![PyPi Downloads](https://pepy.tech/badge/unicorn-binance-websocket-api)](https://pepy.tech/project/unicorn-binance-websocket-api)
-[![License](https://img.shields.io/badge/license-LSOSL-blue)](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/license.html)
-[![Supported Python Version](https://img.shields.io/pypi/pyversions/unicorn_binance_websocket_api.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/github/license/oliver-zehentleitner/unicorn-binance-websocket-api.svg?color=blue)](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/license.html)
 [![PyPI - Status](https://img.shields.io/pypi/status/unicorn_binance_websocket_api.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues)
-[![codecov](https://codecov.io/gh/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/branch/master/graph/badge.svg?token=5I03AZ3F5S)](https://codecov.io/gh/LUCIT-Systems-and-Development/unicorn-binance-websocket-api)
+[![codecov](https://codecov.io/gh/oliver-zehentleitner/unicorn-binance-websocket-api/branch/master/graph/badge.svg?token=5I03AZ3F5S)](https://codecov.io/gh/oliver-zehentleitner/unicorn-binance-websocket-api)
 [![CodeQL](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/codeql-analysis.yml)
 [![Unit Tests](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml)
 [![Build and Publish GH+PyPi](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml)
-[![Build and Publish Anaconda](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_conda.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_conda.yml)
 [![Read the Docs](https://img.shields.io/badge/read-%20docs-yellow)](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api)
 [![Read How To`s](https://img.shields.io/badge/read-%20howto-yellow)](https://technopathy.club)
 [![Github](https://img.shields.io/badge/source-github-cbc2c8)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
 [![Telegram](https://img.shields.io/badge/community-telegram-41ab8c)](https://t.me/unicorndevs)
-[![Gitter](https://img.shields.io/badge/community-gitter-41ab8c)](https://gitter.im/unicorn-binance-suite/unicorn-binance-websocket-api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Get Free Professional Support](https://img.shields.io/badge/chat-lucit%20support-004166)](https://www.lucit.tech/get-support.html)
 
-[![LUCIT-UBWA-Banner](https://raw.githubusercontent.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/master/images/logo/LUCIT-UBWA-Banner-Readme.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
+[![LUCIT-UBWA-Banner](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/logo/LUCIT-UBWA-Banner-Readme.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
 
 # UNICORN Binance WebSocket API
 
-[Description](#description) | [Live Demo](#live-demo) | [Installation](#installation-and-upgrade) | [How To](#howto) |
+[Description](#description) | [Installation](#installation-and-upgrade) | [How To](#howto) |
 [Documentation](#documentation) | [Examples](#examples) | [Change Log](#change-log) | [Wiki](#wiki) | [Social](#social) |
 [Notifications](#receive-notifications) | [Bugs](#how-to-report-bugs-or-suggest-improvements) | 
-[Contributing](#contributing) | [Disclaimer](#disclaimer) | [Commercial Support](#commercial-support)
+[Contributing](#contributing) | [Disclaimer](#disclaimer)
 
-A Python SDK to use the Binance Websocket API`s (com+testnet, com-margin+testnet, 
-com-isolated_margin+testnet, com-futures+testnet, com-coin_futures, us, tr, dex/chain+testnet) 
-in a simple, fast, flexible, robust and fully-featured way. 
+A Python SDK to use the Binance Websocket API`s (com+testnet, com-margin+testnet, com-isolated_margin+testnet, 
+com-futures+testnet, com-coin_futures, us, tr, dex/chain+testnet) in a simple, fast, flexible, robust and 
+fully-featured way. 
 
 Part of '[UNICORN Binance Suite](https://github.com/oliver-zehentleitner/unicorn-binance-suite)'.
-
-[Get help](https://www.lucit.tech/get-support.html) with the integration of the `UNICORN Binance Suite` modules!
-
-## Get a UNICORN Binance Suite License
-
-To run modules of the *UNICORN Binance Suite* you need a [valid license](https://technopathy.club/how-to-obtain-and-use-a-unicorn-binance-suite-license-key-and-run-the-ubs-module-according-to-best-87b0088124a8#4ca4)!
 
 ## Receive Data from Binance WebSockets
 
@@ -126,7 +112,7 @@ with BinanceWebSocketApiManager(exchange='binance.com') as ubwa:
 
 Basically that's it, but there are more options.
 
-## Convert received stream data into well-formed Python dictionaries with [UnicornFy](https://www.lucit.tech/unicorn-fy.html)
+## Convert received stream data into well-formed Python dictionaries with [UnicornFy](https://github.com/oliver-zehentleitner/unicorn-fy)
 
 ```
 unicorn_fied_stream_data = UnicornFy.binance_com_websocket(data)
@@ -289,19 +275,19 @@ Use the [UNICORN Binance REST API](https://github.com/oliver-zehentleitner/unico
 
 | Exchange                                                           | Exchange string                       | [WS](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#receive-data-from-binance-websockets)                                                                                                                               | [WS API](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#send-requests-to-binance-websocket-api)                                                                                                                           |
 |--------------------------------------------------------------------|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| [Binance](https://www.binance.com)                                 | `binance.com`                         | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) |
-| [Binance Testnet](https://testnet.binance.vision/)                 | `binance.com-testnet`                 | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) |
-| [Binance Margin](https://www.binance.com)                          | `binance.com-margin`                  | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |                                                                                                                                     
-| [Binance Margin Testnet](https://testnet.binance.vision/)          | `binance.com-margin-testnet`          | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
-| [Binance Isolated Margin](https://www.binance.com)                 | `binance.com-isolated_margin`         | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
-| [Binance Isolated Margin Testnet](https://testnet.binance.vision/) | `binance.com-isolated_margin-testnet` | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
-| [Binance USD-M Futures](https://www.binance.com)                   | `binance.com-futures`                 | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) |
-| [Binance USD-M Futures Testnet](https://testnet.binancefuture.com) | `binance.com-futures-testnet`         | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) |
-| [Binance Coin-M Futures](https://www.binance.com)                  | `binance.com-coin_futures`            | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
-| [Binance US](https://www.binance.us)                               | `binance.us`                          | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
-| [Binance TR](https://www.trbinance.com)                            | `trbinance.com`                       | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
-| [Binance DEX](https://www.binance.org)                             | `binance.org`                         | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
-| [Binance DEX Testnet](https://testnet.binance.org)                 | `binance.org-testnet`                 | ![yes](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+| [Binance](https://www.binance.com)                                 | `binance.com`                         | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) |
+| [Binance Testnet](https://testnet.binance.vision/)                 | `binance.com-testnet`                 | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) |
+| [Binance Margin](https://www.binance.com)                          | `binance.com-margin`                  | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |                                                                                                                                     
+| [Binance Margin Testnet](https://testnet.binance.vision/)          | `binance.com-margin-testnet`          | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+| [Binance Isolated Margin](https://www.binance.com)                 | `binance.com-isolated_margin`         | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+| [Binance Isolated Margin Testnet](https://testnet.binance.vision/) | `binance.com-isolated_margin-testnet` | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+| [Binance USD-M Futures](https://www.binance.com)                   | `binance.com-futures`                 | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) |
+| [Binance USD-M Futures Testnet](https://testnet.binancefuture.com) | `binance.com-futures-testnet`         | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) |
+| [Binance Coin-M Futures](https://www.binance.com)                  | `binance.com-coin_futures`            | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+| [Binance US](https://www.binance.us)                               | `binance.us`                          | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+| [Binance TR](https://www.trbinance.com)                            | `trbinance.com`                       | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+| [Binance DEX](https://www.binance.org)                             | `binance.org`                         | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+| [Binance DEX Testnet](https://testnet.binance.org)                 | `binance.org-testnet`                 | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
 
 - Streams are processing asynchronous/concurrent (Python asyncio) and each stream is started in a separate thread, so 
 you don't need to deal with asyncio in your code! But you can consume with 
@@ -379,14 +365,14 @@ and specific streams with
 "IPython (Interactive Python) is a command shell for interactive computing that offers introspection, 
 rich media, shell syntax, tab completion, and history." 
 ([example_interactive_mode.py](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_interactive_mode.py)) 
-[![iPython](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/ipython.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_interactive_mode.py) 
+[![iPython](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ipython.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_interactive_mode.py) 
 
 - Also, nice to use with the [Jupyter Notebook](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/ipynb) :)
 
 - [Monitoring API service](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service) 
 and a [check_command](https://exchange.icinga.com/LUCIT/check_lucit_collector) 
 for [ICINGA](https://exchange.icinga.com/LUCIT/check_lucit_collector)/Nagios 
-[![icinga2-demo](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/icinga.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service)
+[![icinga2-demo](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/icinga.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service)
 
 - Integration of [test cases](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml) and [examples](#examples).
 
@@ -405,23 +391,13 @@ for [ICINGA](https://exchange.icinga.com/LUCIT/check_lucit_collector)/Nagios
 
 - Excessively tested on Linux, Mac and Windows on x86, arm32, arm64, ...
 
-If you like the project, please [![star](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/star.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/stargazers) it on 
+If you like the project, please [![star](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/star.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/stargazers) it on 
 [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)!
-
-## Live Demo
-This live demo script is streaming from [binance.com](https://www.binance.com) and runs on a *CCX13* virtual 
-machine of [HETZNER CLOUD](https://hetzner.cloud/?ref=rKgYRMq0l8fd)
-
-[Open live monitor!](https://www.lucit.tech/unicorn-binance-websocket-api-live-demo.html)
-
-[![live-demo](https://ubwa-demo.lucit.tech/ps.png)](https://www.lucit.tech/unicorn-binance-websocket-api-live-demo.html)
-
-(Refresh update once a minute!)
 
 ## Installation and Upgrade
 The module requires Python 3.8 and runs smoothly up to and including Python 3.12.
 
-Anaconda packages are available from Python version 3.8 and higher, but only in the latest version!
+[There is no conda support until the migration to conda-forge.](https://github.com/oliver-zehentleitner/unicorn-binance-suite/issues/17)
 
 For the PyPy interpreter we offer packages via PyPi only from Python version 3.9 and higher.
 
@@ -432,7 +408,7 @@ If you run into errors during the installation take a look [here](https://github
 ### Packages are created automatically with GitHub Actions
 When a new release is to be created, we start two GitHubActions: 
 
-- [Build and Publish Anaconda](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_conda.yml)
+- [Build and Publish Anaconda](https://github.com/oliver-zehentleitner/unicorn-binance-suite/issues/17)
 - [Build and Publish GH+PyPi](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml) 
 
 Both start virtual Windows/Linux/Mac servers provided by GitHub in the cloud with preconfigured environments and 
@@ -467,6 +443,8 @@ this may take some time!
 `pip install unicorn-binance-websocket-api --upgrade`
 
 ### A Conda Package of the latest version with `conda` from [Anaconda](https://anaconda.org/lucit)
+[There is no conda support until the migration to conda-forge.](https://github.com/oliver-zehentleitner/unicorn-binance-suite/issues/17)
+
 The `unicorn-binance-websocket-api` package is also available as a Cython version for the `linux-64`, `osx-64` 
 and `win-64` architectures with [Conda](https://docs.conda.io/en/latest/) through the 
 [`lucit` channel](https://anaconda.org/lucit). 
@@ -475,6 +453,8 @@ For optimal compatibility and performance, it is recommended to source the neces
 [`conda-forge` channel](https://anaconda.org/conda-forge). 
 
 #### Installation
+[There is no conda support until the migration to conda-forge.](https://github.com/oliver-zehentleitner/unicorn-binance-suite/issues/17)
+
 ```
 conda config --add channels conda-forge
 conda config --add channels lucit
@@ -482,19 +462,21 @@ conda install -c lucit unicorn-binance-websocket-api
 ```
 
 #### Update
+[There is no conda support until the migration to conda-forge.](https://github.com/oliver-zehentleitner/unicorn-binance-suite/issues/17)
+
 `conda update -c lucit unicorn-binance-websocket-api`
 
 ### From source of the latest release with PIP from [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
 #### Linux, macOS, ...
 Run in bash:
 
-`pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/$(curl -s https://api.github.com/repos/LUCIT-Systems-and-Development/unicorn-binance-websocket-api/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")').tar.gz --upgrade`
+`pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/$(curl -s https://api.github.com/repos/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")').tar.gz --upgrade`
 
 #### Windows
-Use the below command with the version (such as 2.9.0) you determined 
+Use the below command with the version (such as 2.9.1) you determined 
 [here](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest):
 
-`pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.9.0.tar.gz --upgrade`
+`pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.9.1.tar.gz --upgrade`
 ### From the latest source (dev-stage) with PIP from [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
 This is not a release version and can not be considered to be stable!
 
@@ -511,7 +493,6 @@ This is not a release version and can not be considered to be stable!
 - [Look here!](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/examples/)
 
 ## Howto
-- [How to Obtain and Use a Unicorn Binance Suite License Key and Run the UBS Module According to Best Practice](https://technopathy.club/how-to-obtain-and-use-a-unicorn-binance-suite-license-key-and-run-the-ubs-module-according-to-best-87b0088124a8)
 - [Create and Cancel Orders via WebSocket on Binance](https://technopathy.club/create-and-cancel-orders-via-websocket-on-binance-7f828831404)
 - [How to Download Klines from Binance using Python?](https://technopathy.club/how-to-download-data-from-binance-using-python-8f1b6e8f19f3)
 - [Passing Binance Market Data to Apache Kafka in Python with aiokafka](https://technopathy.club/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka-570541574655)
@@ -525,23 +506,19 @@ This is not a release version and can not be considered to be stable!
 
 ## Social
 - [Discussions](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/discussions)
-- [Gitter](https://gitter.im/unicorn-binance-suite/unicorn-binance-websocket-api)
 - [https://t.me/unicorndevs](https://t.me/unicorndevs)
 - [https://dev.binance.vision](https://dev.binance.vision)
 - [https://forum.bnbchain.org/](https://forum.bnbchain.org/)
 
 ## Receive Notifications
 To receive notifications on available updates you can 
-[![watch](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/watch.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/watchers) 
+[![watch](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/watch.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/watchers) 
 the repository on [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api), write your 
 [own script](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_version_of_this_package.py) 
 with using 
 [`is_update_available()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_update_availabe) 
 or you use the 
 [monitoring API service](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service).
-
-Follow us on [LinkedIn](https://www.linkedin.com/company/lucit-systems-and-development), 
-[X](https://twitter.com/LUCIT_SysDev) or [Facebook](https://www.facebook.com/lucit.systems.and.development)!
 
 To receive news (like inspection windows/maintenance) about the Binance API`s subscribe to their telegram groups: 
 
@@ -552,7 +529,7 @@ To receive news (like inspection windows/maintenance) about the Binance API`s su
 - [https://t.me/BinanceExchange](https://t.me/BinanceExchange)
 
 ## How to report Bugs or suggest Improvements?
-[List of planned features](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) - click ![thumbs-up](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/thumbup.png) if you need one of them or suggest a new feature!
+[List of planned features](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) - click ![thumbs-up](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/thumbup.png) if you need one of them or suggest a new feature!
 
 Before you report a bug, [try the latest release](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api#installation-and-upgrade). If the issue still exists, provide the error trace, OS 
 and Python version and explain how to reproduce the error. A demo script is appreciated.
@@ -570,7 +547,7 @@ contribute follow
 ### Contributors
 [![Contributors](https://contributors-img.web.app/image?repo=oliver-zehentleitner/unicorn-binance-websocket-api)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/graphs/contributors)
 
-We ![love](https://raw.githubusercontent.com/lucit-systems-and-development/unicorn-binance-websocket-api/master/images/misc/heart.png) open source!
+We ![love](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/heart.png) open source!
 
 ## Disclaimer
 This project is for informational purposes only. You should not construe this information or any other material as 
@@ -592,9 +569,3 @@ The purpose of supporting a SOCKS5 proxy in the UNICORN Binance Suite and its mo
 US services. For example, GitHub actions with UBS will not work without a SOCKS5 proxy, as they will inevitably run on 
 servers in the US and be blocked by Binance.com. Moreover, it also seems justified that traders, data scientists and 
 companies from the US analyze binance.com market data - as long as they do not trade there.
-
-## Commercial Support
-
-[![Get professional and fast support](https://raw.githubusercontent.com/LUCIT-Systems-and-Development/unicorn-binance-suite/master/images/support/LUCIT-get-professional-and-fast-support.png)](https://www.lucit.tech/get-support.html)
-
-***Do you need a developer, operator or consultant?*** [Contact us](https://www.lucit.tech/contact.html) for a non-binding initial consultation!

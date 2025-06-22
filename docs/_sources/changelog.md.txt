@@ -9,7 +9,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
-## 2.9.0.dev (development stage/unreleased/unstable)
+## 2.10.0.dev (development stage/unreleased/unstable)
+
+## 2.10.0
+### Changed
+- Moved from https://github.com/LUCIT-Systems-and-Development/ to https://github.com/oliver-zehentleitner
+### Removed
+- LUCIT Licensing Manager
 
 ## 2.9.0
 ### Added
@@ -271,7 +277,7 @@ don't have to do anything special, please note that this process takes some time
 - Websocket API: `create_order()` and `create_test_order()` - Support of parameter `quoteOrderQty`, Behavior: If 
   activated, it replaces the `quantity` parameter.
 ### Fixed
-- Websocket API: `create_order()` and `create_test_order()` -  [issue#353](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/353)
+- Websocket API: `create_order()` and `create_test_order()` -  [issue#353](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/353) 
   and [issue#352](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/352)
 - Websocket API: `create_order()` and `create_test_order()` -  `trailingDelta` is only used if `stopPrice` was not 
   specified.
@@ -431,16 +437,16 @@ don't have to do anything special, please note that this process takes some time
 ## 1.43.0
 ### Added
 - Official support for Python 3.11
-- Socks5 proxy support for [websocket](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager) only: `socks5_proxy_server` and `socks5_proxy_ssl_verification`  and exception
+- Socks5 proxy support for [websocket](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager) only: `socks5_proxy_server` and `socks5_proxy_ssl_verification`  and exception 
 `Socks5ProxyConnectionError` - Currently, no REST support for `listenKey` (needed for userData streams), this will be added later after the 
 next UBRA update!
 - Logging to `manager.wait_till_stream_has_started()`
 - Logging to `manager.wait_till_stream_has_stoped()`
-- Added [PR#305](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/305) of
-[issue#304](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/304) thx to
+- Added [PR#305](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/305) of 
+[issue#304](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/304) thx to 
 [@dima-dmytruk23](https://github.com/dima-dmytruk23):
 New parameters to override connection settings to 
-[`BinanceWebSocketApiManager`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager): `websocket_base_uri`,
+[`BinanceWebSocketApiManager`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager): `websocket_base_uri`, 
 `max_subscriptions_per_stream`, `restful_base_uri`, `restful_path_userdata`, `exchange_type`
 ### Changed
 - "binance.com-coin-futures" to choose coin futures is deprecated. Use "binance.com-coin_futures" instead!
@@ -550,7 +556,7 @@ disconnect cases!
 ### Added
 - `get_stream_buffer_length()` can now return the size of all stream_buffers and also of a specific stream_buffer.
 ### Changed
--  Bump websockets from 10.1 to 10.2 [PR#237](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/237)
+-  Bump websockets from 10.1 to 10.2 [PR#237](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/237) 
 
 ## 1.36.1
 ### Fixed
@@ -561,7 +567,7 @@ disconnect cases!
 ### Changed
 - removed "unicorn_binance_websocket_api_"-part of the module file names (more info: [Discussions](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/discussions/231))
 - renamed logger name of all modules to "unicorn_binance_websocket_api", in the implementation of 
-[PR#223](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/223) every module has had
+[PR#223](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/223) every module has had 
 its own logger name.
  
 ## 1.35.0
@@ -569,11 +575,11 @@ its own logger name.
 - `manager.get_new_stream_id()` to avoid security alerts like "CodeQL py/clear-text-logging-sensitive-data"
 ### Changed
 - `stream_id` is no longer an uuid, but a string from now on!
-- Correctly scope loggers so that it plays nicely with others. [PR#223](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/223), [issue#164](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/164)
+- Correctly scope loggers so that it plays nicely with others. [PR#223](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/223), [issue#164](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/164) 
 - Removed pathlib from requirements [PR#224](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/224)
 - Moved from https://github.com/oliver-zehentleitner to https://github.com/oliver-zehentleitner/
 ### Fixed
-- asyncio.TimeoutError [issue#221](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/221)
+- asyncio.TimeoutError [issue#221](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/221) 
 ### Removed 
 - Support for the new compression feature introduced in websockets10.0 because the new feature is removed in further 
 websockets versions
@@ -583,7 +589,7 @@ websockets versions
 - "binance.com-coin-futures" to "binance.com-coin_futures"
 ### Fixed
 - fix "Default argument value is mutable" error of `subscribe_from_stream()`
-- No data received from binance.com-coin-futures with websockets==10.0 [issue#208](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/208)
+- No data received from binance.com-coin-futures with websockets==10.0 [issue#208](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/208) 
 
 ## 1.34.1
 ### Added
@@ -591,7 +597,7 @@ websockets versions
 ### Changed
 - Logging of `restclient._request()`
 ### Fixed
-- No data received from binance.com-futures with websockets==10.0 [issue#199](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/199)
+- No data received from binance.com-futures with websockets==10.0 [issue#199](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/199) 
 
 ## 1.34.0
 ### Changed
@@ -662,7 +668,7 @@ Now `stream_buffer` can be used as FIFO or LIFO stack, and it's possible to defi
 
 ## 1.27.0
 ### Added
-- `timeout=10` to [`get_result_by_request_id()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_result_by_request_id):
+- `timeout=10` to [`get_result_by_request_id()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_result_by_request_id): 
   Wait for `timeout` seconds to receive the requested result or return `False`
 - logging the use of stream_buffer or process_stream_data and the used OS plattform
 - individual `max_subscriptions_per_stream` for each endpoint
@@ -748,7 +754,7 @@ margin with more than one symbol. [issue#111](https://github.com/oliver-zehentle
  
 ## 1.19.0
 ### Added
-- [`UnicornFy`](https://github.com/oliver-zehentleitner/unicorn-fy) to
+- [`UnicornFy`](https://github.com/oliver-zehentleitner/unicorn-fy) to 
 [`create_stream(output='UnicornFy')`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream)
 ### Changed
 - Links in docstrings
@@ -797,7 +803,7 @@ new_api_secret=False
 - Isolated margin endpoints [issue #109](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/109)
 - Support for `@arr@@s1` [issue #101](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/101)
 - Added `symbol` to `print_stream_info()`
-- Added `api_key` and `api_secret` to `create_stream()` [issue #84](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/84)
+- Added `api_key` and `api_secret` to `create_stream()` [issue #84](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/84) 
 
 ## 1.16.9
 ### Added
@@ -826,7 +832,7 @@ new_api_secret=False
 - Loglevels
 ### Fixed
 - Fixed double slash bug when getting listen key for userDataStream. 
-[PR #87](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/87)
+[PR #87](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/87) 
 - Fixed RuntimeError in connection row 243 (added restart)
 
 ## 1.16.3
@@ -1057,7 +1063,7 @@ https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/31
 - get_monitoring_status_icinga()
 - _start_monitoring_api()
 ### Removed!
-- https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/tools/icinga/
+- https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/tools/icinga/ 
 (to https://github.com/oliver-zehentleitner/check_unicorn_monitoring_api)
 
 ## 1.5.0
@@ -1169,7 +1175,7 @@ available. but I recognized an API ban from GitHub in cause of too many requests
 ### Fixed
 - Bug in class UnicornFy: kline_close_time had the value kline_start_time
 ### Changed
-- Moved UnicornFy from UNICORN Binance WebSocket API to its own [repository](https://github.com/oliver-zehentleitner/unicorn-fy)
+- Moved UnicornFy from UNICORN Binance WebSocket API to its own [repository](https://github.com/oliver-zehentleitner/unicorn-fy) 
 - connection handling (improved)
 
 ## 1.2.6

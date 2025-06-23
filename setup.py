@@ -76,7 +76,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name=name,
-    version="2.10.0",
+    version="2.10.1",
     author="Oliver Zehentleitner",
     url="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api",
     description="A Python SDK to use the Binance Websocket API`s (com+testnet, "
@@ -115,7 +115,6 @@ setup(
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
         "Programming Language :: Cython",
-        "License :: Other/Proprietary License",
         "Intended Audience :: Developers",
         "Intended Audience :: Financial and Insurance Industry",
         "Intended Audience :: Information Technology",

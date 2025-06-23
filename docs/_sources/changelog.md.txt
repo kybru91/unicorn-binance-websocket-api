@@ -9,7 +9,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
-## 2.10.1.dev (development stage/unreleased/unstable)
+## 2.10.2.dev (development stage/unreleased/unstable)
+
+## 2.10.2
+### Fixed
+- restclient.py - Removed lucit licensing
 
 ## 2.10.1
 ### Added

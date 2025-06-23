@@ -55,10 +55,6 @@ class BinanceWebSocketApiRestclient(object):
                  debug: Optional[bool] = False,
                  disable_colorama: Optional[bool] = False,
                  exchange: Optional[str] = "binance.com",
-                 lucit_api_secret: Optional[str] = None,
-                 lucit_license_ini: str = None,
-                 lucit_license_profile: Optional[str] = None,
-                 lucit_license_token: Optional[str] = None,
                  restful_base_uri: Optional[str] = None,
                  show_secrets_in_logs: Optional[bool] = False,
                  socks5_proxy_server: Optional[str] = None,
@@ -76,10 +72,6 @@ class BinanceWebSocketApiRestclient(object):
         self.debug = debug
         self.disable_colorama = disable_colorama
         self.exchange = exchange
-        self.lucit_api_secret: Optional[str] = lucit_api_secret
-        self.lucit_license_ini = lucit_license_ini
-        self.lucit_license_profile = lucit_license_profile
-        self.lucit_license_token = lucit_license_token
         self.restful_base_uri = restful_base_uri
         self.show_secrets_in_logs = show_secrets_in_logs
         self.socks5_proxy_server = socks5_proxy_server
@@ -101,10 +93,6 @@ class BinanceWebSocketApiRestclient(object):
             self.ubra = BinanceRestApiManager(debug=self.debug,
                                               disable_colorama=self.disable_colorama,
                                               exchange=self.exchange,
-                                              lucit_api_secret=self.lucit_api_secret,
-                                              lucit_license_ini=self.lucit_license_ini,
-                                              lucit_license_profile=self.lucit_license_profile,
-                                              lucit_license_token=self.lucit_license_token,
                                               socks5_proxy_server=self.socks5_proxy_server,
                                               socks5_proxy_user=self.socks5_proxy_user,
                                               socks5_proxy_pass=self.socks5_proxy_pass,

@@ -4184,6 +4184,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                                "params": add_params,
                                "id": self.get_request_id()}
                 payload.append(add_payload)
+            if len(payload) > 0:
                 return payload
             else:
                 logger.error(f"BinanceWebSocketApiManager.split_payload() CEX result is None!")

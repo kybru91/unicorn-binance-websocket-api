@@ -227,6 +227,69 @@ class TestBinanceComManager(unittest.TestCase):
         self.assertIsNotNone(result, "split_payload returned None for 702 params (2x batch boundary)")
         self.assertEqual(len(result), 2)
 
+    def test_stream_is_restarting_clears_payload_and_resubscribes(self):
+        print(f"test_stream_is_restarting_clears_payload_and_resubscribes():")
+        ubwa = self.__class__.ubwa
+        stream_id = ubwa.get_new_uuid_id()
+        # Inject a minimal stream_list entry for a regular CEX market-data stream
+        with ubwa.stream_list_lock:
+            ubwa.stream_list[stream_id] = {
+                'status': 'running',
+                'payload': [{'method': 'SUBSCRIBE', 'params': ['stale@trade'], 'id': 99}],
+                'api': False,
+                'channels': ['trade'],
+                'markets': ['bnbbtc', 'ethbtc'],
+                'subscriptions': 2,
+            }
+        ubwa._stream_is_restarting(stream_id=stream_id)
+        # Stale payload must be gone, replaced by fresh re-subscribe
+        payload = ubwa.stream_list[stream_id]['payload']
+        self.assertIsNotNone(payload)
+        self.assertGreater(len(payload), 0, "Re-subscribe payload must be queued on reconnect")
+        all_params = [p for batch in payload for p in batch['params']]
+        self.assertIn('bnbbtc@trade', all_params)
+        self.assertIn('ethbtc@trade', all_params)
+        self.assertNotIn('stale@trade', all_params, "Stale payload must be cleared before re-subscribe")
+        del ubwa.stream_list[stream_id]
+
+    def test_stream_is_restarting_skips_resubscribe_for_userdata(self):
+        print(f"test_stream_is_restarting_skips_resubscribe_for_userdata():")
+        ubwa = self.__class__.ubwa
+        stream_id = ubwa.get_new_uuid_id()
+        with ubwa.stream_list_lock:
+            ubwa.stream_list[stream_id] = {
+                'status': 'running',
+                'payload': [{'method': 'SUBSCRIBE', 'params': ['stale@trade'], 'id': 99}],
+                'api': False,
+                'channels': ['!userData'],
+                'markets': ['arr'],
+                'subscriptions': 0,
+            }
+        ubwa._stream_is_restarting(stream_id=stream_id)
+        # UserData streams use listen-key URI — payload must be cleared and stay empty
+        self.assertEqual(ubwa.stream_list[stream_id]['payload'], [],
+                         "UserData streams must not get a re-subscribe payload")
+        del ubwa.stream_list[stream_id]
+
+    def test_stream_is_restarting_skips_resubscribe_for_api_streams(self):
+        print(f"test_stream_is_restarting_skips_resubscribe_for_api_streams():")
+        ubwa = self.__class__.ubwa
+        stream_id = ubwa.get_new_uuid_id()
+        with ubwa.stream_list_lock:
+            ubwa.stream_list[stream_id] = {
+                'status': 'running',
+                'payload': [{'method': 'SUBSCRIBE', 'params': ['stale@trade'], 'id': 99}],
+                'api': True,
+                'channels': ['trade'],
+                'markets': ['bnbbtc'],
+                'subscriptions': 0,
+            }
+        ubwa._stream_is_restarting(stream_id=stream_id)
+        # WebSocket-API streams must not get a SUBSCRIBE re-queue
+        self.assertEqual(ubwa.stream_list[stream_id]['payload'], [],
+                         "WebSocket-API streams must not get a re-subscribe payload")
+        del ubwa.stream_list[stream_id]
+
     def test_fill_up_space_centered(self):
         print(f"test_fill_up_space_centered():")
         result = "==========test text=========="

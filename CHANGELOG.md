@@ -18,6 +18,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Updated websockets exception handling: `websockets.InvalidStatusCode` → `websockets.exceptions.InvalidStatus`
   with `.response.status_code` attribute access (websockets 14 API change)
 - Simplified `connection_settings.py`: removed Python 3.8 version guard, now uses `typing.Type` unconditionally
+### Fixed
+- On reconnect, the payload queue is now cleared and the full current subscription state is
+  re-queued as a fresh SUBSCRIBE message. Previously, stale queued payloads from before the
+  disconnect could cause duplicate or inconsistent subscriptions on the new connection.
+  UserData streams (listen-key URI) and WebSocket-API streams are unaffected. (issue #374 follow-up)
 ### Removed
 - Python 3.8 support and CI job
 - DEX support (`binance.org`, `binance.org-testnet`): Binance Chain has been discontinued. Removed

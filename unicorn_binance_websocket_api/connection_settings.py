@@ -38,17 +38,11 @@
 # IN THE SOFTWARE.
 
 from enum import Enum
+from typing import Type
 
-import sys
-if sys.version_info >= (3, 9):
-    from typing import Type
-    MAX_SUBSCRIPTIONS_PER_STREAM: Type[int] = int
-    WEBSOCKET_BASE_URI: Type[str] = str
-    WEBSOCKET_API_BASE_URI: Type[str] = str
-else:
-    MAX_SUBSCRIPTIONS_PER_STREAM = int
-    WEBSOCKET_BASE_URI = str
-    WEBSOCKET_API_BASE_URI = str
+MAX_SUBSCRIPTIONS_PER_STREAM: Type[int] = int
+WEBSOCKET_BASE_URI: Type[str] = str
+WEBSOCKET_API_BASE_URI: Type[str] = str
 
 
 class Exchanges(str, Enum):

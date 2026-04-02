@@ -211,6 +211,22 @@ class TestBinanceComManager(unittest.TestCase):
         self.assertEqual(str(self.__class__.ubwa.create_payload(stream_id, "subscribe",
                                                                 ['kline_1m'], ['bnbbtc'])), result)
 
+    def test_split_payload_exact_batch_multiple(self):
+        print(f"test_split_payload_exact_batch_multiple():")
+        # Regression test for issue #374: split_payload() returned None when len(params) was an
+        # exact multiple of 351 (max_items_per_request + 1), because all batches were flushed
+        # inside the loop and add_params was empty afterwards.
+        params_351 = [f"market{i}@trade" for i in range(351)]
+        result = self.__class__.ubwa.split_payload(params_351, "SUBSCRIBE")
+        self.assertIsNotNone(result, "split_payload returned None for 351 params (1x batch boundary)")
+        self.assertEqual(len(result), 1)
+        self.assertEqual(len(result[0]['params']), 351)
+
+        params_702 = [f"market{i}@trade" for i in range(702)]
+        result = self.__class__.ubwa.split_payload(params_702, "SUBSCRIBE")
+        self.assertIsNotNone(result, "split_payload returned None for 702 params (2x batch boundary)")
+        self.assertEqual(len(result), 2)
+
     def test_fill_up_space_centered(self):
         print(f"test_fill_up_space_centered():")
         result = "==========test text=========="

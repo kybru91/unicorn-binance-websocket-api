@@ -58,6 +58,14 @@ Tasks collected from codebase analysis (2026-04-01). Ordered by priority within 
 - O(n×m), false-positive-prone, runs on every received message for WS API streams
 - Fix: parse JSON once, extract `id` field directly, use dict lookup
 
+### [ ] Modernize SOCKS5 proxy using websockets native support
+- Current implementation in `connection.py` manually creates a `socks.socksocket()` (PySocks) and passes it
+  via `sock=` to `websockets.connect()` — a low-level workaround
+- websockets 14 supports proxies natively via the `proxy` parameter in `connect()`
+- Replace the manual PySocks socket setup with `proxy="socks5://user:pass@host:port"` (or similar)
+- Allows removing the manual `netloc` parsing, `host:port` split, and `socks.socksocket` setup in `__aenter__`
+- May allow simplifying or removing the PySocks (`socks`) dependency
+
 ### [ ] Remove wildcard imports
 - `from .exceptions import *` in `manager.py`, `connection.py`, `sockets.py`
 - Replace with explicit imports

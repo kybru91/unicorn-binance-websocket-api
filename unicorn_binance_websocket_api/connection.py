@@ -124,7 +124,7 @@ class BinanceWebSocketApiConnection(object):
                                  ping_interval=self.ping_interval,
                                  ping_timeout=self.ping_timeout,
                                  close_timeout=self.close_timeout,
-                                 extra_headers={'User-Agent': str(self.manager.get_user_agent())})
+                                 additional_headers={'User-Agent': str(self.manager.get_user_agent())})
             logger.info(f"BinanceWebSocketApiConnection.__aenter__({self.stream_id}, {self.channels}"
                         f", {self.markets}) - No proxy used!")
         else:
@@ -163,7 +163,7 @@ class BinanceWebSocketApiConnection(object):
                                  ping_interval=self.ping_interval,
                                  ping_timeout=self.ping_timeout,
                                  close_timeout=self.close_timeout,
-                                 extra_headers={'User-Agent': str(self.manager.get_user_agent())})
+                                 additional_headers={'User-Agent': str(self.manager.get_user_agent())})
             logger.info(f"BinanceWebSocketApiConnection.__aenter__(\"{self.stream_id}, {self.channels}"
                         f", {self.markets}\") - Using proxy: {self.manager.socks5_proxy_address} "
                         f"{self.manager.socks5_proxy_port} SSL: {self.manager.socks5_proxy_ssl_verification}")

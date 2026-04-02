@@ -38,7 +38,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from .connection_settings import CEX_EXCHANGES, DEX_EXCHANGES, CONNECTION_SETTINGS
+from .connection_settings import CEX_EXCHANGES, CONNECTION_SETTINGS
 from .exceptions import *
 from .restclient import BinanceWebSocketApiRestclient
 from .restserver import BinanceWebSocketApiRestServer
@@ -87,11 +87,8 @@ class BinanceWebSocketApiManager(threading.Thread):
     com-isolated_margin+testnet, com-futures+testnet, com-coin_futures, us, "tr", dex/chain+testnet) in a simple, fast,
     flexible, robust and fully-featured way.
 
-    This library supports two different kind of websocket endpoints:
-
-        - CEX (Centralized exchange): "binance.com", "binance.vision", "binance.je", "binance.us", "trbinance.com"
-
-        - DEX (Decentralized exchange): "binance.org"
+    This library supports the following CEX (Centralized exchange) websocket endpoints:
+    "binance.com", "binance.vision", "binance.us", "trbinance.com"
 
     Binance.com websocket API documentation:
 
@@ -112,10 +109,6 @@ class BinanceWebSocketApiManager(threading.Thread):
     TRBinance.com websocket API documentation:
 
         - https://www.trbinance.com/apidocs/#general-wss-information
-
-    Binance.org websocket API documentation:
-
-        - https://docs.binance.org/api-reference/dex-api/ws-connection.html
 
     :param process_asyncio_queue: Insert your Asyncio function into the same AsyncIO loop in which the websocket data
                                   is received. This method guarantees the fastest possible asynchronous processing of
@@ -142,8 +135,8 @@ class BinanceWebSocketApiManager(threading.Thread):
     :type process_stream_data_async: Optional[Callable]
     :param exchange: Select binance.com, binance.com-testnet, binance.com-margin, binance.com-margin-testnet,
                      binance.com-isolated_margin, binance.com-isolated_margin-testnet, binance.com-futures,
-                     binance.com-futures-testnet, binance.com-coin_futures, binance.us, trbinance.com,
-                     binance.org, binance.org-testnet (default: binance.com)
+                     binance.com-futures-testnet, binance.com-coin_futures, binance.us, trbinance.com
+                     (default: binance.com)
     :type exchange: str
     :param warn_on_update: set to `False` to disable the update warning of UBWA and also in UBRA used as submodule.
     :type warn_on_update: bool
@@ -211,7 +204,7 @@ class BinanceWebSocketApiManager(threading.Thread):
     :type websocket_api_base_uri:  str
     :param max_subscriptions_per_stream: Override the `max_subscriptions_per_stream` value. Example: 1024
     :type max_subscriptions_per_stream:  int
-    :param exchange_type: Override the exchange type. Valid options are: 'cex', 'dex'
+    :param exchange_type: Override the exchange type. Valid option: 'cex'
     :type exchange_type:  str
     :param socks5_proxy_server: Set this to activate the usage of a socks5 proxy. Example: '127.0.0.1:9050'
     :type socks5_proxy_server:  str
@@ -246,7 +239,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                  websocket_base_uri: str = None,
                  websocket_api_base_uri: str = None,
                  max_subscriptions_per_stream: Optional[int] = None,
-                 exchange_type: Literal['cex', 'dex', None] = None,
+                 exchange_type: Literal['cex', None] = None,
                  socks5_proxy_server: str = None,
                  socks5_proxy_user: str = None,
                  socks5_proxy_pass: str = None,
@@ -314,16 +307,9 @@ class BinanceWebSocketApiManager(threading.Thread):
         self.websocket_base_uri = websocket_base_uri or CONNECTION_SETTINGS[self.exchange][1]
         self.websocket_api_base_uri = websocket_api_base_uri or CONNECTION_SETTINGS[self.exchange][2]
         self.restful_base_uri = restful_base_uri
-        self.exchange_type: Literal['cex', 'dex', None] = exchange_type
+        self.exchange_type: Literal['cex', None] = exchange_type
         if self.exchange_type is None:
-            if self.exchange in DEX_EXCHANGES:
-                self.exchange_type = "dex"
-            elif self.exchange in CEX_EXCHANGES:
-                self.exchange_type = "cex"
-            else:
-                logger.critical(f"BinanceWebSocketApiManager.is_exchange_type() - Can not determine exchange type for"
-                                f"exchange={str(self.exchange)}, resetting to default 'cex'")
-                self.exchange_type = "cex"
+            self.exchange_type = "cex"
         logger.info(f"Using exchange_type '{self.exchange_type}' ...")
 
         self.socks5_proxy_server = socks5_proxy_server
@@ -349,7 +335,6 @@ class BinanceWebSocketApiManager(threading.Thread):
         self.binance_api_status = {'weight': None,
                                    'timestamp': 0,
                                    'status_code': None}
-        self.dex_user_address = None
         self.event_loops = {}
         self.frequent_checks_list = {}
         self.frequent_checks_list_lock = threading.Lock()
@@ -790,7 +775,6 @@ class BinanceWebSocketApiManager(threading.Thread):
                                            'api': copy.deepcopy(api),
                                            'api_key': copy.deepcopy(api_key),
                                            'api_secret': copy.deepcopy(api_secret),
-                                           'dex_user_address': copy.deepcopy(self.dex_user_address),
                                            'ping_interval': copy.deepcopy(ping_interval),
                                            'ping_timeout': copy.deepcopy(ping_timeout),
                                            'close_timeout': copy.deepcopy(close_timeout),
@@ -1490,69 +1474,7 @@ class BinanceWebSocketApiManager(threading.Thread):
             if type(markets) is str:
                 markets = [markets]
         payload = []
-        if self.is_exchange_type("dex"):
-            if method == "subscribe" and channels is not False:
-                for channel in channels:
-                    add_payload = {"method": method,
-                                   "topic": channel}
-                    symbols = []
-                    if channel == "allMiniTickers" or \
-                            channel == "allTickers" or \
-                            channel == "blockheight":
-                        add_payload["symbols"] = ["$all"]
-                        payload.append(add_payload)
-                        continue
-                    if markets:
-                        for market in markets:
-                            if market == "allMiniTickers" or \
-                                    market == "allTickers" or \
-                                    market == "blockheight":
-                                add_payload_from_market = {"method": method,
-                                                           "topic": market,
-                                                           "symbols": ["$all"]}
-                                payload.append(add_payload_from_market)
-                                continue
-                            elif re.match(r'[a-zA-Z0-9]{41,43}', market) is not None:
-                                if self.stream_list[stream_id]['dex_user_address'] is None:
-                                    self.stream_list[stream_id]['dex_user_address'] = market
-                            else:
-                                symbols.append(market)
-                    try:
-                        if self.stream_list[stream_id]["dex_user_address"] is not None:
-                            add_payload["address"] = self.stream_list[stream_id]["dex_user_address"]
-                            payload.append(add_payload)
-                    except KeyError:
-                        pass
-                    if len(symbols) > 0:
-                        add_payload["symbols"] = symbols
-                        payload.append(add_payload)
-            elif method == "unsubscribe":
-                if markets:
-                    add_payload = {"method": method}
-                    for market in markets:
-                        if re.match(r'[a-zA-Z0-9]{41,43}', market) is not None:
-                            if self.stream_list[stream_id]['dex_user_address'] is None:
-                                with self.stream_list_lock:
-                                    logger.debug(f"BinanceWebSocketApiManager.create_payload() - `stream_list_lock` "
-                                                 f"was entered!")
-                                    self.stream_list[stream_id]['dex_user_address'] = market
-                                    logger.debug(f"BinanceWebSocketApiManager.create_payload() - Leaving "
-                                                 f"`stream_list_lock`!")
-                                markets.remove(market)
-                    if len(markets) > 0:
-                        add_payload["symbols"] = markets
-                        payload.append(add_payload)
-                if channels:
-                    for channel in channels:
-                        add_payload = {"method": method,
-                                       "topic": channel}
-                        payload.append(add_payload)
-            else:
-                logger.critical("BinanceWebSocketApiManager.create_payload(" + str(stream_id) + ", "
-                                + str(channels) + ", " + str(markets) + ") - Allowed values for `method`: `subscribe` "
-                                "or `unsubscribe`!")
-                return None
-        elif self.is_exchange_type("cex"):
+        if self.is_exchange_type("cex"):
             final_market = "@arr"
             if markets:
                 for market in markets:
@@ -1669,9 +1591,6 @@ class BinanceWebSocketApiManager(threading.Thread):
 
                 ``binance_websocket_api_manager.create_stream(["arr"], ["!userData"], api_key="aaa", api_secret="bbb", symbols="ankrbtc")``
 
-            Example DEX:
-
-                ``binance_websocket_api_manager.create_stream(['orders', 'transfers', 'accounts'], binance_dex_user_address)``
 
         To create a multiplexed stream which includes also `!miniTicker@arr`, `!ticker@arr`, `!forceOrder@arr` or
         `!bookTicker@arr` you just need to add `!bookTicker` to the channels list - don't add `arr` (cex) or `$all`
@@ -1803,13 +1722,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                     or market == "$all":
                 markets_new.append(market)
             else:
-                if self.is_exchange_type('cex'):
-                    markets_new.append(str(market).lower())
-                elif self.is_exchange_type('dex'):
-                    if re.match(r'[a-zA-Z0-9]{41,43}', market) is None:
-                        markets_new.append(str(market).upper())
-                    else:
-                        markets_new.append(str(market))
+                markets_new.append(str(market).lower())
         logger.info(f"BinanceWebSocketApiManager.create_stream({str(channels)}, {str(markets_new)}, {str(stream_label)}"
                     f", {str(stream_buffer_name)}, {str(symbols)}, {str(api)}) with stream_id"
                     f"={stream_id}")
@@ -2021,101 +1934,50 @@ class BinanceWebSocketApiManager(threading.Thread):
                         logger.debug(f"BinanceWebSocketApiManager.create_websocket_uri() - Leaving "
                                      f"`stream_list_lock`")
                 return self.websocket_base_uri + "ws/" + channels[0] + "@" + markets[0]
-            elif self.is_exchange_type("dex"):
-                if re.match(r'[a-zA-Z0-9]{41,43}', markets[0]) is not None:
-                    try:
-                        if self.stream_list[stream_id]['dex_user_address'] is None:
-                            self.stream_list[stream_id]['dex_user_address'] = markets[0]
-                        if self.stream_list[stream_id]['dex_user_address'] != markets[0]:
-                            logger.error("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) + ", " +
-                                         str(markets) + ", " + ", " + str(symbols) + ") - Error: once set, the "
-                                         "dex_user_address is not allowed to get changed anymore!")
-                            return None
-                    except KeyError:
-                        pass
-                    add_payload = {"method": "subscribe",
-                                   "topic": channels[0],
-                                   "address": markets[0]}
-                    payload.append(add_payload)
-                    if stream_id:
-                        with self.stream_list_lock:
-                            self.stream_list[stream_id]['payload'] = payload
-                        subscriptions = self.get_number_of_subscriptions(stream_id)
-                        with self.stream_list_lock:
-                            logger.debug(
-                                f"BinanceWebSocketApiManager.create_websocket_uri() response - `stream_list_lock` "
-                                f"was entered!")
-                            self.stream_list[stream_id]['subscriptions'] = subscriptions
-                            logger.debug(f"BinanceWebSocketApiManager.create_websocket_uri() - Leaving "
-                                         f"`stream_list_lock`")
-                    return self.websocket_base_uri + "ws/" + markets[0]
-                elif markets[0] != "" and channels[0] != "":
-                    return self.websocket_base_uri + "ws/" + markets[0] + "@" + channels[0]
-                else:
-                    logger.error("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) + ", " +
-                                 str(markets) + ", " + ", " + str(symbols) + ") - Error: not able to create websocket "
-                                 "URI for DEX")
-                    return None
-        if self.is_exchange_type("dex"):
-            query = "ws"
-            if stream_id:
-                payload = self.create_payload(stream_id, "subscribe", channels=channels, markets=markets)
-                with self.stream_list_lock:
-                    self.stream_list[stream_id]['payload'] = payload
-                subscriptions = self.get_number_of_subscriptions(stream_id)
-                with self.stream_list_lock:
-                    logger.debug(
-                        f"BinanceWebSocketApiManager.create_websocket_uri() response - `stream_list_lock` "
-                        f"was entered!")
-                    self.stream_list[stream_id]['subscriptions'] = subscriptions
-                    logger.debug(f"BinanceWebSocketApiManager.create_websocket_uri() - Leaving "
-                                 f"`stream_list_lock`")
-            return self.websocket_base_uri + str(query)
+        query = "stream?streams="
+        final_market = "@arr"
+        market = ""
+        channel = ""
+        for market in markets:
+            if "arr@" in market:
+                final_market = "@" + market
+        final_channel = "@arr"
+        for channel in channels:
+            if "arr@" in channel:
+                final_channel = "@" + channel
+        for channel in channels:
+            if channel == "!userData":
+                logger.error("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) + ", " +
+                             str(markets) + ", " + ", " + str(symbols) + ") - Can not create "
+                             "'outboundAccountInfo' in a multi channel socket! "
+                             "Unfortunately Binance only stream it in a single stream socket! ./"
+                             "Use create_stream([\"arr\"], [\"!userData\"]) to "
+                             "initiate an extra connection.")
+                return None
+        for market in markets:
+            if market == "!userData":
+                logger.error("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) + ", " +
+                             str(markets) + ", " + ", " + str(symbols) + ") - Can not create "
+                             "'outboundAccountInfo' in a multi channel socket! "
+                             "Unfortunately Binance only stream it in a single stream socket! ./"
+                             "Use create_stream([\"arr\"], [\"!userData\"]) to "
+                             "initiate an extra connection.")
+                return None
+        if "!" in channel:
+            query += channel + final_market
+        elif "!" in market:
+            query += market + final_channel
         else:
-            query = "stream?streams="
-            final_market = "@arr"
-            market = ""
-            channel = ""
-            for market in markets:
-                if "arr@" in market:
-                    final_market = "@" + market
-            final_channel = "@arr"
-            for channel in channels:
-                if "arr@" in channel:
-                    final_channel = "@" + channel
-            for channel in channels:
-                if channel == "!userData":
-                    logger.error("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) + ", " +
-                                 str(markets) + ", " + ", " + str(symbols) + ") - Can not create "
-                                 "'outboundAccountInfo' in a multi channel socket! "
-                                 "Unfortunately Binance only stream it in a single stream socket! ./"
-                                 "Use create_stream([\"arr\"], [\"!userData\"]) to "
-                                 "initiate an extra connection.")
-                    return None
-            for market in markets:
-                if market == "!userData":
-                    logger.error("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) + ", " +
-                                 str(markets) + ", " + ", " + str(symbols) + ") - Can not create "
-                                 "'outboundAccountInfo' in a multi channel socket! "
-                                 "Unfortunately Binance only stream it in a single stream socket! ./"
-                                 "Use create_stream([\"arr\"], [\"!userData\"]) to "
-                                 "initiate an extra connection.")
-                    return None
-            if "!" in channel:
-                query += channel + final_market
-            elif "!" in market:
-                query += market + final_channel
-            else:
-                query += market.lower() + "@" + channel
-            try:
-                if self.subscribe_to_stream(stream_id=stream_id, markets=markets, channels=channels) is False:
-                    return None
-            except KeyError:
-                pass
-            logger.info("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) + ", " +
-                        str(markets) + ", " + ", " + str(symbols) + ") - Created websocket URI for stream_id=" +
-                        str(stream_id) + " is " + self.websocket_base_uri + str(query))
-            return self.websocket_base_uri + str(query)
+            query += market.lower() + "@" + channel
+        try:
+            if self.subscribe_to_stream(stream_id=stream_id, markets=markets, channels=channels) is False:
+                return None
+        except KeyError:
+            pass
+        logger.info("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) + ", " +
+                    str(markets) + ", " + ", " + str(symbols) + ") - Created websocket URI for stream_id=" +
+                    str(stream_id) + " is " + self.websocket_base_uri + str(query))
+        return self.websocket_base_uri + str(query)
 
     def delete_listen_key_by_stream_id(self, stream_id) -> bool:
         """
@@ -2472,7 +2334,7 @@ class BinanceWebSocketApiManager(threading.Thread):
 
     def get_exchange(self):
         """
-        Get the name of the used exchange like "binance.com" or "binance.org-testnet"
+        Get the name of the used exchange like "binance.com" or "binance.com-futures"
 
         :return: str
         """
@@ -3177,12 +3039,7 @@ class BinanceWebSocketApiManager(threading.Thread):
         """
         if request_id is None:
             request_id = self.get_request_id()
-        if self.is_exchange_type('dex'):
-            logger.error("BinanceWebSocketApiManager.get_stream_subscriptions(" + str(stream_id) + ", " +
-                         str(request_id) + ") DEX websockets dont support the listing of subscriptions! Request not "
-                         "sent!")
-            return None
-        elif self.is_exchange_type('cex'):
+        if self.is_exchange_type('cex'):
             payload = {"method": "LIST_SUBSCRIPTIONS",
                        "id": request_id}
             try:
@@ -3483,7 +3340,7 @@ class BinanceWebSocketApiManager(threading.Thread):
         """
         Check the exchange type!
 
-        :param exchange_type: Valid types are `dex` and `cex`!
+        :param exchange_type: Valid type: `cex`
         :type exchange_type: str
         :return: bool
         """
@@ -3653,7 +3510,6 @@ class BinanceWebSocketApiManager(threading.Thread):
         status_row = ""
         payload_row = ""
         symbol_row = ""
-        dex_user_address_row = ""
         last_static_ping_listen_key = ""
         stream_info = self.get_stream_info(stream_id)
         if add_string is None:
@@ -3721,8 +3577,6 @@ class BinanceWebSocketApiManager(threading.Thread):
             symbol_row = " symbols:" + str(stream_info['symbols']) + "\r\n"
         if self.stream_list[stream_id]["payload"]:
             payload_row = " payload: " + str(self.stream_list[stream_id]["payload"]) + "\r\n"
-        if self.stream_list[stream_id]["dex_user_address"] is not None:
-            dex_user_address_row = " user_address: " + str(self.stream_list[stream_id]["dex_user_address"]) + "\r\n"
         if self.stream_list[stream_id]["stream_label"] is not None:
             stream_label_row = " stream_label: " + self.stream_list[stream_id]["stream_label"] + "\r\n"
         if isinstance(stream_info['ping_interval'], int):
@@ -3762,7 +3616,6 @@ class BinanceWebSocketApiManager(threading.Thread):
                   " subscriptions: " + str(self.stream_list[stream_id]['subscriptions']) + "\r\n" +
                   str(payload_row) +
                   str(status_row) +
-                  str(dex_user_address_row) +
                   f" ping_interval: {ping_interval}\r\n"
                   f" ping_timeout: {ping_timeout}\r\n"
                   f" close_timeout: {close_timeout}\r\n"
@@ -4192,19 +4045,6 @@ class BinanceWebSocketApiManager(threading.Thread):
                 if not loop.is_closed():
                     loop.close()
 
-    def set_private_dex_config(self, binance_dex_user_address):
-        """
-        Set binance_dex_user_address
-
-        Is going to be the default user_address, once the websocket is created with this default value, it's not possible
-        to change it. If you plan to use different user_address It's recommended to not use this method! Just provide the
-        user_address with create_stream() in the market parameter.
-
-        :param binance_dex_user_address: Binance DEX user address
-        :type binance_dex_user_address: str
-        """
-        self.dex_user_address = binance_dex_user_address
-
     def set_heartbeat(self, stream_id) -> None:
         """
         Set heartbeat for a specific thread (should only be done by the stream itself)
@@ -4358,10 +4198,6 @@ class BinanceWebSocketApiManager(threading.Thread):
             else:
                 logger.error(f"BinanceWebSocketApiManager.split_payload() CEX result is None!")
                 return None
-        elif self.is_exchange_type('dex'):
-            logger.error(f"BinanceWebSocketApiManager.split_payload() DEX result is None! (Dev: Todo!)")
-            # Todo:
-            #  return None
         else:
             logger.error(f"BinanceWebSocketApiManager.split_payload() result is None!")
             return None
@@ -4464,15 +4300,14 @@ class BinanceWebSocketApiManager(threading.Thread):
         except KeyError:
             return False
         if delete_listen_key:
-            if self.exchange_type != "dex":
-                try:
-                    self.delete_listen_key_by_stream_id(stream_id)
-                except requests.exceptions.ReadTimeout as error_msg:
-                    logger.debug(f"BinanceWebSocketApiManager.stop_stream() - Not able to delete listen_key - "
-                                 f"requests.exceptions.ReadTimeout: {error_msg}")
-                except requests.exceptions.ConnectionError as error_msg:
-                    logger.debug(f"BinanceWebSocketApiManager.stop_stream() - Not able to delete listen_key - "
-                                 f"requests.exceptions.ConnectionError: {error_msg}")
+            try:
+                self.delete_listen_key_by_stream_id(stream_id)
+            except requests.exceptions.ReadTimeout as error_msg:
+                logger.debug(f"BinanceWebSocketApiManager.stop_stream() - Not able to delete listen_key - "
+                             f"requests.exceptions.ReadTimeout: {error_msg}")
+            except requests.exceptions.ConnectionError as error_msg:
+                logger.debug(f"BinanceWebSocketApiManager.stop_stream() - Not able to delete listen_key - "
+                             f"requests.exceptions.ConnectionError: {error_msg}")
         return True
 
     def _crash_stream(self, stream_id, error_msg=None):
@@ -4634,10 +4469,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                     or market == "$all":
                 markets_new.append(market)
             else:
-                if self.is_exchange_type('dex'):
-                    markets_new.append(str(market).upper())
-                elif self.is_exchange_type('cex'):
-                    markets_new.append(str(market).lower())
+                markets_new.append(str(market).lower())
         with self.stream_list_lock:
             logger.debug(f"BinanceWebSocketApiManager.subscribe_to_stream() - `stream_list_lock` was entered!")
             self.stream_list[stream_id]['markets'] = list(set(self.stream_list[stream_id]['markets'] + markets_new))

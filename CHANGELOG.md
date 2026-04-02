@@ -10,6 +10,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.10.2.dev (development stage/unreleased/unstable)
+### Removed
+- DEX support (`binance.org`, `binance.org-testnet`): Binance Chain has been discontinued. Removed
+  `Exchanges.BINANCE_ORG` and `Exchanges.BINANCE_ORG_TESTNET` from `connection_settings.py`, all
+  DEX-specific code paths in `manager.py` and `sockets.py`, the `set_private_dex_config()` method,
+  the `dex_user_address` stream state field, and all related tests and examples.
 
 ## 2.10.2
 ### Fixed

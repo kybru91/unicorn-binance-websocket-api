@@ -24,7 +24,7 @@
 [Contributing](#contributing) | [Disclaimer](#disclaimer)
 
 A Python SDK to use the Binance Websocket API`s (com+testnet, com-margin+testnet, com-isolated_margin+testnet, 
-com-futures+testnet, com-coin_futures, us, tr, dex/chain+testnet) in a simple, fast, flexible, robust and 
+com-futures+testnet, com-coin_futures, us, tr) in a simple, fast, flexible, robust and 
 fully-featured way. 
 
 Part of '[UNICORN Binance Suite](https://github.com/oliver-zehentleitner/unicorn-binance-suite)'.
@@ -243,19 +243,15 @@ provides an API to the Binance Websocket API`s of
 [Binance Futures](https://binance-docs.github.io/apidocs/futures/en/#websocket-market-streams) 
 ([+Testnet](https://testnet.binancefuture.com)), 
 [Binance COIN-M Futures](https://binance-docs.github.io/apidocs/delivery/en/#change-log),
-[Binance US](https://github.com/binance-us/binance-official-api-docs), 
-[Binance TR](https://www.trbinance.com/apidocs), 
-[Binance DEX](https://docs.binance.org/api-reference/dex-api/ws-connection.html) and 
-[Binance DEX Testnet](https://docs.binance.org/api-reference/dex-api/ws-connection.html) and supports sending requests 
+[Binance US](https://github.com/binance-us/binance-official-api-docs) and
+[Binance TR](https://www.trbinance.com/apidocs) and supports sending requests 
 to the [Binance Websocket API](https://developers.binance.com/docs/binance-trading-api/websocket_api) and the streaming 
-of all public streams like trade, kline, ticker, depth, bookTicker, forceOrder, compositeIndex, blockheight etc. and 
+of all public streams like trade, kline, ticker, depth, bookTicker, forceOrder, compositeIndex etc. and 
 also all private userData streams which needs to be used with a valid 
 [api_key and api_secret](https://technopathy.club/how-to-create-a-binance-api-key-and-api-secret-3bb5f47e360d)
 from the Binance Exchange [www.binance.com](https://www.binance.com/), 
 [testnet.binance.vision](https://testnet.binance.vision/) or 
-[www.binance.us](https://www.binance.us) - for the DEX you need a user address from 
-[www.binance.org](https://www.binance.org/en/create) or [testnet.binance.org](https://testnet.binance.org/en/create), 
-and you can [get funds](https://www.binance.vision/tutorials/binance-dex-funding-your-testnet-account) for the testnet.
+[www.binance.us](https://www.binance.us).
 
 Use the [UNICORN Binance REST API](https://github.com/oliver-zehentleitner/unicorn-binance-rest-api) in combination. 
 
@@ -287,8 +283,6 @@ Use the [UNICORN Binance REST API](https://github.com/oliver-zehentleitner/unico
 | [Binance Coin-M Futures](https://www.binance.com)                  | `binance.com-coin_futures`            | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
 | [Binance US](https://www.binance.us)                               | `binance.us`                          | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
 | [Binance TR](https://www.trbinance.com)                            | `trbinance.com`                       | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
-| [Binance DEX](https://www.binance.org)                             | `binance.org`                         | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
-| [Binance DEX Testnet](https://testnet.binance.org)                 | `binance.org-testnet`                 | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
 
 - Streams are processing asynchronous/concurrent (Python asyncio) and each stream is started in a separate thread, so 
 you don't need to deal with asyncio in your code! But you can consume with 

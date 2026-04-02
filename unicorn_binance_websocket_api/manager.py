@@ -4365,7 +4365,27 @@ class BinanceWebSocketApiManager(threading.Thread):
             with self.stream_list_lock:
                 logger.debug(f"BinanceWebSocketApiManager._stream_is_restarting() - `stream_list_lock` was entered!")
                 self.stream_list[stream_id]['status'] = "restarting"
+                self.stream_list[stream_id]['payload'] = []
                 logger.debug(f"BinanceWebSocketApiManager._stream_is_restarting() - Leaving `stream_list_lock`!")
+            # For regular CEX market-data streams, re-queue the full current subscription state so the
+            # new connection picks up all dynamic subscribe/unsubscribe changes made since stream creation.
+            # UserData streams (listen key URI) and WebSocket-API streams need no SUBSCRIBE message.
+            if (self.is_exchange_type('cex')
+                    and self.stream_list[stream_id]['api'] is False
+                    and '!userData' not in self.stream_list[stream_id]['channels']
+                    and '!userData' not in self.stream_list[stream_id]['markets']):
+                payload = self.create_payload(stream_id, "subscribe",
+                                              channels=self.stream_list[stream_id]['channels'],
+                                              markets=self.stream_list[stream_id]['markets'])
+                if payload:
+                    with self.stream_list_lock:
+                        logger.debug(f"BinanceWebSocketApiManager._stream_is_restarting() - "
+                                     f"`stream_list_lock` was entered!")
+                        self.stream_list[stream_id]['payload'] = payload
+                        logger.debug(f"BinanceWebSocketApiManager._stream_is_restarting() - "
+                                     f"Leaving `stream_list_lock`!")
+                    logger.info(f"BinanceWebSocketApiManager._stream_is_restarting({stream_id}) - "
+                                f"Re-queued {len(payload)} subscription payload(s) for reconnect.")
             return True
         except KeyError:
             return False

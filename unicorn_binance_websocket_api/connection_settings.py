@@ -63,11 +63,8 @@ class Exchanges(str, Enum):
     BINANCE_FUTURES_TESTNET = "binance.com-futures-testnet"
     BINANCE_US = "binance.us"
     TRBINANCE = "trbinance.com"
-    BINANCE_ORG = "binance.org"
-    BINANCE_ORG_TESTNET = "binance.org-testnet"
 
 
-DEX_EXCHANGES = [Exchanges.BINANCE_ORG, Exchanges.BINANCE_ORG_TESTNET]
 CEX_EXCHANGES = [
     Exchanges.BINANCE,
     Exchanges.BINANCE_TESTNET,
@@ -97,6 +94,4 @@ CONNECTION_SETTINGS = {
     Exchanges.BINANCE_COIN_FUTURES: (200, "wss://dstream.binance.com/", None),
     Exchanges.BINANCE_US: (1024, "wss://stream.binance.us:9443/", None),
     Exchanges.TRBINANCE: (1024, "wss://stream-cloud.trbinance.com/", None),
-    Exchanges.BINANCE_ORG: (1024, "wss://dex.binance.org/api/", None),
-    Exchanges.BINANCE_ORG_TESTNET: (1024, "wss://testnet-dex.binance.org/api/", None),
 }

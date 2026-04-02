@@ -258,7 +258,7 @@ Use the [UNICORN Binance REST API](https://github.com/oliver-zehentleitner/unico
 ### What are the benefits of the UNICORN Binance WebSocket API?
 - Fully managed websockets and 100% auto-reconnect! Also handles maintenance windows!
 
-- No memory leaks from Python version 3.8 to 3.12!
+- No memory leaks from Python version 3.9 to 3.14!
 
 - The full [UBS stack](https://github.com/oliver-zehentleitner/unicorn-binance-suite) is delivered as a compiled C extension for 
   maximum performance.
@@ -390,7 +390,7 @@ If you like the project, please [![star](https://raw.githubusercontent.com/olive
 [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)!
 
 ## Installation and Upgrade
-The module requires Python 3.8 and runs smoothly up to and including Python 3.12.
+The module requires Python 3.9 and runs smoothly up to and including Python 3.14.
 
 [There is no conda support until the migration to conda-forge.](https://github.com/oliver-zehentleitner/unicorn-binance-suite/issues/17)
 

@@ -39,7 +39,7 @@ requirements:
     - requests >=2.31.0
     - simplejson
     - websocket-client
-    - websockets==11.0.3
+    - websockets>=14.0
     - typing_extensions
   run:
     - python
@@ -56,7 +56,7 @@ requirements:
     - requests >=2.31.0
     - simplejson
     - websocket-client
-    - websockets==11.0.3
+    - websockets>=14.0
     - typing_extensions
 
 dependencies:

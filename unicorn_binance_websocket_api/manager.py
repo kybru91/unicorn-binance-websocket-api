@@ -499,26 +499,16 @@ class BinanceWebSocketApiManager(threading.Thread):
                 logger.debug(f"BinanceWebSocketApiManager._run_socket(stream_id={stream_id}), channels="
                              f"{channels}), markets={markets}) - websockets.ConnectionClosed: {error_msg}")
                 self._stream_is_restarting(stream_id=stream_id, error_msg=error_msg)
-            except websockets.InvalidStatusCode as error_msg:
+            except websockets.exceptions.InvalidStatus as error_msg:
+                status_code = error_msg.response.status_code
                 logger.error(f"BinanceWebSocketApiManager._run_socket(stream_id={stream_id}), channels="
-                             f"{channels}), markets={markets}) - websockets.InvalidStatusCode: {error_msg}")
-                self._stream_is_restarting(stream_id=stream_id, error_msg=str(error_msg))
-                if "Status code not 101: 400" in str(error_msg):
-                    logger.error(f"BinanceWebSocketApiManager._run_socket(stream_id={stream_id}), channels="
-                                 f"{channels}), markets={markets}) - websockets.InvalidStatusCode: {error_msg}")
-                    self._stream_is_restarting(stream_id=stream_id, error_msg=str(error_msg))
-                elif "Status code not 101: 429" in str(error_msg):
+                             f"{channels}), markets={markets}) - websockets.exceptions.InvalidStatus: {error_msg}")
+                if status_code == 429:
                     logger.critical(f"BinanceWebSocketApiManager._run_socket(stream_id={stream_id}), channels="
-                                    f"{channels}), markets={markets}) - websockets.InvalidStatusCode: {error_msg}")
+                                    f"{channels}), markets={markets}) - websockets.exceptions.InvalidStatus: {error_msg}")
                     self._stream_is_crashing(stream_id=stream_id, error_msg=str(error_msg))
                     return None
-                elif "Status code not 101: 500" in str(error_msg):
-                    logger.error(f"BinanceWebSocketApiManager._run_socket(stream_id={stream_id}), channels="
-                                 f"{channels}), markets={markets}) - websockets.InvalidStatusCode: {error_msg}")
-                    self._stream_is_restarting(stream_id=stream_id, error_msg=str(error_msg))
                 else:
-                    logger.error(f"BinanceWebSocketApiManager._run_socket(stream_id={stream_id}), channels="
-                                 f"{channels}), markets={markets}) - websockets.InvalidStatusCode: {error_msg}")
                     self._stream_is_restarting(stream_id=stream_id, error_msg=str(error_msg))
             except websockets.InvalidMessage as error_msg:
                 logger.error(f"BinanceWebSocketApiManager._run_socket(stream_id={stream_id}), channels="

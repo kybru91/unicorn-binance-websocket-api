@@ -10,7 +10,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.10.2.dev (development stage/unreleased/unstable)
+### Added
+- Python 3.14 support (GIL build)
+### Changed
+- Minimum Python version raised from 3.8 to 3.9 (Python 3.8 reached EOL in October 2024)
+- Upgraded `websockets` dependency from `==11.0.3` to `>=14.0`
+- Updated websockets exception handling: `websockets.InvalidStatusCode` → `websockets.exceptions.InvalidStatus`
+  with `.response.status_code` attribute access (websockets 14 API change)
+- Simplified `connection_settings.py`: removed Python 3.8 version guard, now uses `typing.Type` unconditionally
 ### Removed
+- Python 3.8 support and CI job
 - DEX support (`binance.org`, `binance.org-testnet`): Binance Chain has been discontinued. Removed
   `Exchanges.BINANCE_ORG` and `Exchanges.BINANCE_ORG_TESTNET` from `connection_settings.py`, all
   DEX-specific code paths in `manager.py` and `sockets.py`, the `set_private_dex_config()` method,

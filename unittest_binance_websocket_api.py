@@ -673,7 +673,6 @@ class TestApiLive(unittest.TestCase):
                                                      footer="By LUCIT", title="UBWA Unittest")
         self.__class__.ubwa.get_latest_release_info()
         self.__class__.ubwa.get_latest_release_info_check_command()
-        self.__class__.ubwa.set_private_dex_config("bnb1v566f3avl2ud5z0jepazsrguzkj367snlx4jm6")
         self.__class__.ubwa.get_version()
         self.__class__.ubwa.help()
         self.__class__.ubwa.get_current_receiving_speed_global()

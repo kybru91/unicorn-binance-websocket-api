@@ -1162,18 +1162,26 @@ class BinanceWebSocketApiManager(threading.Thread):
                 except BinanceAPIException as error_msg:
                     logger.critical(f"BinanceWebSocketApiManager._ping_listen_key(stream_id={stream_id}) - "
                                     f"BinanceAPIException - Not able to ping the listen_key - error: {error_msg}")
-                    if "IP banned" in str(error_msg):
+                    banned_timeframe = None
+                    retry_after = None
+                    if error_msg.response is not None:
+                        retry_after = error_msg.response.headers.get('Retry-After')
+                    if retry_after is not None:
+                        banned_timeframe = int(retry_after)
+                        ban_until = time.time() + banned_timeframe
+                    elif "banned until" in str(error_msg):
                         match = re.search(r"until (\d+)", str(error_msg))
                         if match:
-                            banned_timeframe = (int(match.group(1))/1000) - time.time()
-                            logger.critical(f"BinanceWebSocketApiManager._ping_listen_key(stream_id="
-                                            f"{stream_id}) - Wait for {banned_timeframe} seconds until the "
-                                            f"IP ban has expired.")
-                            while banned_timeframe > 0 \
-                                    and self.stream_list[stream_id]['status'] != "stopped" \
-                                    and not self.stream_list[stream_id]['status'].startswith("crashed"):
-                                await asyncio.sleep(2)
-                                banned_timeframe = (int(match.group(1)) / 1000) - time.time()
+                            ban_until = int(match.group(1)) / 1000
+                            banned_timeframe = ban_until - time.time()
+                    if banned_timeframe is not None and banned_timeframe > 0:
+                        logger.critical(f"BinanceWebSocketApiManager._ping_listen_key(stream_id="
+                                        f"{stream_id}) - Wait for {banned_timeframe:.0f} seconds until the "
+                                        f"IP ban has expired.")
+                        while ban_until > time.time() \
+                                and self.stream_list[stream_id]['status'] != "stopped" \
+                                and not self.stream_list[stream_id]['status'].startswith("crashed"):
+                            await asyncio.sleep(2)
         logger.info(f"BinanceWebSocketApiManager._ping_listen_key(stream_id={stream_id}) - asyncio task stopped!")
 
     @staticmethod

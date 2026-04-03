@@ -10,6 +10,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.10.2.dev (development stage/unreleased/unstable)
+### Fixed
+- `_ping_listen_key()`: IP ban detection now reads the `Retry-After` response header first
+  (provided by Binance on HTTP 418/429), with fallback to parsing `"banned until"` in the
+  error message. The previous check for `"IP banned"` never matched Binance's actual error
+  text and silently skipped the backoff entirely. (issue #398)
 ### Added
 - Python 3.14 support (GIL build)
 - `stop_manager()` and `stop_manager_with_all_streams()` now accept a `delete_listen_key` parameter

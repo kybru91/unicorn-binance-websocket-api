@@ -4055,7 +4055,7 @@ class BinanceWebSocketApiManager(threading.Thread):
         logger.info("BinanceWebSocketApiManager.stop_manager_with_all_streams() - Stopping "
                     "unicorn_binance_websocket_api_manager " + self.version + " ...")
 
-        self.stop_manager(delete_listen_key=delete_listen_key)
+        return self.stop_manager(delete_listen_key=delete_listen_key)
 
     def stop_stream(self, stream_id, delete_listen_key: bool = True):
         """

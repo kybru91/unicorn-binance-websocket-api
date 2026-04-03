@@ -27,11 +27,6 @@ Tasks collected from codebase analysis (2026-04-01). Ordered by priority within 
 - Removed `flask`, `flask_restful`, `cheroot` dependencies
 - Cleaned `get_monitoring_status_plain()` of all check_lucit references; method retained for programmatic use
 
-### [ ] Replace print() with logger calls
-- `connection.py:121` — `print(f"KeyError: {error_msg}")`
-- `manager.py:460`, `896` — error messages printed to stdout
-- Libraries must not write to stdout directly — use `logger.critical()` / `logger.error()`
-
 ### [x] Upgrade websockets + Python 3.14 support (GIL only — no-GIL in PR 3)
 - Upgraded `websockets==11.0.3` → `>=14.0`
 - Updated exception handling: `InvalidStatusCode` → `websockets.exceptions.InvalidStatus` with `.response.status_code`

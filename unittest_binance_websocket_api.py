@@ -394,6 +394,16 @@ class TestBinanceComManagerTest(unittest.TestCase):
     def test_is_exchange_type_cex(self):
         self.assertEqual(self.__class__.ubwa.is_exchange_type("cex"), True)
 
+    def test_stop_manager_delete_listen_key_false(self):
+        print(f"test_stop_manager_delete_listen_key_false():")
+        with BinanceWebSocketApiManager(exchange="binance.com-testnet", debug=True) as ubwa:
+            self.assertTrue(ubwa.stop_manager(delete_listen_key=False))
+
+    def test_stop_manager_with_all_streams_delete_listen_key_false(self):
+        print(f"test_stop_manager_with_all_streams_delete_listen_key_false():")
+        with BinanceWebSocketApiManager(exchange="binance.com-testnet", debug=True) as ubwa:
+            self.assertTrue(ubwa.stop_manager_with_all_streams(delete_listen_key=False))
+
     def test_z_stop_manager(self):
         time.sleep(6)
         self.__class__.ubwa.stop_manager()

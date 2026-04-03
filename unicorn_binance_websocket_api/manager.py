@@ -4007,9 +4007,14 @@ class BinanceWebSocketApiManager(threading.Thread):
             logger.error(f"BinanceWebSocketApiManager.split_payload() result is None!")
             return None
 
-    def stop_manager(self):
+    def stop_manager(self, delete_listen_key: bool = True):
         """
         Stop the BinanceWebSocketApiManager with all streams, monitoring and management threads
+
+        :param delete_listen_key: If set to `True` (default), the `listen_key` of each stream gets deleted on stop.
+                                  Set to `False` if multiple processes share the same `listen_key` and you do not want
+                                  to invalidate it for the other processes.
+        :type delete_listen_key: bool
         """
         logger.info("BinanceWebSocketApiManager.stop_manager() - Stopping "
                     "unicorn_binance_websocket_api_manager " + self.version + " ...")
@@ -4023,7 +4028,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                     logger.debug(f"BinanceWebSocketApiManager.stop_manager() - Leaving `stream_list_lock`!")
                 try:
                     for stream_id in stream_list:
-                        self.stop_stream(stream_id)
+                        self.stop_stream(stream_id, delete_listen_key=delete_listen_key)
                 except AttributeError:
                     pass
             except AttributeError as error_msg:
@@ -4036,16 +4041,21 @@ class BinanceWebSocketApiManager(threading.Thread):
                 logger.debug(f"stop_manager() - AttributeError: {error_msg}")
         return True
 
-    def stop_manager_with_all_streams(self):
+    def stop_manager_with_all_streams(self, delete_listen_key: bool = True):
         """
         Stop the BinanceWebSocketApiManager with all streams, monitoring and management threads
 
         Alias of 'stop_manager()'
+
+        :param delete_listen_key: If set to `True` (default), the `listen_key` of each stream gets deleted on stop.
+                                  Set to `False` if multiple processes share the same `listen_key` and you do not want
+                                  to invalidate it for the other processes.
+        :type delete_listen_key: bool
         """
         logger.info("BinanceWebSocketApiManager.stop_manager_with_all_streams() - Stopping "
                     "unicorn_binance_websocket_api_manager " + self.version + " ...")
 
-        self.stop_manager()
+        return self.stop_manager(delete_listen_key=delete_listen_key)
 
     def stop_stream(self, stream_id, delete_listen_key: bool = True):
         """

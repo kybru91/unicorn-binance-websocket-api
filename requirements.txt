@@ -9,7 +9,6 @@ Cython
 psutil
 PySocks
 requests>=2.31.0
-simplejson
 orjson
 unicorn-fy>=0.15.0
 unicorn-binance-rest-api>=2.7.0

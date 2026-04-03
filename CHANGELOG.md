@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.10.2.dev (development stage/unreleased/unstable)
+### Removed
+- `simplejson` dependency — unused in UBWA code; `orjson` is the sole JSON library
 ### Fixed
 - `_ping_listen_key()`: IP ban detection now reads the `Retry-After` response header first
   (provided by Binance on HTTP 418/429), with fallback to parsing `"banned until"` in the

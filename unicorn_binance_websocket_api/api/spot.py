@@ -38,6 +38,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+from decimal import Decimal
 from typing import Optional, Union, Literal
 import logging
 import threading
@@ -398,7 +399,7 @@ class BinanceWebSocketApiApiSpot(object):
         if cancel_restrictions is not None:
             params['cancelRestrictions'] = cancel_restrictions
         if iceberg_qty is not None:
-            params['icebergQty'] = str(iceberg_qty)
+            params['icebergQty'] = format(Decimal(repr(iceberg_qty)), 'f')
         if new_client_order_id is not None:
             params['NewClientOrderId'] = new_client_order_id
         if new_order_resp_type is not None:
@@ -409,15 +410,15 @@ class BinanceWebSocketApiApiSpot(object):
                 order_type.upper() == "LIMIT_MAKER" or
                 order_type.upper() == "STOP_LOSS_LIMIT" or
                 order_type.upper() == "TAKE_PROFIT_LIMIT"):
-            params['price'] = str(price)
+            params['price'] = format(Decimal(repr(price)), 'f')
         if (order_type.upper() == "LIMIT" or
                 order_type.upper() == "STOP_LOSS_LIMIT" or
                 order_type.upper() == "TAKE_PROFIT_LIMIT"):
             params['timeInForce'] = time_in_force
         if quantity is not None:
-            params['quantity'] = str(quantity)
+            params['quantity'] = format(Decimal(repr(quantity)), 'f')
         if quote_order_qty is not None:
-            params['quoteOrderQty'] = str(quote_order_qty)
+            params['quoteOrderQty'] = format(Decimal(repr(quote_order_qty)), 'f')
             if quantity is not None:
                 logger.warning(f"BinanceWebSocketApiApiSpot.cancel_and_replace_order() - error_msg: By using the "
                                f"parameter `quoteOrderQty` the use of `quantity` is suppressed!")
@@ -427,7 +428,7 @@ class BinanceWebSocketApiApiSpot(object):
         if self_trade_prevention_mode is not None:
             params['selfTradePreventionMode'] = self_trade_prevention_mode
         if stop_price is not None:
-            params['stopPrice'] = str(stop_price)
+            params['stopPrice'] = format(Decimal(repr(stop_price)), 'f')
             if trailing_delta is not None:
                 logger.warning(f"BinanceWebSocketApiApiSpot.cancel_and_replace_order() - error_msg: By using the "
                                f"parameter `stopPrice` the use of `trailingDelta` is suppressed!")
@@ -1057,22 +1058,22 @@ class BinanceWebSocketApiApiSpot(object):
                   "type": order_type}
 
         if iceberg_qty is not None:
-            params['icebergQty'] = str(iceberg_qty)
+            params['icebergQty'] = format(Decimal(repr(iceberg_qty)), 'f')
         if new_order_resp_type is not None:
             params['newOrderRespType'] = new_order_resp_type
         if (order_type.upper() == "LIMIT" or
                 order_type.upper() == "LIMIT_MAKER" or
                 order_type.upper() == "STOP_LOSS_LIMIT" or
                 order_type.upper() == "TAKE_PROFIT_LIMIT"):
-            params['price'] = str(price)
+            params['price'] = format(Decimal(repr(price)), 'f')
         if (order_type.upper() == "LIMIT" or
                 order_type.upper() == "STOP_LOSS_LIMIT" or
                 order_type.upper() == "TAKE_PROFIT_LIMIT"):
             params['timeInForce'] = time_in_force
         if quantity is not None:
-            params['quantity'] = str(quantity)
+            params['quantity'] = format(Decimal(repr(quantity)), 'f')
         if quote_order_qty is not None:
-            params['quoteOrderQty'] = str(quote_order_qty)
+            params['quoteOrderQty'] = format(Decimal(repr(quote_order_qty)), 'f')
             if quantity is not None:
                 logger.warning(f"BinanceWebSocketApiApiSpot.create_order() - error_msg: By using the parameter "
                                f"`quoteOrderQty` the use of `quantity` is suppressed!")
@@ -1082,7 +1083,7 @@ class BinanceWebSocketApiApiSpot(object):
         if self_trade_prevention_mode is not None:
             params['selfTradePreventionMode'] = self_trade_prevention_mode
         if stop_price is not None:
-            params['stopPrice'] = str(stop_price)
+            params['stopPrice'] = format(Decimal(repr(stop_price)), 'f')
             if trailing_delta is not None:
                 logger.warning(f"BinanceWebSocketApiApiSpot.create_order() - error_msg: By using the parameter "
                                f"`stopPrice` the use of `trailingDelta` is suppressed!")

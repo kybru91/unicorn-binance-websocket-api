@@ -394,6 +394,22 @@ class TestBinanceComManagerTest(unittest.TestCase):
     def test_is_exchange_type_cex(self):
         self.assertEqual(self.__class__.ubwa.is_exchange_type("cex"), True)
 
+    def test_float_to_str_no_scientific_notation(self):
+        print(f"test_float_to_str_no_scientific_notation():")
+        from decimal import Decimal
+        test_cases = [
+            (1.9e-07, '0.00000019'),
+            (1.9e-05, '0.000019'),
+            (1.9e-06, '0.0000019'),
+            (23416.1, '23416.1'),
+            (0.00001, '0.00001'),
+            (100.0, '100.0'),
+        ]
+        for value, expected in test_cases:
+            result = format(Decimal(repr(value)), 'f')
+            self.assertEqual(result, expected, f"Failed for {value!r}: got {result!r}, expected {expected!r}")
+            self.assertNotIn('e', result.lower(), f"Scientific notation found in {result!r} for input {value!r}")
+
     def test_stop_manager_delete_listen_key_false(self):
         print(f"test_stop_manager_delete_listen_key_false():")
         with BinanceWebSocketApiManager(exchange="binance.com-testnet", debug=True) as ubwa:

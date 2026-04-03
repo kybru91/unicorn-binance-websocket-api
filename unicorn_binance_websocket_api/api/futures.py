@@ -38,6 +38,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+from decimal import Decimal
 from typing import Optional, Union, Literal
 import logging
 import threading
@@ -501,7 +502,7 @@ class BinanceWebSocketApiApiFutures(object):
                 order_type.upper() == "LIMIT_MAKER" or
                 order_type.upper() == "STOP_LOSS_LIMIT" or
                 order_type.upper() == "TAKE_PROFIT_LIMIT"):
-            params['price'] = str(price)
+            params['price'] = format(Decimal(repr(price)), 'f')
         if (order_type.upper() == "LIMIT" or
                 order_type.upper() == "STOP_LOSS_LIMIT" or
                 order_type.upper() == "TAKE_PROFIT_LIMIT"):
@@ -513,7 +514,7 @@ class BinanceWebSocketApiApiFutures(object):
         if price_protect is not None:
             params['priceProtect'] = "TRUE" if price_protect is True else "FALSE"
         if quantity is not None:
-            params['quantity'] = str(quantity)
+            params['quantity'] = format(Decimal(repr(quantity)), 'f')
         if recv_window is not None:
             params['recvWindow'] = str(recv_window)
         if reduce_only is not None:
@@ -521,7 +522,7 @@ class BinanceWebSocketApiApiFutures(object):
         if self_trade_prevention_mode is not None:
             params['selfTradePreventionMode'] = self_trade_prevention_mode
         if stop_price is not None:
-            params['stopPrice'] = str(stop_price)
+            params['stopPrice'] = format(Decimal(repr(stop_price)), 'f')
         if working_type is not None:
             params['workingType'] = working_type
 
@@ -2121,8 +2122,8 @@ class BinanceWebSocketApiApiFutures(object):
                 return False
 
         params = {"apiKey": self._manager.stream_list[stream_id]['api_key'],
-                  "price": str(price),
-                  "quantity": str(quantity),
+                  "price": format(Decimal(repr(price)), 'f'),
+                  "quantity": format(Decimal(repr(quantity)), 'f'),
                   "side": side.upper(),
                   "symbol": symbol.upper(),
                   "timestamp": self._manager.get_timestamp()}

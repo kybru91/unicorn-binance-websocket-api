@@ -13,6 +13,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - Python 3.14 support (GIL build)
 - `stop_manager()` and `stop_manager_with_all_streams()` now accept a `delete_listen_key` parameter
+### Fixed
+- `api/spot.py` and `api/futures.py`: float parameters (`price`, `quantity`, `stop_price`, etc.) were
+  converted to string using `str()`, which produces scientific notation (e.g. `1.9e-07`) for very small
+  values. Binance rejects these with error -1100. Now using `format(Decimal(repr(value)), 'f')` which
+  always produces decimal notation. (issue #397)
   (default `True`). Set to `False` if multiple processes share the same `listen_key` and stopping
   one process should not invalidate it for the others. (issue #396)
 ### Changed

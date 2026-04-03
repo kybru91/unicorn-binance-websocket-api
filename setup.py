@@ -86,7 +86,7 @@ setup(
     long_description_content_type="text/markdown",
     license='MIT',
     install_requires=['colorama', 'requests>=2.31.0', 'websocket-client', 'websockets>=14.0',
-                      'orjson', 'psutil', 'PySocks', 'simplejson',
+                      'orjson', 'psutil', 'PySocks',
                       'unicorn-fy>=0.15.0', 'unicorn-binance-rest-api>=2.7.0', 'typing_extensions', 'Cython'],
     keywords='binance, asyncio, async, asynchronous, concurrent, websocket-api, webstream-api, '
              'binance-websocket, binance-webstream, webstream, websocket, api, binance-dex, '

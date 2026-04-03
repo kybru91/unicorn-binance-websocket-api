@@ -364,11 +364,6 @@ rich media, shell syntax, tab completion, and history."
 
 - Also, nice to use with the [Jupyter Notebook](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/ipynb) :)
 
-- [Monitoring API service](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service) 
-and a [check_command](https://exchange.icinga.com/LUCIT/check_lucit_collector) 
-for [ICINGA](https://exchange.icinga.com/LUCIT/check_lucit_collector)/Nagios 
-[![icinga2-demo](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/icinga.png)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service)
-
 - Integration of [test cases](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml) and [examples](#examples).
 
 - Customizable base URL.
@@ -492,6 +487,7 @@ This is not a release version and can not be considered to be stable!
 - [How to Download Klines from Binance using Python?](https://technopathy.club/how-to-download-data-from-binance-using-python-8f1b6e8f19f3)
 - [Passing Binance Market Data to Apache Kafka in Python with aiokafka](https://technopathy.club/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka-570541574655)
 - [How to Connect to binance.com Websockets using Python via a Socks5 Proxy](https://technopathy.club/how-to-connect-to-binance-com-websockets-using-python-via-a-socks5-proxy-3c5a3e063f12)
+- [When IP Whitelisting Isn't What It Seems: A Real-World Case Study from the Binance API](https://technopathy.club/when-ip-whitelisting-isnt-what-it-seems-a-real-world-case-study-from-the-binance-api-816c4312d6d0)
 
 ## Project Homepage
 [https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
@@ -512,8 +508,7 @@ the repository on [GitHub](https://github.com/oliver-zehentleitner/unicorn-binan
 [own script](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_version_of_this_package.py) 
 with using 
 [`is_update_available()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.is_update_availabe) 
-or you use the 
-[monitoring API service](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service).
+or you use [`get_monitoring_status_plain()`](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.get_monitoring_status_plain).
 
 To receive news (like inspection windows/maintenance) about the Binance API`s subscribe to their telegram groups: 
 

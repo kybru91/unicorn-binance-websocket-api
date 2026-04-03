@@ -41,16 +41,12 @@
 from .connection_settings import CEX_EXCHANGES, CONNECTION_SETTINGS
 from .exceptions import *
 from .restclient import BinanceWebSocketApiRestclient
-from .restserver import BinanceWebSocketApiRestServer
 from .sockets import BinanceWebSocketApiSocket
 from .api.api import WsApi
 from unicorn_binance_rest_api import BinanceRestApiManager, BinanceAPIException
 from unicorn_fy.unicorn_fy import UnicornFy
-from cheroot import wsgi
 from collections import deque
 from datetime import datetime, timezone
-from flask import Flask, redirect
-from flask_restful import Api
 from operator import itemgetter
 from typing import Optional, Union, Callable, List, Set, Literal
 import asyncio
@@ -347,12 +343,10 @@ class BinanceWebSocketApiManager(threading.Thread):
         self.last_entry_added_to_stream_buffer = 0
         self.last_monitoring_check = time.time()
         self.last_update_check_github = {'timestamp': time.time(), 'status': {'tag_name': None}}
-        self.last_update_check_github_check_command = {'timestamp': time.time(), 'status': {'tag_name': None}}
         self.listen_key_refresh_interval = 15*60
         self.max_send_messages_per_second = 5
         self.max_send_messages_per_second_reserve = 2
         self.most_receives_per_second = 0
-        self.monitoring_api_server = None
         self.monitoring_total_received_bytes = 0
         self.monitoring_total_receives = 0
         self.output_default: Optional[Literal['dict', 'raw_data', 'UnicornFy']] = output_default
@@ -1200,59 +1194,6 @@ class BinanceWebSocketApiManager(threading.Thread):
         except Exception as error_msg:
             logger.critical(f"BinanceWebSocketApiManager._handle_task_result() - Exception({error_msg}) raised by task "
                             f"= {task}")
-
-    def _start_monitoring_api_thread(self, host, port, warn_on_update) -> bool:
-        """
-        Threaded method that servces the monitoring api
-
-        :param host: IP or hostname to use
-        :type host: str
-        :param port: Port to use
-        :type port: int
-        :param warn_on_update: Should the monitoring system report available updates?
-        :type warn_on_update: bool
-
-        :return: bool
-        """
-        logger.info("BinanceWebSocketApiManager._start_monitoring_api_thread() - Starting monitoring API service ...")
-        app = Flask(__name__)
-
-        @app.route('/')
-        @app.route('/status/')
-        def redirect_to_wiki():
-            logger.info("BinanceWebSocketApiManager._start_monitoring_api_thread() 200 - "
-                        "Visit https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-"
-                        "Monitoring-API-Service for further information!")
-            return redirect("https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/"
-                            "UNICORN-Monitoring-API-Service", code=302)
-
-        api = Api(app)
-        api.add_resource(BinanceWebSocketApiRestServer,
-                         "/status/<string:statusformat>/",
-                         "/status/<string:statusformat>/<string:checkcommandversion>",
-                         resource_class_kwargs={'handler_binance_websocket_api_manager': self,
-                                                'warn_on_update': warn_on_update})
-        try:
-            with app.app_context():
-                dispatcher = wsgi.PathInfoDispatcher({'/': app})
-                self.monitoring_api_server = wsgi.WSGIServer((host, port), dispatcher)
-                self.monitoring_api_server.start()
-        except RuntimeError as error_msg:
-            logger.critical("BinanceWebSocketApiManager._start_monitoring_api_thread() - Monitoring API service is "
-                            "going down! - error_msg: RuntimeError - " + str(error_msg))
-            self.stop_monitoring_api()
-            return False
-        except ResourceWarning as error_msg:
-            logger.critical("BinanceWebSocketApiManager._start_monitoring_api_thread() - Monitoring API service is "
-                            "going down! - error_msg: ResourceWarning - " + str(error_msg))
-            self.stop_monitoring_api()
-            return False
-        except OSError as error_msg:
-            logger.critical("BinanceWebSocketApiManager._start_monitoring_api_thread() - Monitoring API service is "
-                            "going down! - error_msg: OSError - " + str(error_msg))
-            self.stop_monitoring_api()
-            return False
-        return True
 
     def add_payload_to_stream(self, stream_id=None, payload: dict = None):
         """
@@ -2399,21 +2340,6 @@ class BinanceWebSocketApiManager(threading.Thread):
             logger.debug(f"BinanceWebSocketApiManager.get_latest_release_info() - Exception: {error_msg}")
             return None
 
-    @staticmethod
-    def get_latest_release_info_check_command():
-        """
-        Get infos about the latest available `check_lucit_collector` release
-        
-        :return: dict or None
-        """
-        try:
-            respond = requests.get('https://api.github.com/repos/LUCIT-Development/check_lucit_collector.py/'
-                                   'releases/latest')
-            return respond.json()
-        except Exception as error_msg:
-            logger.debug(f"BinanceWebSocketApiManager.get_latest_release_info_check_command() - Exception: {error_msg}")
-            return None
-
     def get_latest_version(self) -> Optional[str]:
         """
         Get the version of the latest available release (cache time 1 hour)
@@ -2431,25 +2357,6 @@ class BinanceWebSocketApiManager(threading.Thread):
                 return self.last_update_check_github['status']['tag_name']
             except KeyError as error_msg:
                 logger.debug(f"BinanceLocalDepthCacheManager.get_latest_version() - KeyError: {error_msg}")
-                return None
-        else:
-            return None
-
-    def get_latest_version_check_command(self) -> Optional[str]:
-        """
-        Get the version of the latest available `check_lucit_collector.py` release (cache time 1 hour)
-        
-        :return: str or None
-        """
-        # Do a fresh request if status is None or last timestamp is older 1 hour
-        if self.last_update_check_github_check_command['status'].get('tag_name') is None or \
-                (self.last_update_check_github_check_command['timestamp'] + (60 * 60) < time.time()):
-            self.last_update_check_github_check_command['status'] = self.get_latest_release_info_check_command()
-        if self.last_update_check_github_check_command['status'].get('tag_name') is not None:
-            try:
-                return self.last_update_check_github_check_command['status']['tag_name']
-            except KeyError as error_msg:
-                logger.debug(f"BinanceWebSocketApiManager.get_latest_version_check_command() - KeyError: {error_msg}")
                 return None
         else:
             return None
@@ -2601,62 +2508,13 @@ class BinanceWebSocketApiManager(threading.Thread):
         """
         return self.keep_max_received_last_second_entries
 
-    def get_monitoring_status_icinga(self, check_command_version=False, warn_on_update=True):
-        """
-        Get status and perfdata to monitor and collect metrics with ICINGA/Nagios
-
-        status: OK, WARNING, CRITICAL
-        - WARNING: on restarts, available updates
-        - CRITICAL: crashed streams
-
-        perfdata:
-        - average receives per second since last status check
-        - average speed per second since last status check
-        - total received bytes since start
-        - total received length since start
-        - stream_buffer size
-        - stream_buffer length
-        - reconnects
-        - uptime
-
-        :param check_command_version: is the version of the calling `check_command <https://github.com/oliver-zehentleitner/check_lucit_collector.py>`__
-        :type check_command_version: str
-        :param warn_on_update: set to `False` to disable the update warning
-        :type warn_on_update: bool
-        :return: dict (text, time, return_code)
-        """
-        result = self.get_monitoring_status_plain(check_command_version=check_command_version,
-                                                  warn_on_update=warn_on_update)
-        if len(result['update_msg']) > 0 or len(result['status_msg']) > 0:
-            text_msg = " -" + str(result['status_msg']) + str(result['update_msg'])
-        else:
-            text_msg = ""
-        check_message = "BINANCE WEBSOCKETS (" + self.exchange + ") - " + result['status_text'] + ": O:" + \
-                        str(result['active_streams']) + \
-                        "/R:" + str(result['restarting_streams']) + "/C:" + str(result['crashed_streams']) + "/S:" + \
-                        str(result['stopped_streams']) + text_msg + " | " + \
-                        "active streams=" + str(result['active_streams']) + ";;;0 " + \
-                        "average_receives_per_second=" + str(result['average_receives_per_second']) + \
-                        ";;;0 current_receiving_speed_per_second=" + str(result['average_speed_per_second']) + \
-                        "KB;;;0 total_received_length=" + str(result['total_received_length']) + "c;;;0 total_" \
-                        "received_size=" + str(result['total_received_mb']) + "MB;;;0 stream_buffer_size=" + \
-                        str(result['stream_buffer_mb']) + "MB;;;0 stream_buffer_length=" + \
-                        str(result['stream_buffer_items']) + ";;;0 reconnects=" + str(result['reconnects']) + "c;;;0 " \
-                        "uptime_days=" + str(result['uptime']) + "c;;;0"
-        status = {'text': check_message,
-                  'time': int(result['timestamp']),
-                  'return_code': result['return_code']}
-        return status
-
-    def get_monitoring_status_plain(self, check_command_version=False, warn_on_update=True):
+    def get_monitoring_status_plain(self, warn_on_update=True):
         """
         Get plain monitoring status data:
         active_streams, crashed_streams, restarting_streams, stopped_streams, return_code, status_text,
         timestamp, update_msg, average_receives_per_second, average_speed_per_second, total_received_mb,
         stream_buffer_items, stream_buffer_mb, reconnects, uptime
 
-        :param check_command_version: is the version of the calling `check_command <https://github.com/oliver-zehentleitner/check_lucit_collector.py>`__
-        :type check_command_version: False or str
         :param warn_on_update: set to `False` to disable the update warning
         :type warn_on_update: bool
         :return: dict
@@ -2674,11 +2532,6 @@ class BinanceWebSocketApiManager(threading.Thread):
         time_period = result['timestamp'] - self.last_monitoring_check
         timestamp_last_hour = time.time() - (60*60)
         is_update_available_unicorn_fy = UnicornFy().is_update_available()
-        if check_command_version:
-            is_update_available_check_command = self.is_update_available_check_command(
-                                                                            check_command_version=check_command_version)
-        else:
-            is_update_available_check_command = True
         with self.stream_list_lock:
             logger.debug(f"BinanceWebSocketApiManager.get_monitoring_status_plain() - `stream_list_lock` "
                          f"was entered!")
@@ -2699,24 +2552,8 @@ class BinanceWebSocketApiManager(threading.Thread):
                 elif "crashed" in self.stream_list[stream_id]['status']:
                     result['crashed_streams'] += 1
             logger.debug(f"BinanceWebSocketApiManager.get_monitoring_status_plain() - Leaving `stream_list_lock`!")
-        if self.is_update_available() and is_update_available_unicorn_fy and is_update_available_check_command:
-            result['update_msg'] = " Update available: UNICORN Binance WebSocket API, UnicornFy and " \
-                                   "check_lucit_collector.py!"
-            if warn_on_update is True:
-                result['status_text'] = "WARNING"
-                result['return_code'] = 1
-        elif self.is_update_available() and is_update_available_unicorn_fy:
+        if self.is_update_available() and is_update_available_unicorn_fy:
             result['update_msg'] = " Update available: UNICORN Binance WebSocket API and UnicornFy"
-            if warn_on_update is True:
-                result['status_text'] = "WARNING"
-                result['return_code'] = 1
-        elif self.is_update_available() and is_update_available_check_command:
-            result['update_msg'] = " Update available: UNICORN Binance WebSocket API and check_lucit_collector.py!"
-            if warn_on_update is True:
-                result['status_text'] = "WARNING"
-                result['return_code'] = 1
-        elif is_update_available_unicorn_fy and is_update_available_check_command:
-            result['update_msg'] = " Update available: UnicornFy and check_lucit_collector.py!"
             if warn_on_update is True:
                 result['status_text'] = "WARNING"
                 result['return_code'] = 1
@@ -2727,12 +2564,6 @@ class BinanceWebSocketApiManager(threading.Thread):
                 result['return_code'] = 1
         elif is_update_available_unicorn_fy:
             result['update_msg'] = " Update UnicornFy " + str(UnicornFy().get_latest_version()) + " available!"
-            if warn_on_update is True:
-                result['status_text'] = "WARNING"
-                result['return_code'] = 1
-        elif is_update_available_check_command:
-            result['update_msg'] = " Update `check_lucit_collector.py` " + \
-                                   str(self.get_latest_version_check_command()) + " available!"
             if warn_on_update is True:
                 result['status_text'] = "WARNING"
                 result['return_code'] = 1
@@ -3409,23 +3240,6 @@ class BinanceWebSocketApiManager(threading.Thread):
         :return: bool
         """
         return UnicornFy().is_update_available()
-
-    def is_update_available_check_command(self, check_command_version=None):
-        """
-        Is a new release of `check_lucit_collector.py` available?
-
-        :return: bool
-        """
-        installed_version = check_command_version
-        latest_version = self.get_latest_version_check_command()
-        if ".dev" in str(installed_version):
-            installed_version = installed_version[:-4]
-        if latest_version == installed_version:
-            return False
-        elif latest_version is None:
-            return False
-        else:
-            return True
 
     def pop_stream_data_from_stream_buffer(self, stream_buffer_name: Union[Literal[False], str] = None, mode="FIFO"):
         """
@@ -4193,27 +4007,6 @@ class BinanceWebSocketApiManager(threading.Thread):
             logger.error(f"BinanceWebSocketApiManager.split_payload() result is None!")
             return None
 
-    def start_monitoring_api(self, host='127.0.0.1', port=64201, warn_on_update=True):
-        """
-        Start the monitoring API server
-
-        Take a look into the
-        `Wiki <https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki/UNICORN-Monitoring-API-Service>`__
-        to see how this works!
-
-        :param host: listening ip address, use 0.0.0.0 or a specific address (default: 127.0.0.1)
-        :type host: str
-        :param port: listening port number (default: 64201)
-        :type port: int
-        :param warn_on_update: set to `False` to disable the update warning
-        :type warn_on_update: bool
-        """
-        thread = threading.Thread(target=self._start_monitoring_api_thread,
-                                  args=(host, port, warn_on_update),
-                                  name="monitoring_api")
-        thread.start()
-        return True
-
     def stop_manager(self):
         """
         Stop the BinanceWebSocketApiManager with all streams, monitoring and management threads
@@ -4235,8 +4028,6 @@ class BinanceWebSocketApiManager(threading.Thread):
                     pass
             except AttributeError as error_msg:
                 logger.debug(f"BinanceWebSocketApiManager.stop_manager() - AttributeError: {error_msg}")
-            # stop monitoring API services
-            self.stop_monitoring_api()
             # stop restclient
             try:
                 if self.exchange in CONNECTION_SETTINGS and self.restclient is not None:
@@ -4255,20 +4046,6 @@ class BinanceWebSocketApiManager(threading.Thread):
                     "unicorn_binance_websocket_api_manager " + self.version + " ...")
 
         self.stop_manager()
-
-    def stop_monitoring_api(self) -> bool:
-        """
-        Stop the monitoring API service
-
-        :return: bool
-        """
-        try:
-            if self.monitoring_api_server is not None:
-                self.monitoring_api_server.stop()
-                time.sleep(1)
-        except AttributeError:
-            pass
-        return True
 
     def stop_stream(self, stream_id, delete_listen_key: bool = True):
         """

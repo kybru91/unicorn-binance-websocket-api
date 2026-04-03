@@ -29,6 +29,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   `Exchanges.BINANCE_ORG` and `Exchanges.BINANCE_ORG_TESTNET` from `connection_settings.py`, all
   DEX-specific code paths in `manager.py` and `sockets.py`, the `set_private_dex_config()` method,
   the `dex_user_address` stream state field, and all related tests and examples.
+- Icinga/Nagios monitoring REST server: removed `start_monitoring_api()`, `stop_monitoring_api()`,
+  `get_monitoring_status_icinga()`, `_start_monitoring_api_thread()`, `get_latest_release_info_check_command()`,
+  `get_latest_version_check_command()`, `is_update_available_check_command()`, and `restserver.py`.
+  The `get_monitoring_status_plain()` method is retained for programmatic status access.
+  Dependencies `flask`, `flask_restful`, and `cheroot` have been removed.
 
 ## 2.10.2
 ### Fixed

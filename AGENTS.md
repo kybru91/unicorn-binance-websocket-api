@@ -59,9 +59,8 @@ Defined in `unicorn_binance_websocket_api/connection_settings.py` as the `Exchan
 
 Managed in `requirements.txt`, `setup.py`, and `pyproject.toml` — **all three must be kept in sync manually** (IDE find/replace):
 
-- `websocket-client`, `websockets==11.0.3` — WebSocket connections
+- `websocket-client`, `websockets>=14.0` — WebSocket connections
 - `requests>=2.31.0` — HTTP
-- `flask`, `flask_restful`, `cheroot` — REST server
 - `orjson` — fast JSON serialization
 - `unicorn-fy>=0.15.0` — stream data normalization
 - `unicorn-binance-rest-api>=2.7.0` — REST API support

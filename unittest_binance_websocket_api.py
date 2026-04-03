@@ -39,7 +39,6 @@
 
 from unicorn_binance_websocket_api.manager import BinanceWebSocketApiManager
 from unicorn_binance_websocket_api.exceptions import *
-from unicorn_binance_websocket_api.restserver import BinanceWebSocketApiRestServer
 from unicorn_binance_websocket_api.restclient import BinanceWebSocketApiRestclient
 from unicorn_binance_rest_api import BinanceRestApiManager
 import asyncio
@@ -94,7 +93,6 @@ class TestBinanceComManager(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.ubwa.stop_monitoring_api()
         cls.ubwa.stop_manager()
         print(f"\r\nTestBinanceComManager threads:")
         for thread in threading.enumerate():
@@ -324,17 +322,8 @@ class TestBinanceComManager(unittest.TestCase):
         self.__class__.ubwa.unsubscribe_from_stream(stream_id, markets=['bnbbtc'])
         self.__class__.ubwa.unsubscribe_from_stream(stream_id, channels=['trade'])
         time.sleep(6)
-        self.__class__.ubwa.get_monitoring_status_icinga()
         self.__class__.ubwa.print_summary(title="Unittests")
         self.__class__.ubwa.print_stream_info(stream_id, title="Unittests")
-
-    def test_start_monitoring_api(self):
-        print(f"test_start_monitoring_api():")
-        with BinanceWebSocketApiManager(exchange="binance.com-testnet",
-                                        debug=True,) as ubwa:
-            self.assertTrue(ubwa.start_monitoring_api())
-            time.sleep(6)
-            self.assertTrue(ubwa.stop_monitoring_api())
 
 
 class TestBinanceComManagerTest(unittest.TestCase):
@@ -651,11 +640,6 @@ class TestApiLive(unittest.TestCase):
 
         time.sleep(6)
 
-        restserver = BinanceWebSocketApiRestServer(self.__class__.ubwa)
-        restserver.get("icinga")
-        restserver.get("invalid")
-        del restserver
-
         markets = ['xrpbearbusd', 'zeceth', 'cndbtc', 'dashbtc', 'atompax', 'perlbtc', 'ardreth', 'zecbnb',
                    'erdbnb', 'xrpbearusdt', 'stratbnb', 'cmtbtc', 'cvcbtc', 'kncbtc', 'rpxbnb', 'zenbnb', 'cndbnb',
                    'wrxbtc', 'pptbtc', 'nknbtc', 'zecusdt', 'stormeth', 'qtumusdt']
@@ -741,7 +725,6 @@ class TestApiLive(unittest.TestCase):
         self.__class__.ubwa.get_number_of_free_subscription_slots(stream_id2)
         self.__class__.ubwa.get_most_receives_per_second()
         self.__class__.ubwa.get_number_of_streams_in_stream_list()
-        self.__class__.ubwa.is_update_available_check_command()
         print(f"Waiting for {stream_id2} has stopped")
         self.__class__.ubwa.wait_till_stream_has_stopped(stream_id2)
         print(f"Done!")
@@ -751,7 +734,6 @@ class TestApiLive(unittest.TestCase):
             self.__class__.ubwa.print_summary_to_png(".", 12.5, add_string="test: blah",
                                                      footer="By LUCIT", title="UBWA Unittest")
         self.__class__.ubwa.get_latest_release_info()
-        self.__class__.ubwa.get_latest_release_info_check_command()
         self.__class__.ubwa.get_version()
         self.__class__.ubwa.help()
         self.__class__.ubwa.get_current_receiving_speed_global()

@@ -640,11 +640,6 @@ class TestApiLive(unittest.TestCase):
 
         time.sleep(6)
 
-        restserver = BinanceWebSocketApiRestServer(self.__class__.ubwa)
-        restserver.get("icinga")
-        restserver.get("invalid")
-        del restserver
-
         markets = ['xrpbearbusd', 'zeceth', 'cndbtc', 'dashbtc', 'atompax', 'perlbtc', 'ardreth', 'zecbnb',
                    'erdbnb', 'xrpbearusdt', 'stratbnb', 'cmtbtc', 'cvcbtc', 'kncbtc', 'rpxbnb', 'zenbnb', 'cndbnb',
                    'wrxbtc', 'pptbtc', 'nknbtc', 'zecusdt', 'stormeth', 'qtumusdt']

@@ -12,6 +12,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## 2.10.2.dev (development stage/unreleased/unstable)
 ### Added
 - Python 3.14 support (GIL build)
+- `stop_manager()` and `stop_manager_with_all_streams()` now accept a `delete_listen_key` parameter
+  (default `True`). Set to `False` if multiple processes share the same `listen_key` and stopping
+  one process should not invalidate it for the others. (issue #396)
 ### Changed
 - Minimum Python version raised from 3.8 to 3.9 (Python 3.8 reached EOL in October 2024)
 - Upgraded `websockets` dependency from `==11.0.3` to `>=14.0`

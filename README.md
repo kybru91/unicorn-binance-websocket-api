@@ -487,6 +487,7 @@ This is not a release version and can not be considered to be stable!
 - [How to Download Klines from Binance using Python?](https://technopathy.club/how-to-download-data-from-binance-using-python-8f1b6e8f19f3)
 - [Passing Binance Market Data to Apache Kafka in Python with aiokafka](https://technopathy.club/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka-570541574655)
 - [How to Connect to binance.com Websockets using Python via a Socks5 Proxy](https://technopathy.club/how-to-connect-to-binance-com-websockets-using-python-via-a-socks5-proxy-3c5a3e063f12)
+- [When IP Whitelisting Isn't What It Seems: A Real-World Case Study from the Binance API](https://technopathy.club/when-ip-whitelisting-isnt-what-it-seems-a-real-world-case-study-from-the-binance-api-816c4312d6d0)
 
 ## Project Homepage
 [https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)

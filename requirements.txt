@@ -4,11 +4,8 @@
 # ./pyproject.toml
 # ./setup.py
 
-cheroot
 colorama
 Cython
-flask
-flask_restful
 psutil
 PySocks
 requests>=2.31.0

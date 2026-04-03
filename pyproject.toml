@@ -21,11 +21,8 @@ repository = "https://github.com/oliver-zehentleitner/unicorn-binance-websocket-
 
 [tool.poetry.dependencies]
 python = ">=3.9.0"
-cheroot = "*"
 colorama = "*"
 Cython = "*"
-flask = "*"
-flask_restful = "*"
 orjson = "*"
 psutil = "*"
 PySocks = "*"

@@ -94,7 +94,6 @@ class TestBinanceComManager(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.ubwa.stop_monitoring_api()
         cls.ubwa.stop_manager()
         print(f"\r\nTestBinanceComManager threads:")
         for thread in threading.enumerate():
@@ -324,17 +323,8 @@ class TestBinanceComManager(unittest.TestCase):
         self.__class__.ubwa.unsubscribe_from_stream(stream_id, markets=['bnbbtc'])
         self.__class__.ubwa.unsubscribe_from_stream(stream_id, channels=['trade'])
         time.sleep(6)
-        self.__class__.ubwa.get_monitoring_status_icinga()
         self.__class__.ubwa.print_summary(title="Unittests")
         self.__class__.ubwa.print_stream_info(stream_id, title="Unittests")
-
-    def test_start_monitoring_api(self):
-        print(f"test_start_monitoring_api():")
-        with BinanceWebSocketApiManager(exchange="binance.com-testnet",
-                                        debug=True,) as ubwa:
-            self.assertTrue(ubwa.start_monitoring_api())
-            time.sleep(6)
-            self.assertTrue(ubwa.stop_monitoring_api())
 
 
 class TestBinanceComManagerTest(unittest.TestCase):

@@ -19,11 +19,13 @@ Tasks collected from codebase analysis (2026-04-01). Ordered by priority within 
 - Remove `restclient.keepalive_listen_key()` call path
 - Affects: `manager.py:_ping_listen_key()`, `restclient.py`
 
-### [ ] Remove check_lucit_collector + Icinga support
-- Remove `get_latest_release_info_check_command()` and `get_latest_version_check_command()` from `manager.py`
-- Remove `last_update_check_github_check_command` state
-- Remove any Icinga/monitoring plugin code (REST server routes)
-- Out-of-scope for this library
+### [x] Remove check_lucit_collector + Icinga support
+- Removed `get_latest_release_info_check_command()`, `get_latest_version_check_command()`,
+  `is_update_available_check_command()`, `get_monitoring_status_icinga()`,
+  `start_monitoring_api()`, `stop_monitoring_api()`, `_start_monitoring_api_thread()`
+- Removed `restserver.py` entirely
+- Removed `flask`, `flask_restful`, `cheroot` dependencies
+- Cleaned `get_monitoring_status_plain()` of all check_lucit references; method retained for programmatic use
 
 ### [ ] Replace print() with logger calls
 - `connection.py:121` — `print(f"KeyError: {error_msg}")`

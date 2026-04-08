@@ -79,13 +79,25 @@ CEX_EXCHANGES = [
 CONNECTION_SETTINGS = {
     Exchanges.BINANCE: (1024, "wss://stream.binance.com:9443/", "wss://ws-api.binance.com/ws-api/v3"),
     Exchanges.BINANCE_TESTNET: (1024, "wss://testnet.binance.vision/", "wss://testnet.binance.vision/ws-api/v3"),
-    Exchanges.BINANCE_MARGIN: (1024, "wss://stream.binance.com:9443/", None),
-    Exchanges.BINANCE_MARGIN_TESTNET: (1024, "wss://testnet.binance.vision/", None),
-    Exchanges.BINANCE_ISOLATED_MARGIN: (1024, "wss://stream.binance.com:9443/", None),
-    Exchanges.BINANCE_ISOLATED_MARGIN_TESTNET: (1024, "wss://testnet.binance.vision/", None),
+    Exchanges.BINANCE_MARGIN: (1024, "wss://stream.binance.com:9443/", "wss://ws-api.binance.com/ws-api/v3"),
+    Exchanges.BINANCE_MARGIN_TESTNET: (1024, "wss://testnet.binance.vision/", "wss://testnet.binance.vision/ws-api/v3"),
+    Exchanges.BINANCE_ISOLATED_MARGIN: (1024, "wss://stream.binance.com:9443/", "wss://ws-api.binance.com/ws-api/v3"),
+    Exchanges.BINANCE_ISOLATED_MARGIN_TESTNET: (1024, "wss://testnet.binance.vision/", "wss://testnet.binance.vision/ws-api/v3"),
     Exchanges.BINANCE_FUTURES: (200, "wss://fstream.binance.com/", "wss://ws-fapi.binance.com/ws-fapi/v1"),
     Exchanges.BINANCE_FUTURES_TESTNET: (200, "wss://stream.binancefuture.com/", "wss://testnet.binancefuture.com/ws-fapi/v1"),
     Exchanges.BINANCE_COIN_FUTURES: (200, "wss://dstream.binance.com/", None),
     Exchanges.BINANCE_US: (1024, "wss://stream.binance.us:9443/", None),
     Exchanges.TRBINANCE: (1024, "wss://stream-cloud.trbinance.com/", None),
 }
+
+# Exchanges that use the new WS API userDataStream subscription flow (userDataStream.subscribe.signature)
+# instead of the legacy REST listenKey approach (POST /api/v3/userDataStream).
+# Binance deprecated and removed the listenKey REST endpoints for Spot and Margin in February 2026.
+USERDATA_WS_API_EXCHANGES = frozenset([
+    Exchanges.BINANCE,
+    Exchanges.BINANCE_TESTNET,
+    Exchanges.BINANCE_MARGIN,
+    Exchanges.BINANCE_MARGIN_TESTNET,
+    Exchanges.BINANCE_ISOLATED_MARGIN,
+    Exchanges.BINANCE_ISOLATED_MARGIN_TESTNET,
+])

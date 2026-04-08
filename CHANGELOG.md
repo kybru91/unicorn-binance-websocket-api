@@ -12,6 +12,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## 2.10.2.dev (development stage/unreleased/unstable)
 ### Changed
 - build_wheels.yml: Upgraded `cibuildwheel` from `v3.0.0` to `v3.4.1`
+- `!userData` streams on `binance.com`, `binance.com-testnet`, `binance.com-margin`,
+  `binance.com-margin-testnet`, `binance.com-isolated_margin` and
+  `binance.com-isolated_margin-testnet` now use the new WS API subscription flow
+  (`userDataStream.subscribe.signature`) instead of the legacy REST listenKey approach.
+  Binance removed the Spot/Margin listenKey REST endpoints (`POST /api/v3/userDataStream` etc.)
+  in February 2026. The public interface is unchanged:
+  `create_stream('arr', '!userData', api_key=..., api_secret=...)` continues to work as before.
+  Futures exchanges are unaffected and keep their existing listenKey flow. (issue #399)
+- `connection_settings.py`: Added `USERDATA_WS_API_EXCHANGES` constant; added WS API base URIs
+  for `binance.com-margin`, `binance.com-margin-testnet`, `binance.com-isolated_margin` and
+  `binance.com-isolated_margin-testnet`
 ### Removed
 - `simplejson` dependency — unused in UBWA code; `orjson` is the sole JSON library
 ### Fixed

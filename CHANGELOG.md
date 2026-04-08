@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.10.2.dev (development stage/unreleased/unstable)
+### Changed
+- build_wheels.yml: Upgraded `cibuildwheel` from `v3.0.0` to `v3.4.1`
 ### Removed
 - `simplejson` dependency — unused in UBWA code; `orjson` is the sole JSON library
 ### Fixed

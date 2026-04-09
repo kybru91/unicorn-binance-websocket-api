@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.10.2.dev (development stage/unreleased/unstable)
+### Fixed
+- `get_latest_release_info()`: corrected GitHub API URL from the old `LUCIT-Systems-and-Development`
+  organization to `oliver-zehentleitner`
 ### Changed
 - build_wheels.yml: Upgraded `cibuildwheel` from `v3.0.0` to `v3.4.1`
 - `!userData` streams on `binance.com`, `binance.com-testnet`, `binance.com-margin`,

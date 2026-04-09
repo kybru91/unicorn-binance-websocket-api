@@ -2391,7 +2391,7 @@ class BinanceWebSocketApiManager(threading.Thread):
         :return: dict or None
         """
         try:
-            respond = requests.get(f'https://api.github.com/repos/LUCIT-Systems-and-Development/'
+            respond = requests.get(f'https://api.github.com/repos/oliver-zehentleitner/'
                                    f'unicorn-binance-websocket-api/releases/latest')
             latest_release_info = respond.json()
             return latest_release_info

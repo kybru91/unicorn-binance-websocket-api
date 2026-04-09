@@ -89,6 +89,22 @@ class BinanceWebSocketApiSocket(object):
                                                      symbols=self.symbols) as self.websocket:
                 if self.websocket is None:
                     raise StreamIsRestarting(stream_id=self.stream_id, reason="websocket is None")
+
+                # New WS API userData subscription flow (Spot/Margin, Binance Feb 2026 change):
+                # Authenticate by sending a signed subscription message right after connect.
+                # This replaces the legacy listenKey approach and is re-sent on every reconnect.
+                if self.manager.stream_list[self.stream_id].get('userData_type') == 'ws_api_signature':
+                    subscribe_payload = self.manager._build_userdata_subscribe_payload(self.stream_id)
+                    with self.manager.stream_list_lock:
+                        self.manager.stream_list[self.stream_id]['userdata_subscribe_id'] = subscribe_payload['id']
+                    if self.manager.show_secrets_in_logs is True:
+                        logger.info(f"BinanceWebSocketApiSocket.start_socket({str(self.stream_id)}) - "
+                                    f"Sending userDataStream.subscribe.signature: {subscribe_payload}")
+                    else:
+                        logger.info(f"BinanceWebSocketApiSocket.start_socket({str(self.stream_id)}) - "
+                                    f"Sending userDataStream.subscribe.signature (id={subscribe_payload['id']})")
+                    await self.websocket.send(orjson.dumps(subscribe_payload).decode("utf-8"))
+
                 if self.manager.stream_list[self.stream_id]['status'] == "restarting":
                     self.manager.increase_reconnect_counter(self.stream_id)
                 self.manager.stream_list[self.stream_id]['status'] = "running"
@@ -128,6 +144,26 @@ class BinanceWebSocketApiSocket(object):
 
                         received_stream_data_json = await self.websocket.receive()
                         if received_stream_data_json is not None:
+                            # Filter the userDataStream.subscribe.signature acknowledgment so it does
+                            # not reach the user's callback/stream_buffer. On auth failure, crash the
+                            # stream with a meaningful error instead of silently dropping events.
+                            userdata_subscribe_id = self.manager.stream_list[self.stream_id].get('userdata_subscribe_id')
+                            if userdata_subscribe_id and userdata_subscribe_id in received_stream_data_json:
+                                ack = orjson.loads(received_stream_data_json)
+                                with self.manager.stream_list_lock:
+                                    self.manager.stream_list[self.stream_id]['userdata_subscribe_id'] = None
+                                if ack.get('status') == 200:
+                                    logger.info(f"BinanceWebSocketApiSocket.start_socket({str(self.stream_id)}) - "
+                                                f"userDataStream.subscribe.signature acknowledged successfully")
+                                else:
+                                    error = ack.get('error', {})
+                                    error_msg = (f"userDataStream.subscribe.signature failed: "
+                                                 f"code={error.get('code')} msg={error.get('msg')}")
+                                    logger.critical(f"BinanceWebSocketApiSocket.start_socket("
+                                                    f"{str(self.stream_id)}) - {error_msg}")
+                                    raise StreamIsCrashing(stream_id=self.stream_id, reason=error_msg)
+                                continue
+
                             if self.output == "UnicornFy":
                                 if self.manager.stream_list[self.stream_id]['api'] is False:
                                     if self.exchange == "binance.com":

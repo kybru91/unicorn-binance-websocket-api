@@ -38,7 +38,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from .connection_settings import CEX_EXCHANGES, CONNECTION_SETTINGS
+from .connection_settings import CEX_EXCHANGES, CONNECTION_SETTINGS, USERDATA_WS_API_EXCHANGES
 from .exceptions import *
 from .restclient import BinanceWebSocketApiRestclient
 from .sockets import BinanceWebSocketApiSocket
@@ -788,6 +788,8 @@ class BinanceWebSocketApiManager(threading.Thread):
                                            'processed_receives_statistic': {},
                                            'transfer_rate_per_second': {'bytes': {}, 'speed': 0},
                                            'websocket_uri': None,
+                                           'userData_type': None,
+                                           'userdata_subscribe_id': None,
                                            '3rd-party-future': None}
             logger.debug(f"BinanceWebSocketApiManager._add_stream_to_stream_list() - Leaving `stream_list_lock`!")
         logger.info("BinanceWebSocketApiManager._add_stream_to_stream_list(" +
@@ -839,7 +841,8 @@ class BinanceWebSocketApiManager(threading.Thread):
             self.asyncio_queue[stream_id] = asyncio.Queue()
             if (self.stream_list[stream_id]['api'] is False
                     and ("!userData" in self.stream_list[stream_id]['markets']
-                         or "!userData" in self.stream_list[stream_id]['channels'])):
+                         or "!userData" in self.stream_list[stream_id]['channels'])
+                    and self.exchange not in USERDATA_WS_API_EXCHANGES):
                 logger.debug(f"BinanceWebSocketApiManager._create_stream_thread({stream_id} - "
                              f"Adding `_ping_listen_key({stream_id})` to asyncio loop ...")
                 loop.create_task(self._ping_listen_key(stream_id=stream_id))
@@ -923,6 +926,35 @@ class BinanceWebSocketApiManager(threading.Thread):
         query_string = '&'.join(["{}={}".format(d[0], d[1]) for d in ordered_data])
         m = hmac.new(api_secret.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256)
         return m.hexdigest()
+
+    def _build_userdata_subscribe_payload(self, stream_id: str) -> dict:
+        """
+        Build a signed `userDataStream.subscribe.signature` payload for the WS API userData subscription flow.
+
+        Used for Spot and Margin exchanges after Binance removed the REST listenKey endpoints in February 2026.
+        The signature is generated fresh on every call so it is safe to use on reconnects.
+
+        :param stream_id: the stream_id whose api_key/api_secret are used for signing
+        :type stream_id: str
+        :return: dict ready to be serialised and sent over the WebSocket
+        :rtype: dict
+        """
+        api_key = self.stream_list[stream_id]['api_key']
+        api_secret = self.stream_list[stream_id]['api_secret']
+        timestamp = self.get_timestamp()
+        query_string = f"apiKey={api_key}&timestamp={timestamp}"
+        signature = hmac.new(api_secret.encode('utf-8'),
+                             query_string.encode('utf-8'),
+                             hashlib.sha256).hexdigest()
+        return {
+            "id": str(uuid.uuid4()),
+            "method": "userDataStream.subscribe.signature",
+            "params": {
+                "apiKey": api_key,
+                "timestamp": timestamp,
+                "signature": signature
+            }
+        }
 
     @staticmethod
     def order_params(data):
@@ -1775,6 +1807,25 @@ class BinanceWebSocketApiManager(threading.Thread):
         if len(channels) == 1 and len(markets) == 1:
             if "!userData" in channels or "!userData" in markets:
                 if stream_id is not None:
+                    # New WS API subscription flow: Binance removed the REST listenKey endpoints for
+                    # Spot and Margin in February 2026. Authentication now happens via a signed
+                    # userDataStream.subscribe.signature message sent over the WebSocket after connect.
+                    if self.exchange in USERDATA_WS_API_EXCHANGES:
+                        with self.stream_list_lock:
+                            logger.debug(f"BinanceWebSocketApiManager.create_websocket_uri() - "
+                                         f"`stream_list_lock` was entered!")
+                            self.stream_list[stream_id]['userData_type'] = 'ws_api_signature'
+                            subscriptions = self.get_number_of_subscriptions(stream_id)
+                            self.stream_list[stream_id]['subscriptions'] = subscriptions
+                            logger.debug(f"BinanceWebSocketApiManager.create_websocket_uri() - "
+                                         f"Leaving `stream_list_lock`!")
+                        logger.info(f"BinanceWebSocketApiManager.create_websocket_uri({str(channels)}, "
+                                    f"{str(markets)}, {str(symbols)}) - Using new WS API userData subscription "
+                                    f"flow for exchange='{self.exchange}', stream_id={stream_id}, "
+                                    f"result: {self.websocket_api_base_uri}")
+                        return self.websocket_api_base_uri
+
+                    # Legacy listenKey flow (Futures and other exchanges where REST listenKey still works)
                     if self.stream_list[stream_id]['provided_listen_key'] is not None:
                         response = {'listenKey': self.stream_list[stream_id]['provided_listen_key']}
                         self.stream_list[stream_id]['listen_key'] = str(response['listenKey'])

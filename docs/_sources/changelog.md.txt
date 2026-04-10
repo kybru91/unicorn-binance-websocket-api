@@ -9,7 +9,59 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
-## 2.10.2.dev (development stage/unreleased/unstable)
+## 2.11.0.dev (development stage/unreleased/unstable)
+
+## 2.11.0
+### Added
+- Python 3.14 support (GIL build)
+- `stop_manager()` and `stop_manager_with_all_streams()` now accept a `delete_listen_key` parameter
+### Changed
+- build_wheels.yml: Upgraded `cibuildwheel` from `v3.0.0` to `v3.4.1`
+- `!userData` streams on `binance.com`, `binance.com-testnet`, `binance.com-margin`,
+  `binance.com-margin-testnet`, `binance.com-isolated_margin` and
+  `binance.com-isolated_margin-testnet` now use the new WS API subscription flow
+  (`userDataStream.subscribe.signature`) instead of the legacy REST listenKey approach.
+  Binance removed the Spot/Margin listenKey REST endpoints (`POST /api/v3/userDataStream` etc.)
+  in February 2026. The public interface is unchanged:
+  `create_stream('arr', '!userData', api_key=..., api_secret=...)` continues to work as before.
+  Futures exchanges are unaffected and keep their existing listenKey flow. (issue #399)
+- `connection_settings.py`: Added `USERDATA_WS_API_EXCHANGES` constant; added WS API base URIs
+  for `binance.com-margin`, `binance.com-margin-testnet`, `binance.com-isolated_margin` and
+  `binance.com-isolated_margin-testnet`
+- Minimum Python version raised from 3.8 to 3.9 (Python 3.8 reached EOL in October 2024)
+- Upgraded `websockets` dependency from `==11.0.3` to `>=14.0`
+- Updated websockets exception handling: `websockets.InvalidStatusCode` → `websockets.exceptions.InvalidStatus`
+  with `.response.status_code` attribute access (websockets 14 API change)
+- Simplified `connection_settings.py`: removed Python 3.8 version guard, now uses `typing.Type` unconditionally
+### Fixed
+- `get_latest_release_info()`: corrected GitHub API URL from the old `LUCIT-Systems-and-Development`
+  organization to `oliver-zehentleitner`
+- `_ping_listen_key()`: IP ban detection now reads the `Retry-After` response header first
+  (provided by Binance on HTTP 418/429), with fallback to parsing `"banned until"` in the
+  error message. The previous check for `"IP banned"` never matched Binance's actual error
+  text and silently skipped the backoff entirely. (issue #398)
+- `api/spot.py` and `api/futures.py`: float parameters (`price`, `quantity`, `stop_price`, etc.) were
+  converted to string using `str()`, which produces scientific notation (e.g. `1.9e-07`) for very small
+  values. Binance rejects these with error -1100. Now using `format(Decimal(repr(value)), 'f')` which
+  always produces decimal notation. (issue #397)
+  (default `True`). Set to `False` if multiple processes share the same `listen_key` and stopping
+  one process should not invalidate it for the others. (issue #396)
+- On reconnect, the payload queue is now cleared and the full current subscription state is
+  re-queued as a fresh SUBSCRIBE message. Previously, stale queued payloads from before the
+  disconnect could cause duplicate or inconsistent subscriptions on the new connection.
+  UserData streams (listen-key URI) and WebSocket-API streams are unaffected. (issue #374 follow-up)
+### Removed
+- `simplejson` dependency — unused in UBWA code; `orjson` is the sole JSON library
+- Python 3.8 support and CI job
+- DEX support (`binance.org`, `binance.org-testnet`): Binance Chain has been discontinued. Removed
+  `Exchanges.BINANCE_ORG` and `Exchanges.BINANCE_ORG_TESTNET` from `connection_settings.py`, all
+  DEX-specific code paths in `manager.py` and `sockets.py`, the `set_private_dex_config()` method,
+  the `dex_user_address` stream state field, and all related tests and examples.
+- Icinga/Nagios monitoring REST server: removed `start_monitoring_api()`, `stop_monitoring_api()`,
+  `get_monitoring_status_icinga()`, `_start_monitoring_api_thread()`, `get_latest_release_info_check_command()`,
+  `get_latest_version_check_command()`, `is_update_available_check_command()`, and `restserver.py`.
+  The `get_monitoring_status_plain()` method is retained for programmatic status access.
+  Dependencies `flask`, `flask_restful`, and `cheroot` have been removed.
 
 ## 2.10.2
 ### Fixed

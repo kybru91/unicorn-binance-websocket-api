@@ -60,13 +60,6 @@ unicorn\_binance\_websocket\_api.restclient module
     :undoc-members:
     :show-inheritance:
 
-unicorn\_binance\_websocket\_api.restserver module
-------------------------------------------------------------------------------------
-
-.. automodule:: unicorn_binance_websocket_api.restserver
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 unicorn\_binance\_websocket\_api.sockets module
 --------------------------------------------------------------------------------

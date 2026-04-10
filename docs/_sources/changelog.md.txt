@@ -50,6 +50,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   re-queued as a fresh SUBSCRIBE message. Previously, stale queued payloads from before the
   disconnect could cause duplicate or inconsistent subscriptions on the new connection.
   UserData streams (listen-key URI) and WebSocket-API streams are unaffected. (issue #374 follow-up)
+- `_frequent_checks()`: Fixed `KeyError: 'receives_statistic_last_second'` race condition. When a
+  stream restarts, its `stream_list` entry can be briefly absent or incomplete while
+  `_frequent_checks()` is still iterating the active stream list snapshot. The delete-cleanup
+  blocks for `receives_statistic_last_second` and `transfer_rate_per_second` were not wrapped in
+  `try/except KeyError`, unlike the surrounding stat-read blocks. Added the missing guard.
 ### Removed
 - `simplejson` dependency — unused in UBWA code; `orjson` is the sole JSON library
 - Python 3.8 support and CI job

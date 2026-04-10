@@ -1077,24 +1077,27 @@ class BinanceWebSocketApiManager(threading.Thread):
                     # delete list entries older than `keep_max_received_last_second_entries`
                     # receives_statistic_last_second
                     delete_index = []
-                    if len(self.stream_list[stream_id]['receives_statistic_last_second']['entries']) > \
-                            self.keep_max_received_last_second_entries:
-                        with self.stream_list_lock:
-                            logger.debug(f"BinanceWebSocketApiManager._frequent_checks() - `stream_list_lock` was "
-                                         f"entered!")
-                            temp_entries = copy.deepcopy(self.stream_list[stream_id]['receives_statistic_last_second']['entries'])
-                            logger.debug(f"BinanceWebSocketApiManager._frequent_checks() - Leaving "
-                                         f"`stream_list_lock`!")
-                        for timestamp_key in temp_entries:
-                            try:
-                                if timestamp_key < current_timestamp - self.keep_max_received_last_second_entries:
-                                    delete_index.append(timestamp_key)
-                            except ValueError as error_msg:
-                                logger.error("BinanceWebSocketApiManager._frequent_checks() timestamp_key=" +
-                                             str(timestamp_key) + " current_timestamp=" + str(current_timestamp) +
-                                             " keep_max_received_last_second_entries=" +
-                                             str(self.keep_max_received_last_second_entries) + " error_msg=" +
-                                             str(error_msg))
+                    try:
+                        if len(self.stream_list[stream_id]['receives_statistic_last_second']['entries']) > \
+                                self.keep_max_received_last_second_entries:
+                            with self.stream_list_lock:
+                                logger.debug(f"BinanceWebSocketApiManager._frequent_checks() - `stream_list_lock` was "
+                                             f"entered!")
+                                temp_entries = copy.deepcopy(self.stream_list[stream_id]['receives_statistic_last_second']['entries'])
+                                logger.debug(f"BinanceWebSocketApiManager._frequent_checks() - Leaving "
+                                             f"`stream_list_lock`!")
+                            for timestamp_key in temp_entries:
+                                try:
+                                    if timestamp_key < current_timestamp - self.keep_max_received_last_second_entries:
+                                        delete_index.append(timestamp_key)
+                                except ValueError as error_msg:
+                                    logger.error("BinanceWebSocketApiManager._frequent_checks() timestamp_key=" +
+                                                 str(timestamp_key) + " current_timestamp=" + str(current_timestamp) +
+                                                 " keep_max_received_last_second_entries=" +
+                                                 str(self.keep_max_received_last_second_entries) + " error_msg=" +
+                                                 str(error_msg))
+                    except KeyError:
+                        pass
                     for timestamp_key in delete_index:
                         with self.stream_list_lock:
                             logger.debug(f"BinanceWebSocketApiManager._frequent_checks() - `stream_list_lock` was "
@@ -1105,25 +1108,28 @@ class BinanceWebSocketApiManager(threading.Thread):
                                          f"`stream_list_lock`!")
                     # transfer_rate_per_second
                     delete_index = []
-                    if len(self.stream_list[stream_id]['transfer_rate_per_second']['bytes']) > \
-                            self.keep_max_received_last_second_entries:
-                        try:
-                            temp_bytes = self.stream_list[stream_id]['transfer_rate_per_second']['bytes']
-                            for timestamp_key in temp_bytes:
-                                try:
-                                    if timestamp_key < current_timestamp - self.keep_max_received_last_second_entries:
-                                        delete_index.append(timestamp_key)
-                                except ValueError as error_msg:
-                                    logger.error(
-                                        "BinanceWebSocketApiManager._frequent_checks() timestamp_key="
-                                        + str(timestamp_key) +
-                                        " current_timestamp=" + str(current_timestamp) +
-                                        " keep_max_received_last_second_"
-                                        "entries=" + str(self.keep_max_received_last_second_entries) + " error_msg=" +
-                                        str(error_msg))
-                        except RuntimeError as error_msg:
-                            logger.info("BinanceWebSocketApiManager._frequent_checks() - "
-                                        "Caught RuntimeError: " + str(error_msg))
+                    try:
+                        if len(self.stream_list[stream_id]['transfer_rate_per_second']['bytes']) > \
+                                self.keep_max_received_last_second_entries:
+                            try:
+                                temp_bytes = self.stream_list[stream_id]['transfer_rate_per_second']['bytes']
+                                for timestamp_key in temp_bytes:
+                                    try:
+                                        if timestamp_key < current_timestamp - self.keep_max_received_last_second_entries:
+                                            delete_index.append(timestamp_key)
+                                    except ValueError as error_msg:
+                                        logger.error(
+                                            "BinanceWebSocketApiManager._frequent_checks() timestamp_key="
+                                            + str(timestamp_key) +
+                                            " current_timestamp=" + str(current_timestamp) +
+                                            " keep_max_received_last_second_"
+                                            "entries=" + str(self.keep_max_received_last_second_entries) + " error_msg=" +
+                                            str(error_msg))
+                            except RuntimeError as error_msg:
+                                logger.info("BinanceWebSocketApiManager._frequent_checks() - "
+                                            "Caught RuntimeError: " + str(error_msg))
+                    except KeyError:
+                        pass
                     for timestamp_key in delete_index:
                         with self.stream_list_lock:
                             logger.debug(f"BinanceWebSocketApiManager._frequent_checks() - `stream_list_lock` was "

@@ -13,11 +13,12 @@ Tasks collected from codebase analysis (2026-04-01). Ordered by priority within 
 - Update `AGENTS.md` supported exchanges table
 - Bump version
 
-### [ ] Rebuild listen key handling — remove REST-based approach
-- Current REST-based listen key ping (`_ping_listen_key` in `manager.py`) is obsolete
-- Rebuild using the WebSocket-native approach
-- Remove `restclient.keepalive_listen_key()` call path
-- Affects: `manager.py:_ping_listen_key()`, `restclient.py`
+### [x] Rebuild listen key handling — remove REST-based approach
+- Binance removed REST listenKey endpoints for Spot/Margin in February 2026
+- PR #411: new WS API subscription flow (`userDataStream.subscribe.signature`) for Spot/Margin
+- PR #413: deadlock fix in `create_websocket_uri()` (get_number_of_subscriptions inside stream_list_lock)
+- Futures exchanges keep the existing listenKey flow (unaffected)
+- `_ping_listen_key()` and `restclient.keepalive_listen_key()` still active for Futures — leave as-is
 
 ### [x] Remove check_lucit_collector + Icinga support
 - Removed `get_latest_release_info_check_command()`, `get_latest_version_check_command()`,

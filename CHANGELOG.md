@@ -9,6 +9,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
+## 2.10.2.dev (development stage/unreleased/unstable)
+### Fixed
+- `_frequent_checks()`: Fixed `KeyError: 'receives_statistic_last_second'` race condition. When a
+  stream restarts, its `stream_list` entry can be briefly absent or incomplete while
+  `_frequent_checks()` is still iterating the active stream list snapshot. The delete-cleanup
+  blocks for `receives_statistic_last_second` and `transfer_rate_per_second` were not wrapped in
+  `try/except KeyError`, unlike the surrounding stat-read blocks. Added the missing guard.
+### Fixed
+- `get_latest_release_info()`: corrected GitHub API URL from the old `LUCIT-Systems-and-Development`
+  organization to `oliver-zehentleitner`
 ## 2.11.0.dev (development stage/unreleased/unstable)
 
 ## 2.11.0

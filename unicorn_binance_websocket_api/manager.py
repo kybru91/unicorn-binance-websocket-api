@@ -1811,11 +1811,11 @@ class BinanceWebSocketApiManager(threading.Thread):
                     # Spot and Margin in February 2026. Authentication now happens via a signed
                     # userDataStream.subscribe.signature message sent over the WebSocket after connect.
                     if self.exchange in USERDATA_WS_API_EXCHANGES:
+                        subscriptions = self.get_number_of_subscriptions(stream_id)
                         with self.stream_list_lock:
                             logger.debug(f"BinanceWebSocketApiManager.create_websocket_uri() - "
                                          f"`stream_list_lock` was entered!")
                             self.stream_list[stream_id]['userData_type'] = 'ws_api_signature'
-                            subscriptions = self.get_number_of_subscriptions(stream_id)
                             self.stream_list[stream_id]['subscriptions'] = subscriptions
                             logger.debug(f"BinanceWebSocketApiManager.create_websocket_uri() - "
                                          f"Leaving `stream_list_lock`!")

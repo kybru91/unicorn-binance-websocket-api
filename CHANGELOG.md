@@ -13,10 +13,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed
 - `get_latest_release_info()`: corrected GitHub API URL from the old `LUCIT-Systems-and-Development`
   organization to `oliver-zehentleitner`
-- `create_websocket_uri()`: fixed deadlock on `!userData` streams for Spot/Margin exchanges —
-  `get_number_of_subscriptions()` was called while holding `stream_list_lock`, but that method
-  also tries to acquire the same lock (`threading.Lock`, not `RLock`), causing the stream thread
-  to block forever. Moved the call outside the lock block. (issue #413)
 ### Changed
 - build_wheels.yml: Upgraded `cibuildwheel` from `v3.0.0` to `v3.4.1`
 - `!userData` streams on `binance.com`, `binance.com-testnet`, `binance.com-margin`,

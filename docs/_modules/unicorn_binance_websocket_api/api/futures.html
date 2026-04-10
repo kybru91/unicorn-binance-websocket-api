@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unicorn_binance_websocket_api.api.futures &#8212; unicorn-binance-websocket-api 2.9.1 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unicorn_binance_websocket_api.api.futures &#8212; unicorn-binance-websocket-api 2.11.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
     <link rel="stylesheet" type="text/css" href="../../../_static/pydoctheme.css?v=fdf8e9ae" />
@@ -14,9 +14,8 @@
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" /><link rel="shortcut icon" type="image/png" href="../../../_static/lucit.png" />
+    <link rel="search" title="Search" href="../../../search.html" /><link rel="shortcut icon" type="image/png" href="../../../_static/py.png" />
     <script async defer src="https://buttons.github.io/buttons.js"></script>
-    
             <script type="text/javascript" src="../../../_static/copybutton.js"></script>
             <script type="text/javascript" src="../../../_static/menu.js"></script> 
   </head>
@@ -41,16 +40,8 @@
         <nav class="menu" role="navigation" aria-label="main navigation">
             <p class="logo">
                 <div style="text-align: center;">
-                    <a href="https://www.lucit.tech"><img src="https://www.lucit.tech/files/images/logos/LUCIT-LOGO.png"></a><br>
-                    <a href="https://shop.lucit.services/software/unicorn-binance-suite" style="font-size: 0.85em;font-weight: 900">Get a UNICORN Binance Suite License!</a><br>
+                    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite"><img src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-suite/refs/heads/master/images/logo/LUCIT-UBS-Logo.png"></a>
                     <br>
-                    <a href="https://github.com/LUCIT-Systems-and-Development" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-github-20.png"></a>
-                    <a href="https://fb.me/lucit.systems.and.development" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-facebook-20.png"></a>
-                    <a href="https://twitter.com/LUCIT_SysDev" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-twitter-20.png"></a>
-                    <a href="https://www.linkedin.com/company/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-linkedin-20.png"></a>
-                    <a href="https://www.xing.com/pages/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-xing-20.png"></a>
-                    <a href="https://medium.lucit.tech" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-medium-monogram-20.png"></a>
-                    <a href="https://www.youtube.com/channel/UCp57u8vaPqEWQTlfpYn-KnQ" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-youtube-20.png"></a>
                 </div>
             </p>
 <div id="searchbox" style="display: block" role="search">
@@ -93,7 +84,7 @@
     </div>
 </div>
   
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -104,10 +95,11 @@
              >modules</a> |</li>
               
                   
-              <li><img src="../../../_static/github-logo.png" alt="GitHub Logo"
-                       style="vertical-align: middle; margin-top: -1px"/></li>
-              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
+              <li><img src="../../../_static/py.png" alt="Python"
+                       style="vertical-align: middle; margin-top: -1px"/></li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Docs Index</a> | </li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
               
               
@@ -178,9 +170,10 @@
 <span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS</span>
 <span class="c1"># IN THE SOFTWARE.</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Literal</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Literal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
 
 <span class="n">__logger__</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;unicorn_binance_websocket_api&quot;</span><span class="p">)</span>
 
@@ -189,7 +182,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures">[docs]</a>
-<span class="k">class</span> <span class="nc">BinanceWebSocketApiApiFutures</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BinanceWebSocketApiApiFutures</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Connect to Binance Futures API via Websocket.</span>
 
@@ -216,12 +209,12 @@
 <span class="sd">    :type manager: BinanceWebsocketApiManager</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_manager</span> <span class="o">=</span> <span class="n">manager</span>
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.cancel_order">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.cancel_order">[docs]</a>
-    <span class="k">def</span> <span class="nf">cancel_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">orig_client_order_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cancel_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">orig_client_order_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                      <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recv_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                      <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                      <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
@@ -386,7 +379,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.create_order">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.create_order">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                      <span class="n">activation_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                      <span class="n">callback_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                      <span class="n">close_position</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -648,7 +641,7 @@
                 <span class="n">order_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;LIMIT_MAKER&quot;</span> <span class="ow">or</span>
                 <span class="n">order_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;STOP_LOSS_LIMIT&quot;</span> <span class="ow">or</span>
                 <span class="n">order_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TAKE_PROFIT_LIMIT&quot;</span><span class="p">):</span>
-            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">price</span><span class="p">)</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">price</span><span class="p">)),</span> <span class="s1">&#39;f&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">order_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;LIMIT&quot;</span> <span class="ow">or</span>
                 <span class="n">order_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;STOP_LOSS_LIMIT&quot;</span> <span class="ow">or</span>
                 <span class="n">order_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TAKE_PROFIT_LIMIT&quot;</span><span class="p">):</span>
@@ -660,7 +653,7 @@
         <span class="k">if</span> <span class="n">price_protect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">params</span><span class="p">[</span><span class="s1">&#39;priceProtect&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;TRUE&quot;</span> <span class="k">if</span> <span class="n">price_protect</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="s2">&quot;FALSE&quot;</span>
         <span class="k">if</span> <span class="n">quantity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;quantity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;quantity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">quantity</span><span class="p">)),</span> <span class="s1">&#39;f&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">recv_window</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">params</span><span class="p">[</span><span class="s1">&#39;recvWindow&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">recv_window</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">reduce_only</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -668,7 +661,7 @@
         <span class="k">if</span> <span class="n">self_trade_prevention_mode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">params</span><span class="p">[</span><span class="s1">&#39;selfTradePreventionMode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">self_trade_prevention_mode</span>
         <span class="k">if</span> <span class="n">stop_price</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;stopPrice&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">stop_price</span><span class="p">)</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;stopPrice&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">stop_price</span><span class="p">)),</span> <span class="s1">&#39;f&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">working_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">params</span><span class="p">[</span><span class="s1">&#39;workingType&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">working_type</span>
 
@@ -706,7 +699,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.get_account_balance">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.get_account_balance">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_account_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recv_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_account_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recv_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;v2&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
@@ -842,7 +835,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.get_account_position">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.get_account_position">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_account_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recv_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_account_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recv_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                              <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                              <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;v2&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1043,7 +1036,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.get_account_status">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.get_account_status">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_account_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recv_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_account_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recv_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;v2&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
@@ -1334,7 +1327,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.get_listen_key">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.get_listen_key">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_listen_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_listen_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                        <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Start user data stream (USER STREAM)</span>
@@ -1437,7 +1430,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.get_order">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.get_order">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">orig_client_order_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">orig_client_order_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">recv_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                   <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1599,7 +1592,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.get_order_book">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.get_order_book">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_order_book</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">recv_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_order_book</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">recv_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                        <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                        <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1743,7 +1736,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.get_server_time">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.get_server_time">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_server_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_server_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                         <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check server time</span>
@@ -1839,7 +1832,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.get_ticker_order_book">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.get_ticker_order_book">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ticker_order_book</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ticker_order_book</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                               <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1990,7 +1983,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.get_ticker_price">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.get_ticker_price">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ticker_price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ticker_price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                          <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -2132,7 +2125,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.modify_order">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.modify_order">[docs]</a>
-    <span class="k">def</span> <span class="nf">modify_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">modify_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                      <span class="n">order_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                      <span class="n">orig_client_order_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                      <span class="n">price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -2298,8 +2291,8 @@
                 <span class="k">return</span> <span class="kc">False</span>
 
         <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;apiKey&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manager</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;api_key&#39;</span><span class="p">],</span>
-                  <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">price</span><span class="p">),</span>
-                  <span class="s2">&quot;quantity&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">quantity</span><span class="p">),</span>
+                  <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">price</span><span class="p">)),</span> <span class="s1">&#39;f&#39;</span><span class="p">),</span>
+                  <span class="s2">&quot;quantity&quot;</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">quantity</span><span class="p">)),</span> <span class="s1">&#39;f&#39;</span><span class="p">),</span>
                   <span class="s2">&quot;side&quot;</span><span class="p">:</span> <span class="n">side</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
                   <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="n">symbol</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
                   <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manager</span><span class="o">.</span><span class="n">get_timestamp</span><span class="p">()}</span>
@@ -2347,7 +2340,7 @@
 
 <div class="viewcode-block" id="BinanceWebSocketApiApiFutures.ping">
 <a class="viewcode-back" href="../../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.api.futures.BinanceWebSocketApiApiFutures.ping">[docs]</a>
-    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
              <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stream_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test connectivity</span>
@@ -2444,20 +2437,12 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
             <p class="logo">
                 <div style="text-align: center;">
-                    <a href="https://www.lucit.tech"><img src="https://www.lucit.tech/files/images/logos/LUCIT-LOGO.png"></a><br>
-                    <a href="https://shop.lucit.services/software/unicorn-binance-suite" style="font-size: 0.85em;font-weight: 900">Get a UNICORN Binance Suite License!</a><br>
+                    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite"><img src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-suite/refs/heads/master/images/logo/LUCIT-UBS-Logo.png"></a>
                     <br>
-                    <a href="https://github.com/LUCIT-Systems-and-Development" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-github-20.png"></a>
-                    <a href="https://fb.me/lucit.systems.and.development" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-facebook-20.png"></a>
-                    <a href="https://twitter.com/LUCIT_SysDev" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-twitter-20.png"></a>
-                    <a href="https://www.linkedin.com/company/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-linkedin-20.png"></a>
-                    <a href="https://www.xing.com/pages/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-xing-20.png"></a>
-                    <a href="https://medium.lucit.tech" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-medium-monogram-20.png"></a>
-                    <a href="https://www.youtube.com/channel/UCp57u8vaPqEWQTlfpYn-KnQ" target="_blank" style="text-decoration:none;"><img src="../../../_static/icons8-youtube-20.png"></a>
                 </div>
             </p>
 <div id="searchbox" style="display: block" role="search">
@@ -2500,7 +2485,7 @@
       </div>
       <div class="clearer"></div>
     </div>  
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -2511,10 +2496,11 @@
              >modules</a> |</li>
               
                   
-              <li><img src="../../../_static/github-logo.png" alt="GitHub Logo"
-                       style="vertical-align: middle; margin-top: -1px"/></li>
-              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
+              <li><img src="../../../_static/py.png" alt="Python"
+                       style="vertical-align: middle; margin-top: -1px"/></li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Docs Index</a> | </li>
+              <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
                   
               
               
@@ -2539,17 +2525,15 @@
       </ul>
     </div>  
     <div class="footer">
-    <a href="https://docs.lucit.tech">Index of all LUCIT Software Documentation</a><br />
+    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Jun 22 2025 at 20:02 (CET).
+    Last updated on Apr 10 2026 at 14:59 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
-        with <a href="https://github.com/LUCIT-Systems-and-Development/python-docs-theme-lucit">python-docs-theme-lucit</a>
-        by <a href="https://www.lucit.tech">LUCIT Systems and Development</a>.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+        with <a href="https://github.com/LUCIT-Systems-and-Development/python-docs-theme-lucit">python-docs-theme-lucit</a>.
     </div>
-    
 
   </body>
 </html>

@@ -113,6 +113,65 @@ with BinanceWebSocketApiManager(exchange='binance.com') as ubwa:
 
 Basically that's it, but there are more options.
 
+## Receive private UserData Streams
+
+Create a private `!userData` stream to receive account updates like order fills, balance changes and position updates in 
+real time. A valid `api_key` and `api_secret` is required.
+
+### Set the credentials globally on the manager
+
+All streams created on this manager inherit the credentials:
+
+```
+from unicorn_binance_websocket_api import BinanceWebSocketApiManager
+
+async def process_userdata(stream_data):
+    print(stream_data)
+
+ubwa = BinanceWebSocketApiManager(exchange="binance.com",
+                                  api_key="YOUR_BINANCE_API_KEY",
+                                  api_secret="YOUR_BINANCE_API_SECRET")
+ubwa.create_stream(channels='arr',
+                   markets='!userData',
+                   process_stream_data_async=process_userdata)
+```
+
+### Or pass the credentials per stream
+
+Useful when running multiple `!userData` streams with different API keys on the same manager:
+
+```
+ubwa = BinanceWebSocketApiManager(exchange="binance.com")
+
+ubwa.create_stream(channels='arr',
+                   markets='!userData',
+                   api_key="API_KEY_ACCOUNT_A",
+                   api_secret="API_SECRET_ACCOUNT_A",
+                   stream_label="ACCOUNT_A",
+                   process_stream_data_async=process_userdata)
+
+ubwa.create_stream(channels='arr',
+                   markets='!userData',
+                   api_key="API_KEY_ACCOUNT_B",
+                   api_secret="API_SECRET_ACCOUNT_B",
+                   stream_label="ACCOUNT_B",
+                   process_stream_data_async=process_userdata)
+```
+
+Per-stream credentials override the manager defaults. Isolated Margin additionally requires the `symbols` parameter:
+
+```
+ubwa_im = BinanceWebSocketApiManager(exchange="binance.com-isolated_margin")
+ubwa_im.create_stream(channels='arr',
+                      markets='!userData',
+                      symbols='btcusdt',
+                      api_key="YOUR_BINANCE_API_KEY",
+                      api_secret="YOUR_BINANCE_API_SECRET",
+                      process_stream_data_async=process_userdata)
+```
+
+See also [example_multiple_userdata_streams.py](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_multiple_userdata_streams.py).
+
 ## Convert received stream data into well-formed Python dictionaries with [UnicornFy](https://github.com/oliver-zehentleitner/unicorn-fy)
 
 ```

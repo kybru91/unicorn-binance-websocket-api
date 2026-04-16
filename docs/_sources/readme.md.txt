@@ -24,7 +24,7 @@
 [Contributing](#contributing) | [Disclaimer](#disclaimer)
 
 A Python SDK to use the Binance Websocket API`s (com+testnet, com-margin+testnet, com-isolated_margin+testnet, 
-com-futures+testnet, com-coin_futures, us, tr) in a simple, fast, flexible, robust and 
+com-futures+testnet, com-coin_futures, com-vanilla-options+testnet, us, tr) in a simple, fast, flexible, robust and 
 fully-featured way. 
 
 Part of '[UNICORN Binance Suite](https://github.com/oliver-zehentleitner/unicorn-binance-suite)'.
@@ -112,6 +112,65 @@ with BinanceWebSocketApiManager(exchange='binance.com') as ubwa:
 ```
 
 Basically that's it, but there are more options.
+
+## Receive private UserData Streams
+
+Create a private `!userData` stream to receive account updates like order fills, balance changes and position updates in 
+real time. A valid `api_key` and `api_secret` is required.
+
+### Set the credentials globally on the manager
+
+All streams created on this manager inherit the credentials:
+
+```
+from unicorn_binance_websocket_api import BinanceWebSocketApiManager
+
+async def process_userdata(stream_data):
+    print(stream_data)
+
+ubwa = BinanceWebSocketApiManager(exchange="binance.com",
+                                  api_key="YOUR_BINANCE_API_KEY",
+                                  api_secret="YOUR_BINANCE_API_SECRET")
+ubwa.create_stream(channels='arr',
+                   markets='!userData',
+                   process_stream_data_async=process_userdata)
+```
+
+### Or pass the credentials per stream
+
+Useful when running multiple `!userData` streams with different API keys on the same manager:
+
+```
+ubwa = BinanceWebSocketApiManager(exchange="binance.com")
+
+ubwa.create_stream(channels='arr',
+                   markets='!userData',
+                   api_key="API_KEY_ACCOUNT_A",
+                   api_secret="API_SECRET_ACCOUNT_A",
+                   stream_label="ACCOUNT_A",
+                   process_stream_data_async=process_userdata)
+
+ubwa.create_stream(channels='arr',
+                   markets='!userData',
+                   api_key="API_KEY_ACCOUNT_B",
+                   api_secret="API_SECRET_ACCOUNT_B",
+                   stream_label="ACCOUNT_B",
+                   process_stream_data_async=process_userdata)
+```
+
+Per-stream credentials override the manager defaults. Isolated Margin additionally requires the `symbols` parameter:
+
+```
+ubwa_im = BinanceWebSocketApiManager(exchange="binance.com-isolated_margin")
+ubwa_im.create_stream(channels='arr',
+                      markets='!userData',
+                      symbols='btcusdt',
+                      api_key="YOUR_BINANCE_API_KEY",
+                      api_secret="YOUR_BINANCE_API_SECRET",
+                      process_stream_data_async=process_userdata)
+```
+
+See also [example_multiple_userdata_streams.py](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_multiple_userdata_streams.py).
 
 ## Convert received stream data into well-formed Python dictionaries with [UnicornFy](https://github.com/oliver-zehentleitner/unicorn-fy)
 
@@ -243,6 +302,8 @@ provides an API to the Binance Websocket API`s of
 [Binance Futures](https://binance-docs.github.io/apidocs/futures/en/#websocket-market-streams) 
 ([+Testnet](https://testnet.binancefuture.com)), 
 [Binance COIN-M Futures](https://binance-docs.github.io/apidocs/delivery/en/#change-log),
+[Binance European Options](https://developers.binance.com/docs/derivatives/option/general-info)
+([+Testnet](https://testnet.binancefuture.com)),
 [Binance US](https://github.com/binance-us/binance-official-api-docs) and
 [Binance TR](https://www.trbinance.com/apidocs) and supports sending requests 
 to the [Binance Websocket API](https://developers.binance.com/docs/binance-trading-api/websocket_api) and the streaming 
@@ -281,6 +342,8 @@ Use the [UNICORN Binance REST API](https://github.com/oliver-zehentleitner/unico
 | [Binance USD-M Futures](https://www.binance.com)                   | `binance.com-futures`                 | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) |
 | [Binance USD-M Futures Testnet](https://testnet.binancefuture.com) | `binance.com-futures-testnet`         | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) |
 | [Binance Coin-M Futures](https://www.binance.com)                  | `binance.com-coin_futures`            | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+| [Binance European Options](https://www.binance.com)                | `binance.com-vanilla-options`         | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+| [Binance European Options Testnet](https://testnet.binancefuture.com) | `binance.com-vanilla-options-testnet` | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
 | [Binance US](https://www.binance.us)                               | `binance.us`                          | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
 | [Binance TR](https://www.trbinance.com)                            | `trbinance.com`                       | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
 
@@ -463,10 +526,10 @@ Run in bash:
 `pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/$(curl -s https://api.github.com/repos/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")').tar.gz --upgrade`
 
 #### Windows
-Use the below command with the version (such as 2.11.0) you determined 
+Use the below command with the version (such as 2.12.0) you determined 
 [here](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest):
 
-`pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.11.0.tar.gz --upgrade`
+`pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.12.0.tar.gz --upgrade`
 ### From the latest source (dev-stage) with PIP from [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
 This is not a release version and can not be considered to be stable!
 

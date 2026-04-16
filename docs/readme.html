@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>UNICORN Binance WebSocket API &#8212; unicorn-binance-websocket-api 2.11.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNICORN Binance WebSocket API &#8212; unicorn-binance-websocket-api 2.12.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
     <link rel="stylesheet" type="text/css" href="_static/pydoctheme.css?v=fdf8e9ae" />
@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="unicorn_binance_websocket_api" href="modules.html" />
-    <link rel="prev" title="Welcome to unicorn-binance-websocket-api’s documentation!" href="index.html" /><link rel="shortcut icon" type="image/png" href="_static/py.png" />
+    <link rel="prev" title="Welcome to unicorn-binance-websocket-api’s documentation!" href="index.html" /><link rel="shortcut icon" type="image/png" href="_static/lucit.png" />
     <script async defer src="https://buttons.github.io/buttons.js"></script>
             <script type="text/javascript" src="_static/copybutton.js"></script>
             <script type="text/javascript" src="_static/menu.js"></script> 
@@ -43,8 +43,16 @@
         <nav class="menu" role="navigation" aria-label="main navigation">
             <p class="logo">
                 <div style="text-align: center;">
-                    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite"><img src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-suite/refs/heads/master/images/logo/LUCIT-UBS-Logo.png"></a>
+                    <a href="https://www.lucit.tech"><img src="https://www.lucit.tech/files/images/logos/LUCIT-LOGO.png"></a><br>
+                    <a href="https://shop.lucit.services/software/unicorn-binance-suite" style="font-size: 0.85em;font-weight: 900">Get a UNICORN Binance Suite License!</a><br>
                     <br>
+                    <a href="https://github.com/LUCIT-Systems-and-Development" target="_blank" style="text-decoration:none;"><img src="_static/icons8-github-20.png"></a>
+                    <a href="https://fb.me/lucit.systems.and.development" target="_blank" style="text-decoration:none;"><img src="_static/icons8-facebook-20.png"></a>
+                    <a href="https://twitter.com/LUCIT_SysDev" target="_blank" style="text-decoration:none;"><img src="_static/icons8-twitter-20.png"></a>
+                    <a href="https://www.linkedin.com/company/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="_static/icons8-linkedin-20.png"></a>
+                    <a href="https://www.xing.com/pages/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="_static/icons8-xing-20.png"></a>
+                    <a href="https://medium.lucit.tech" target="_blank" style="text-decoration:none;"><img src="_static/icons8-medium-monogram-20.png"></a>
+                    <a href="https://www.youtube.com/channel/UCp57u8vaPqEWQTlfpYn-KnQ" target="_blank" style="text-decoration:none;"><img src="_static/icons8-youtube-20.png"></a>
                 </div>
             </p>
   <div>
@@ -59,6 +67,11 @@
 <li><a class="reference internal" href="#or-with-a-callback-function-just-do">Or with a callback function just do</a></li>
 <li><a class="reference internal" href="#or-with-an-async-callback-function-just-do">Or with an async callback function just do</a></li>
 <li><a class="reference internal" href="#or-await-the-stream-data-in-an-asyncio-coroutine">Or await the stream data in an asyncio coroutine</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#receive-private-userdata-streams">Receive private UserData Streams</a><ul>
+<li><a class="reference internal" href="#set-the-credentials-globally-on-the-manager">Set the credentials globally on the manager</a></li>
+<li><a class="reference internal" href="#or-pass-the-credentials-per-stream">Or pass the credentials per stream</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#convert-received-stream-data-into-well-formed-python-dictionaries-with-unicornfy">Convert received stream data into well-formed Python dictionaries with UnicornFy</a></li>
@@ -192,7 +205,7 @@
               
                   
                   
-              <li><img src="_static/py.png" alt="Python"
+              <li><img src="_static/lucit.png" alt="LUCIT Logo"
                        style="vertical-align: middle; margin-top: -1px"/></li>
               <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Docs Index</a> | </li>
               <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
@@ -247,7 +260,7 @@
 <a class="reference internal" href="#receive-notifications">Notifications</a> | <a class="reference internal" href="#how-to-report-bugs-or-suggest-improvements">Bugs</a> |
 <a class="reference internal" href="#contributing">Contributing</a> | <a class="reference internal" href="#disclaimer">Disclaimer</a></p>
 <p>A Python SDK to use the Binance Websocket API`s (com+testnet, com-margin+testnet, com-isolated_margin+testnet,
-com-futures+testnet, com-coin_futures, us, tr) in a simple, fast, flexible, robust and
+com-futures+testnet, com-coin_futures, com-vanilla-options+testnet, us, tr) in a simple, fast, flexible, robust and
 fully-featured way.</p>
 <p>Part of ‘<a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-suite">UNICORN Binance Suite</a>’.</p>
 <section id="receive-data-from-binance-websockets">
@@ -331,6 +344,60 @@ generally recommended method for processing data from streams.</p>
 </pre></div>
 </div>
 <p>Basically that’s it, but there are more options.</p>
+</section>
+</section>
+<section id="receive-private-userdata-streams">
+<h2>Receive private UserData Streams<a class="headerlink" href="#receive-private-userdata-streams" title="Link to this heading">¶</a></h2>
+<p>Create a private <code class="docutils literal notranslate"><span class="pre">!userData</span></code> stream to receive account updates like order fills, balance changes and position updates in
+real time. A valid <code class="docutils literal notranslate"><span class="pre">api_key</span></code> and <code class="docutils literal notranslate"><span class="pre">api_secret</span></code> is required.</p>
+<section id="set-the-credentials-globally-on-the-manager">
+<h3>Set the credentials globally on the manager<a class="headerlink" href="#set-the-credentials-globally-on-the-manager" title="Link to this heading">¶</a></h3>
+<p>All streams created on this manager inherit the credentials:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_binance_websocket_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiManager</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_userdata</span><span class="p">(</span><span class="n">stream_data</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">stream_data</span><span class="p">)</span>
+
+<span class="n">ubwa</span> <span class="o">=</span> <span class="n">BinanceWebSocketApiManager</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;binance.com&quot;</span><span class="p">,</span>
+                                  <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;YOUR_BINANCE_API_KEY&quot;</span><span class="p">,</span>
+                                  <span class="n">api_secret</span><span class="o">=</span><span class="s2">&quot;YOUR_BINANCE_API_SECRET&quot;</span><span class="p">)</span>
+<span class="n">ubwa</span><span class="o">.</span><span class="n">create_stream</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="s1">&#39;arr&#39;</span><span class="p">,</span>
+                   <span class="n">markets</span><span class="o">=</span><span class="s1">&#39;!userData&#39;</span><span class="p">,</span>
+                   <span class="n">process_stream_data_async</span><span class="o">=</span><span class="n">process_userdata</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="or-pass-the-credentials-per-stream">
+<h3>Or pass the credentials per stream<a class="headerlink" href="#or-pass-the-credentials-per-stream" title="Link to this heading">¶</a></h3>
+<p>Useful when running multiple <code class="docutils literal notranslate"><span class="pre">!userData</span></code> streams with different API keys on the same manager:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ubwa</span> <span class="o">=</span> <span class="n">BinanceWebSocketApiManager</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;binance.com&quot;</span><span class="p">)</span>
+
+<span class="n">ubwa</span><span class="o">.</span><span class="n">create_stream</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="s1">&#39;arr&#39;</span><span class="p">,</span>
+                   <span class="n">markets</span><span class="o">=</span><span class="s1">&#39;!userData&#39;</span><span class="p">,</span>
+                   <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;API_KEY_ACCOUNT_A&quot;</span><span class="p">,</span>
+                   <span class="n">api_secret</span><span class="o">=</span><span class="s2">&quot;API_SECRET_ACCOUNT_A&quot;</span><span class="p">,</span>
+                   <span class="n">stream_label</span><span class="o">=</span><span class="s2">&quot;ACCOUNT_A&quot;</span><span class="p">,</span>
+                   <span class="n">process_stream_data_async</span><span class="o">=</span><span class="n">process_userdata</span><span class="p">)</span>
+
+<span class="n">ubwa</span><span class="o">.</span><span class="n">create_stream</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="s1">&#39;arr&#39;</span><span class="p">,</span>
+                   <span class="n">markets</span><span class="o">=</span><span class="s1">&#39;!userData&#39;</span><span class="p">,</span>
+                   <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;API_KEY_ACCOUNT_B&quot;</span><span class="p">,</span>
+                   <span class="n">api_secret</span><span class="o">=</span><span class="s2">&quot;API_SECRET_ACCOUNT_B&quot;</span><span class="p">,</span>
+                   <span class="n">stream_label</span><span class="o">=</span><span class="s2">&quot;ACCOUNT_B&quot;</span><span class="p">,</span>
+                   <span class="n">process_stream_data_async</span><span class="o">=</span><span class="n">process_userdata</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Per-stream credentials override the manager defaults. Isolated Margin additionally requires the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> parameter:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ubwa_im</span> <span class="o">=</span> <span class="n">BinanceWebSocketApiManager</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;binance.com-isolated_margin&quot;</span><span class="p">)</span>
+<span class="n">ubwa_im</span><span class="o">.</span><span class="n">create_stream</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="s1">&#39;arr&#39;</span><span class="p">,</span>
+                      <span class="n">markets</span><span class="o">=</span><span class="s1">&#39;!userData&#39;</span><span class="p">,</span>
+                      <span class="n">symbols</span><span class="o">=</span><span class="s1">&#39;btcusdt&#39;</span><span class="p">,</span>
+                      <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;YOUR_BINANCE_API_KEY&quot;</span><span class="p">,</span>
+                      <span class="n">api_secret</span><span class="o">=</span><span class="s2">&quot;YOUR_BINANCE_API_SECRET&quot;</span><span class="p">,</span>
+                      <span class="n">process_stream_data_async</span><span class="o">=</span><span class="n">process_userdata</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See also <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/examples/_archive/example_multiple_userdata_streams.py">example_multiple_userdata_streams.py</a>.</p>
 </section>
 </section>
 <section id="convert-received-stream-data-into-well-formed-python-dictionaries-with-unicornfy">
@@ -459,6 +526,8 @@ provides an API to the Binance Websocket API`s of
 <a class="reference external" href="https://binance-docs.github.io/apidocs/futures/en/#websocket-market-streams">Binance Futures</a>
 (<a class="reference external" href="https://testnet.binancefuture.com">+Testnet</a>),
 <a class="reference external" href="https://binance-docs.github.io/apidocs/delivery/en/#change-log">Binance COIN-M Futures</a>,
+<a class="reference external" href="https://developers.binance.com/docs/derivatives/option/general-info">Binance European Options</a>
+(<a class="reference external" href="https://testnet.binancefuture.com">+Testnet</a>),
 <a class="reference external" href="https://github.com/binance-us/binance-official-api-docs">Binance US</a> and
 <a class="reference external" href="https://www.trbinance.com/apidocs">Binance TR</a> and supports sending requests
 to the <a class="reference external" href="https://developers.binance.com/docs/binance-trading-api/websocket_api">Binance Websocket API</a> and the streaming
@@ -543,6 +612,18 @@ and <a class="reference external" href="https://oliver-zehentleitner.github.io/u
 <tr>
 <td><a href="https://www.binance.com">Binance Coin-M Futures</a></td>
 <td><code>binance.com-coin_futures</code></td>
+<td><img alt="yes" src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png" /></td>
+<td><img alt="no" src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png" /></td>
+</tr>
+<tr>
+<td><a href="https://www.binance.com">Binance European Options</a></td>
+<td><code>binance.com-vanilla-options</code></td>
+<td><img alt="yes" src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png" /></td>
+<td><img alt="no" src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png" /></td>
+</tr>
+<tr>
+<td><a href="https://testnet.binancefuture.com">Binance European Options Testnet</a></td>
+<td><code>binance.com-vanilla-options-testnet</code></td>
 <td><img alt="yes" src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png" /></td>
 <td><img alt="no" src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png" /></td>
 </tr>
@@ -723,9 +804,9 @@ and <code class="docutils literal notranslate"><span class="pre">win-64</span></
 </section>
 <section id="windows">
 <h4>Windows<a class="headerlink" href="#windows" title="Link to this heading">¶</a></h4>
-<p>Use the below command with the version (such as 2.11.0) you determined
+<p>Use the below command with the version (such as 2.12.0) you determined
 <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest">here</a>:</p>
-<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.11.0.tar.gz</span> <span class="pre">--upgrade</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.12.0.tar.gz</span> <span class="pre">--upgrade</span></code></p>
 </section>
 </section>
 <section id="from-the-latest-source-dev-stage-with-pip-from-github">
@@ -849,8 +930,16 @@ companies from the US analyze binance.com market data - as long as they do not t
         <div class="sphinxsidebarwrapper">
             <p class="logo">
                 <div style="text-align: center;">
-                    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite"><img src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-suite/refs/heads/master/images/logo/LUCIT-UBS-Logo.png"></a>
+                    <a href="https://www.lucit.tech"><img src="https://www.lucit.tech/files/images/logos/LUCIT-LOGO.png"></a><br>
+                    <a href="https://shop.lucit.services/software/unicorn-binance-suite" style="font-size: 0.85em;font-weight: 900">Get a UNICORN Binance Suite License!</a><br>
                     <br>
+                    <a href="https://github.com/LUCIT-Systems-and-Development" target="_blank" style="text-decoration:none;"><img src="_static/icons8-github-20.png"></a>
+                    <a href="https://fb.me/lucit.systems.and.development" target="_blank" style="text-decoration:none;"><img src="_static/icons8-facebook-20.png"></a>
+                    <a href="https://twitter.com/LUCIT_SysDev" target="_blank" style="text-decoration:none;"><img src="_static/icons8-twitter-20.png"></a>
+                    <a href="https://www.linkedin.com/company/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="_static/icons8-linkedin-20.png"></a>
+                    <a href="https://www.xing.com/pages/lucit-systems-and-development" target="_blank" style="text-decoration:none;"><img src="_static/icons8-xing-20.png"></a>
+                    <a href="https://medium.lucit.tech" target="_blank" style="text-decoration:none;"><img src="_static/icons8-medium-monogram-20.png"></a>
+                    <a href="https://www.youtube.com/channel/UCp57u8vaPqEWQTlfpYn-KnQ" target="_blank" style="text-decoration:none;"><img src="_static/icons8-youtube-20.png"></a>
                 </div>
             </p>
   <div>
@@ -865,6 +954,11 @@ companies from the US analyze binance.com market data - as long as they do not t
 <li><a class="reference internal" href="#or-with-a-callback-function-just-do">Or with a callback function just do</a></li>
 <li><a class="reference internal" href="#or-with-an-async-callback-function-just-do">Or with an async callback function just do</a></li>
 <li><a class="reference internal" href="#or-await-the-stream-data-in-an-asyncio-coroutine">Or await the stream data in an asyncio coroutine</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#receive-private-userdata-streams">Receive private UserData Streams</a><ul>
+<li><a class="reference internal" href="#set-the-credentials-globally-on-the-manager">Set the credentials globally on the manager</a></li>
+<li><a class="reference internal" href="#or-pass-the-credentials-per-stream">Or pass the credentials per stream</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#convert-received-stream-data-into-well-formed-python-dictionaries-with-unicornfy">Convert received stream data into well-formed Python dictionaries with UnicornFy</a></li>
@@ -998,7 +1092,7 @@ companies from the US analyze binance.com market data - as long as they do not t
               
                   
                   
-              <li><img src="_static/py.png" alt="Python"
+              <li><img src="_static/lucit.png" alt="LUCIT Logo"
                        style="vertical-align: middle; margin-top: -1px"/></li>
               <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Docs Index</a> | </li>
               <li><a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">unicorn-binance-websocket-api</a> &#187;</li>
@@ -1028,7 +1122,7 @@ companies from the US analyze binance.com market data - as long as they do not t
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Apr 10 2026 at 15:21 (CET).
+    Last updated on Apr 16 2026 at 14:23 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
     Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.

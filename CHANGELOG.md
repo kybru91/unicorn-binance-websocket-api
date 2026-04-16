@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.11.0.dev (development stage/unreleased/unstable)
+### Added
+- Support for Binance European Options (Vanilla Options) WebSocket streams via `exchange="binance.com-vanilla-options"`
+- New exchange strings: `binance.com-vanilla-options`, `binance.com-vanilla-options-testnet`
+- Connection settings: `wss://fstream.binance.com/public/` (200 max streams per connection)
 
 ## 2.11.0
 ### Added

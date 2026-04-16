@@ -777,6 +777,35 @@ class TestApiLive(unittest.TestCase):
         time.sleep(1)
 
 
+class TestBinanceOptionsManager(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        print(f"\r\nTestBinanceOptionsManager:")
+        cls.ubwa = BinanceWebSocketApiManager(exchange="binance.com-vanilla-options",
+                                              disable_colorama=True)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.ubwa.stop_manager()
+
+    def test_exchange_string(self):
+        self.assertEqual(str(self.__class__.ubwa.get_exchange()), "binance.com-vanilla-options")
+
+    def test_is_exchange_type_cex(self):
+        self.assertTrue(self.__class__.ubwa.is_exchange_type("cex"))
+
+    def test_max_subscriptions(self):
+        self.assertEqual(self.__class__.ubwa.get_limit_of_subscriptions_per_stream(), 200)
+
+    def test_create_stream(self):
+        stream_id = self.__class__.ubwa.create_stream(
+            markets=['btc-260626-120000-c'], channels=["depth@500ms"],
+            stream_label="options_test")
+        self.assertTrue(bool(stream_id))
+        time.sleep(3)
+        self.__class__.ubwa.stop_stream(stream_id)
+
+
 if __name__ == '__main__':
     try:
         unittest.main()

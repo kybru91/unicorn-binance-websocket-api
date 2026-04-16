@@ -55,6 +55,8 @@ class Exchanges(str, Enum):
     BINANCE_FUTURES = "binance.com-futures"
     BINANCE_COIN_FUTURES = "binance.com-coin_futures"
     BINANCE_FUTURES_TESTNET = "binance.com-futures-testnet"
+    BINANCE_VANILLA_OPTIONS = "binance.com-vanilla-options"
+    BINANCE_VANILLA_OPTIONS_TESTNET = "binance.com-vanilla-options-testnet"
     BINANCE_US = "binance.us"
     TRBINANCE = "trbinance.com"
 
@@ -69,6 +71,8 @@ CEX_EXCHANGES = [
     Exchanges.BINANCE_FUTURES,
     Exchanges.BINANCE_COIN_FUTURES,
     Exchanges.BINANCE_FUTURES_TESTNET,
+    Exchanges.BINANCE_VANILLA_OPTIONS,
+    Exchanges.BINANCE_VANILLA_OPTIONS_TESTNET,
     Exchanges.BINANCE_US,
     Exchanges.TRBINANCE,
 ]
@@ -86,6 +90,8 @@ CONNECTION_SETTINGS = {
     Exchanges.BINANCE_FUTURES: (200, "wss://fstream.binance.com/", "wss://ws-fapi.binance.com/ws-fapi/v1"),
     Exchanges.BINANCE_FUTURES_TESTNET: (200, "wss://stream.binancefuture.com/", "wss://testnet.binancefuture.com/ws-fapi/v1"),
     Exchanges.BINANCE_COIN_FUTURES: (200, "wss://dstream.binance.com/", None),
+    Exchanges.BINANCE_VANILLA_OPTIONS: (200, "wss://fstream.binance.com/public/", None),
+    Exchanges.BINANCE_VANILLA_OPTIONS_TESTNET: (200, "wss://fstream.binancefuture.com/public/", None),
     Exchanges.BINANCE_US: (1024, "wss://stream.binance.us:9443/", None),
     Exchanges.TRBINANCE: (1024, "wss://stream-cloud.trbinance.com/", None),
 }

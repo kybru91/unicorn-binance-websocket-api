@@ -11,7 +11,7 @@
 #
 # Author: Oliver Zehentleitner
 #
-# Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
+# Copyright (c) 2019-2024, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -39,8 +39,6 @@ except ImportError:
     print("Please install `matplotlib`! https://pypi.org/project/matplotlib")
     exit(1)
 
-# To use this library you need a valid UNICORN Binance Suite License:
-# https://shop.lucit.services
 binance_websocket_api_manager = ubwam.BinanceWebSocketApiManager()
 binance_websocket_api_manager.create_stream("trade", "btcusdt", output="UnicornFy")
 

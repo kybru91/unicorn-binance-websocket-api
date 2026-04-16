@@ -11,7 +11,7 @@
 #
 # Author: Oliver Zehentleitner
 #
-# Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
+# Copyright (c) 2019-2024, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -41,8 +41,6 @@ logging.basicConfig(level=logging.DEBUG,
                     style="{")
 
 
-# To use this library you need a valid UNICORN Binance Suite License:
-# https://shop.lucit.services
 binance_websocket_api_manager = BinanceWebSocketApiManager(exchange="binance.com")
 
 markets = ['bnbbtc', 'ethbtc', 'btcusdt', 'bchabcusdt', 'xrpusdt', 'rvnbtc', 'ltcusdt', 'adausdt', 'eosusdt',

@@ -11,7 +11,7 @@
 #
 # Author: Oliver Zehentleitner
 #
-# Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
+# Copyright (c) 2019-2024, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -46,8 +46,6 @@ def order_status(msg):
     print("order_status: " + str(msg))
 
 
-# To use this library you need a valid UNICORN Binance Suite License:
-# https://shop.lucit.services
 bwsm = BinanceWebSocketApiManager()
 
 book_ticker_id = bwsm.create_stream("bookTicker", 'bnbbusd', stream_buffer_name=True)

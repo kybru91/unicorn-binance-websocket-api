@@ -19,7 +19,7 @@ load_dotenv()
 
 class BinanceDataProcessor:
     def __init__(self, ubwa_manager: BinanceWebSocketApiManager = None):
-        self.footer: str = "By LUCIT - www.lucit.tech"
+        self.footer: str = ""
         self.markets_limit = 10
         self.title: str = "UBWA Demo"
         self.ubwa: BinanceWebSocketApiManager = ubwa_manager

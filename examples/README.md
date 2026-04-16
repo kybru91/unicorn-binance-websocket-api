@@ -5,7 +5,7 @@ For each example you will find a `README.md` and a `requirements.txt` to install
 file is to download and start, if an example does not work, we are happy about a 
 [patch](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/fork) or a message via 
 [GitHub Issue](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose) or 
-[our chat](https://www.lucit.tech/get-support.html).
+the [GitHub issues](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues).
 
 Old examples are stored in the 
 [archive](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/examples/_archive).

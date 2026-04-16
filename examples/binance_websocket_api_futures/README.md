@@ -16,9 +16,6 @@ BINANCE_API_KEY=12A34BCD5678EFG90HIJKLM12NOP3456QR789STUV0WXYZ
 BINANCE_API_SECRET=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6
 ```
 
-## Get a UNICORN Binance Suite License
-To run modules of the *UNICORN Trading Suite* you need a [valid license](https://shop.lucit.services)!
-
 ## Usage
 ### Running the Script:
 ```bash
@@ -33,5 +30,4 @@ an unexpected exception.
 The script employs logging to provide insights into its operation and to assist in troubleshooting. Logs are saved to a 
 file named after the script with a .log extension.
 
-For further assistance or to report issues, please [contact our support team](https://www.lucit.tech/get-support.html) 
-or [visit our GitHub repository](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api).
+For further assistance or to report issues, please [visit the GitHub repository](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api).

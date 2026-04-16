@@ -11,7 +11,7 @@
 #
 # Author: Oliver Zehentleitner
 #
-# Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
+# Copyright (c) 2019-2024, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -50,8 +50,6 @@ def callback_signals(signal_type=None, stream_id=None, data_record=None, error_m
     print(f"SIGNAL: {signal_type} - {stream_id} - {data_record} - {error_msg}")
 
 
-# To use this library you need a valid UNICORN Binance Suite License:
-# https://shop.lucit.services
 with BinanceWebSocketApiManager(auto_data_cleanup_stopped_streams=True,
                                 exchange="binance.com",
                                 process_stream_signals=callback_signals) as ubwa:

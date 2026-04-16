@@ -99,8 +99,6 @@ if __name__ == "__main__":
     # Loading os.getenv() vars from .env
     load_dotenv()
 
-    # To use this library you need a valid UNICORN Binance Suite License:
-    # https://shop.lucit.services
     with BinanceWebSocketApiManager(exchange='binance.com',
                                     output_default="dict",
                                     process_stream_signals=process_stream_signal) as ubwa_manager:

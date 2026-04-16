@@ -11,7 +11,7 @@
 #
 # Author: Oliver Zehentleitner
 #
-# Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
+# Copyright (c) 2019-2024, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -36,9 +36,6 @@
 # Info:
 # depends on: https://pypi.org/project/kafka-python/
 # must not be installed: https://pypi.org/project/kafka (https://github.com/dpkp/kafka-python/issues/1566)
-
-# To use this library you need a valid UNICORN Binance Suite License:
-# https://shop.lucit.services
 
 from aiokafka import AIOKafkaProducer
 from aiokafka.helpers import create_ssl_context
@@ -101,9 +98,6 @@ if __name__ == "__main__":
     kafka = {"server": "rocket.srvs.cloudkafka.com:9094",
              "user": "pfyrfgiv",
              "pass": "JUTrtwrJFYdMsYbEZGoL0Zt5m1WElPzS"}
-
-    # To use this library you need a valid UNICORN Binance Suite License:
-    # https://shop.lucit.services
 
     ubwa = BinanceWebSocketApiManager(exchange=exchange)
 

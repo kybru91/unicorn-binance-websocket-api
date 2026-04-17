@@ -606,7 +606,7 @@ We ![love](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binanc
 
 ## AI Integration
 
-This project provides a [`llms.txt`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/llms.txt) file for AI tools (ChatGPT, Claude, Copilot, etc.) with structured 
+This project provides a [`llms.txt`](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/refs/heads/master/llms.txt) file for AI tools (ChatGPT, Claude, Copilot, etc.) with structured 
 usage instructions, code examples and module routing.
 
 ---

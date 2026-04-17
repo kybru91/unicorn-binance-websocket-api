@@ -1,0 +1,144 @@
+# UNICORN Binance WebSocket API (UBWA)
+
+> Real-time market data and user data streams for Binance with automatic reconnect.
+> Part of [UNICORN Binance Suite](https://github.com/oliver-zehentleitner/unicorn-binance-suite).
+
+Install: `pip install unicorn-binance-websocket-api`
+Import: `from unicorn_binance_websocket_api import BinanceWebSocketApiManager`
+
+## Quick Start
+
+```python
+# use case: stream real-time trades
+from unicorn_binance_websocket_api import BinanceWebSocketApiManager
+
+with BinanceWebSocketApiManager(exchange="binance.com") as ubwa:
+    ubwa.create_stream(channels="trade", markets="btcusdt",
+                       process_stream_data=lambda data: print(data))
+    while not ubwa.is_manager_stopping():
+        pass
+```
+
+## Data Reception Patterns
+
+### Callback (simplest)
+```python
+def handle(stream_data):
+    print(stream_data)
+
+ubwa = BinanceWebSocketApiManager(process_stream_data=handle)
+ubwa.create_stream(channels="trade", markets="btcusdt")
+```
+
+### Async callback
+```python
+async def handle(stream_data):
+    await process(stream_data)
+
+ubwa = BinanceWebSocketApiManager(process_stream_data_async=handle)
+ubwa.create_stream(channels="trade", markets="btcusdt")
+```
+
+### Asyncio queue (fastest)
+```python
+async def handle(stream_id=None):
+    while not ubwa.is_stop_request(stream_id):
+        data = await ubwa.get_stream_data_from_asyncio_queue(stream_id)
+        print(data)
+        ubwa.asyncio_queue_task_done(stream_id)
+
+ubwa = BinanceWebSocketApiManager()
+ubwa.create_stream(channels="trade", markets="btcusdt", process_asyncio_queue=handle)
+```
+
+### Stream buffer (polling)
+```python
+ubwa = BinanceWebSocketApiManager()
+ubwa.create_stream(channels="trade", markets="btcusdt")
+while True:
+    data = ubwa.pop_stream_data_from_stream_buffer()
+    if data:
+        print(data)
+```
+
+## Place Orders via WebSocket API
+
+```python
+ubwa = BinanceWebSocketApiManager()
+api_stream = ubwa.create_stream(api=True, api_key="...", api_secret="...")
+
+# Spot order
+order = ubwa.api.spot.create_order(symbol="BTCUSDT", side="BUY", order_type="LIMIT",
+                                    quantity=0.01, price=50000, stream_id=api_stream,
+                                    return_response=True)
+
+# Futures order
+ubwa.api.futures.create_order(symbol="BTCUSDT", side="BUY", order_type="MARKET",
+                               quantity=0.01, stream_id=api_stream)
+```
+
+## Stream Signals
+
+Monitor stream lifecycle events:
+
+```python
+def on_signal(signal_type=None, stream_id=None, data_record=None, error_msg=None):
+    print(f"{signal_type}: {ubwa.get_stream_label(stream_id=stream_id)}")
+
+ubwa = BinanceWebSocketApiManager(process_stream_signals=on_signal)
+```
+
+Signal types: `CONNECT`, `FIRST_RECEIVED_DATA`, `DISCONNECT`, `STOP`, `STREAM_UNREPAIRABLE`
+
+## Subscribe/Unsubscribe at Runtime
+
+```python
+stream_id = ubwa.create_stream(channels="trade", markets="btcusdt")
+ubwa.subscribe_to_stream(stream_id, markets=["ethusdt", "bnbusdt"])
+ubwa.unsubscribe_from_stream(stream_id, markets=["btcusdt"])
+```
+
+## Multiple UserData Streams
+
+```python
+ubwa = BinanceWebSocketApiManager(exchange="binance.com")
+stream1 = ubwa.create_stream(channels="!userData", markets="arr",
+                              api_key="key1", api_secret="secret1")
+stream2 = ubwa.create_stream(channels="!userData", markets="arr",
+                              api_key="key2", api_secret="secret2")
+```
+
+## Key Parameters
+
+### BinanceWebSocketApiManager()
+| Parameter | Type | Default | Purpose |
+|-----------|------|---------|---------|
+| exchange | str | "binance.com" | Exchange endpoint |
+| process_stream_data | callable | None | Sync callback for stream data |
+| process_stream_data_async | callable | None | Async callback for stream data |
+| process_asyncio_queue | callable | None | Asyncio queue consumer |
+| process_stream_signals | callable | None | Stream lifecycle callback |
+| output_default | str | "raw_data" | "raw_data", "dict", or "UnicornFy" |
+| high_performance | bool | False | Disable internal logging for speed |
+| socks5_proxy_server | str | None | SOCKS5 proxy address:port |
+
+### create_stream()
+| Parameter | Type | Default | Purpose |
+|-----------|------|---------|---------|
+| channels | str/list | required | "trade", "kline_1m", "depth", "!userData", etc. |
+| markets | str/list | required | "btcusdt", "ethusdt", or "arr" for userData |
+| api | bool | False | True for WebSocket API (order placement) |
+| api_key | str | None | Binance API key (for userData or api streams) |
+| api_secret | str | None | Binance API secret |
+| stream_label | str | None | Human-readable label |
+| process_stream_data | callable | None | Per-stream callback override |
+
+## Supported Exchanges
+
+`binance.com`, `binance.com-testnet`, `binance.com-margin`, `binance.com-margin-testnet`, `binance.com-isolated_margin`, `binance.com-isolated_margin-testnet`, `binance.com-futures`, `binance.com-futures-testnet`, `binance.com-coin_futures`, `binance.com-vanilla-options`, `binance.com-vanilla-options-testnet`, `binance.us`, `trbinance.com`
+
+## Common Mistakes
+
+- Do NOT forget to call `ubwa.stop_manager()` or use `with` context — streams run in background threads
+- Do NOT create hundreds of streams — use `subscribe_to_stream()` to add markets to existing streams
+- UserData streams need `channels="!userData", markets="arr"` — not a symbol name

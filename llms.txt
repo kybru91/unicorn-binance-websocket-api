@@ -3,6 +3,8 @@
 > Real-time market data and user data streams for Binance with automatic reconnect.
 > Part of [UNICORN Binance Suite](https://github.com/oliver-zehentleitner/unicorn-binance-suite).
 
+Version: 2.12.x. Python 3.9 – 3.14.
+
 Install: `pip install unicorn-binance-websocket-api`
 Import: `from unicorn_binance_websocket_api import BinanceWebSocketApiManager`
 
@@ -88,7 +90,12 @@ def on_signal(signal_type=None, stream_id=None, data_record=None, error_msg=None
 ubwa = BinanceWebSocketApiManager(process_stream_signals=on_signal)
 ```
 
-Signal types: `CONNECT`, `FIRST_RECEIVED_DATA`, `DISCONNECT`, `STOP`, `STREAM_UNREPAIRABLE`
+Signal types:
+- `CONNECT` — stream successfully connected to Binance
+- `FIRST_RECEIVED_DATA` — first payload arrived (useful to mark a stream as "live")
+- `DISCONNECT` — transient disconnect; the manager will reconnect automatically
+- `STOP` — stream was deliberately stopped via `stop_stream()`
+- `STREAM_UNREPAIRABLE` — stream crashed beyond automatic recovery (e.g. exhausted reconnect attempts, invalid credentials, endpoint gone). The manager gives up on it; the caller has to decide what to do
 
 ## Subscribe/Unsubscribe at Runtime
 
@@ -142,3 +149,18 @@ stream2 = ubwa.create_stream(channels="!userData", markets="arr",
 - Do NOT forget to call `ubwa.stop_manager()` or use `with` context — streams run in background threads
 - Do NOT create hundreds of streams — use `subscribe_to_stream()` to add markets to existing streams
 - UserData streams need `channels="!userData", markets="arr"` — not a symbol name
+
+## Related Modules
+
+- [UBRA](https://github.com/oliver-zehentleitner/unicorn-binance-rest-api) — REST client. Share an instance via `ubra_manager=...` (listen-key management, order placement alongside streams).
+- [UBLDC](https://github.com/oliver-zehentleitner/unicorn-binance-local-depth-cache) — local order books built on UBWA. Use this instead of hand-rolling a depth-stream consumer.
+- [UnicornFy](https://github.com/oliver-zehentleitner/unicorn-fy) — normalize raw stream payloads into clean dicts; activate via `output_default="UnicornFy"`.
+
+## Docs
+
+- Repo: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
+- Docs: https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/
+- Full manager reference: https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html
+- PyPI: https://pypi.org/project/unicorn-binance-websocket-api/
+- conda-forge: https://anaconda.org/conda-forge/unicorn-binance-websocket-api
+- Changelog: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/CHANGELOG.md

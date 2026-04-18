@@ -11,7 +11,7 @@
 #
 # Author: Oliver Zehentleitner
 #
-# Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
+# Copyright (c) 2019-2026, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -40,9 +40,6 @@ logging.basicConfig(level=logging.DEBUG,
                     filename=os.path.basename(__file__) + '.log',
                     format="{asctime} [{levelname:8}] {process} {thread} {module}: {message}",
                     style="{")
-
-# To use this library you need a valid UNICORN Binance Suite License:
-# https://shop.lucit.services
 binance_websocket_api_manager = BinanceWebSocketApiManager(exchange="binance.com-futures")
 
 binance_websocket_api_manager.create_stream('arr', '!miniTicker')

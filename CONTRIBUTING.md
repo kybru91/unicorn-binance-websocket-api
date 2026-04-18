@@ -1,10 +1,8 @@
 # Contributing
 
-Contributions via GitHub pull requests are welcome. However, contributors should be aware that submitted code
-automatically becomes LUCIT IT-Management GmbH's property and copyright.
-
-Please read [our license terms](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/LICENSE) 
-thoroughly!
+Contributions via GitHub pull requests are welcome. By submitting a pull request you agree that your
+contribution is licensed under the project's
+[MIT License](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/LICENSE).
 
 When contributing to this repository, please first discuss the change you wish to make via 
 [issue](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose) 

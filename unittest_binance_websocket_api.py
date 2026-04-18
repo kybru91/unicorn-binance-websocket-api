@@ -758,7 +758,7 @@ class TestApiLive(unittest.TestCase):
         self.__class__.ubwa.print_summary()
         if platform.system() != 'Windows':
             self.__class__.ubwa.print_summary_to_png(".", 12.5, add_string="test: blah",
-                                                     footer="By LUCIT", title="UBWA Unittest")
+                                                     footer="UBWA", title="UBWA Unittest")
         self.__class__.ubwa.get_latest_release_info()
         self.__class__.ubwa.get_version()
         self.__class__.ubwa.help()

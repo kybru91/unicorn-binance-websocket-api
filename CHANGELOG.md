@@ -11,6 +11,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 2.12.1.dev (development stage/unreleased/unstable)
 ### Changed
+- `CONTRIBUTING.md` and `.github/pull_request_template.md`: removed the
+  "submitted code becomes LUCIT IT-Management GmbH's property"
+  clause and the LSOSL reference. Contributions are MIT-licensed now.
+- `SECURITY.md`: replaced the lucit.tech contact form URL with the
+  GitHub Security Advisories private-reporting URL.
+- `dev/test_*.py`: updated the copyright header from
+  "LUCIT Systems and Development" to "Oliver Zehentleitner" and
+  dropped the `# https://shop.lucit.services` license-shop references.
+- `unittest_binance_websocket_api.py`: changed the
+  `print_summary_to_png()` footer from "By LUCIT" to "UBWA".
+### Removed
+- `dev/test_license.py`: tested the old LUCIT licensing manager which
+  has been removed from the codebase; the test file is obsolete.
 - README: switched all conda references from the legacy `lucit` channel
   to `conda-forge`. Added conda-forge version / downloads / feedstock
   build badges. Removed the "There is no conda support until migration"

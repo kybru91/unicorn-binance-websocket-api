@@ -11,7 +11,7 @@
 #
 # Author: Oliver Zehentleitner
 #
-# Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
+# Copyright (c) 2019-2026, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -47,10 +47,6 @@ except ImportError:
 
 binance_api_key = ""
 binance_api_secret = ""
-
-# To use this library you need a valid UNICORN Binance Suite License:
-# https://shop.lucit.services
-
 channels = {'aggTrade', 'trade', 'kline_1m', 'kline_5m', 'kline_15m', 'kline_30m', 'kline_1h', 'kline_2h', 'kline_4h',
             'kline_6h', 'kline_8h', 'kline_12h', 'kline_1d', 'kline_3d', 'kline_1w', 'kline_1M', 'miniTicker',
             'ticker', 'bookTicker', 'depth5', 'depth10', 'depth20', 'depth', 'depth@100ms'}
@@ -65,10 +61,6 @@ logging.basicConfig(level=logging.INFO,
 
 def print_stream_data(stream_data, stream_buffer_name=False):
     print(str(stream_data))
-
-
-# To use this library you need a valid UNICORN Binance Suite License:
-# https://shop.lucit.services
 try:
     binance_rest_client = unicorn_binance_rest_api.BinanceRestApiManager(binance_api_key, binance_api_secret)
     binance_websocket_api_manager = BinanceWebSocketApiManager()

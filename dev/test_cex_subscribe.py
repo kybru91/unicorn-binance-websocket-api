@@ -11,7 +11,7 @@
 #
 # Author: Oliver Zehentleitner
 #
-# Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
+# Copyright (c) 2019-2026, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -54,11 +54,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
         else:
             #print(oldest_stream_data_from_stream_buffer)
             pass
-
-
-# To use this library you need a valid UNICORN Binance Suite License:
-# https://shop.lucit.services
-
 # create instance of BinanceWebSocketApiManager for Binance Chain DEX
 binance_websocket_api_manager = BinanceWebSocketApiManager(exchange="binance.com")
 

@@ -11,7 +11,7 @@
 #
 # Author: Oliver Zehentleitner
 #
-# Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
+# Copyright (c) 2019-2026, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -68,10 +68,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
         oldest_stream_data_from_stream_buffer = binance_websocket_api_manager.pop_stream_data_from_stream_buffer()
         if oldest_stream_data_from_stream_buffer is None:
             time.sleep(0.01)
-
-
-# To use this library you need a valid UNICORN Binance Suite License:
-# https://shop.lucit.services
 try:
     binance_rest_client = unicorn_binance_rest_api.BinanceRestApiManager(binance_api_key, binance_api_secret)
     binance_websocket_api_manager = BinanceWebSocketApiManager(ping_interval_default=20,

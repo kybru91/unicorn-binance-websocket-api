@@ -11,7 +11,7 @@
 #
 # Author: Oliver Zehentleitner
 #
-# Copyright (c) 2019-2024, LUCIT Systems and Development (https://www.lucit.tech)
+# Copyright (c) 2019-2026, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -96,9 +96,6 @@ if __name__ == "__main__":
                         filename=os.path.basename(__file__) + '.log',
                         format="{asctime} [{levelname:8}] {process} {thread} {module}: {message}",
                         style="{")
-
-    # To use this library you need a valid UNICORN Binance Suite License:
-    # https://shop.lucit.services
     ubwa = BinanceWebSocketApiManager(exchange='binance.com')
     try:
         asyncio.run(binance_stream(ubwa))

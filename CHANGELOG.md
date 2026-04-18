@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 2.12.1.dev (development stage/unreleased/unstable)
 ### Changed
+- Bumped minimum `unicorn-fy` dependency from `>=0.15.0` to `>=0.17.2`
+  in `setup.py`, `requirements.txt`, `pyproject.toml`,
+  `environment.yml` and `meta.yaml`. 0.17.2 is the first release of
+  the suite-wide LUCIT-cleanup round.
 - Bumped minimum `unicorn-binance-rest-api` dependency from `>=2.7.0`
   to `>=2.11.0` in `setup.py`, `requirements.txt`, `pyproject.toml`,
   `environment.yml` and `meta.yaml`. 2.11.0 is the cleanup-round

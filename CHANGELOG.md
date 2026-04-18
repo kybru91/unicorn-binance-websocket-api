@@ -10,6 +10,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.12.0.dev (development stage/unreleased/unstable)
+### Fixed
+- `MANIFEST.in`: the previous pattern `include unicorn_binance_websocket_api/*.*`
+  only matched top-level files and excluded the `api/` subpackage, so the
+  source tarball on PyPI shipped `api/*.c` but no `api/*.py` or `api/*.pyi`.
+  Building from the sdist (e.g. conda-forge) therefore failed with
+  `ValueError: 'unicorn_binance_websocket_api/api/*.py' doesn't match any files`.
+  Switched to `recursive-include` so all Python, stub, Cython and binary
+  files in every subpackage are packaged.
 
 ## 2.12.0
 ### Added

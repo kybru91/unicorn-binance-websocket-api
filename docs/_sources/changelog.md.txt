@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.12.2.dev (development stage/unreleased/unstable)
+
+## 2.12.2
 ### Changed
 - Bumped minimum `unicorn-fy` dependency from `>=0.15.0` to `>=0.17.2`
   in `setup.py`, `requirements.txt`, `pyproject.toml`,

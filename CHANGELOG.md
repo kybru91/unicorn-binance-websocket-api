@@ -10,6 +10,26 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.12.1.dev (development stage/unreleased/unstable)
+### Changed
+- README: switched all conda references from the legacy `lucit` channel
+  to `conda-forge`. Added conda-forge version / downloads / feedstock
+  build badges. Removed the "There is no conda support until migration"
+  placeholders. Install section is now a single
+  `conda install -c conda-forge unicorn-binance-websocket-api`.
+- Aligned dependency lists across `requirements.txt`, `setup.py`,
+  `pyproject.toml`, `environment.yml` and `meta.yaml`
+  (`typing_extensions` was missing from `requirements.txt` and
+  `pyproject.toml`; versions pinned consistently).
+- `meta.yaml`: removed the leftover `channels:` and `dependencies:`
+  blocks (they are `environment.yml` keys, not valid in `meta.yaml`).
+  Dropped the `lucit::` channel prefixes from the suite deps.
+  Refreshed `about.description` by re-embedding the current `README.md`.
+- `environment.yml`: dropped the `lucit` channel and the `lucit::`
+  prefixes on suite dependencies — conda-forge provides them now.
+### Removed
+- `.github/workflows/build_conda.yml`: the conda-forge feedstock
+  (`conda-forge/unicorn-binance-websocket-api-feedstock`) now builds
+  and publishes the conda package; no in-repo build is needed anymore.
 
 ## 2.12.1
 ### Fixed

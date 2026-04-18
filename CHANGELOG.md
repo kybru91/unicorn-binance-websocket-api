@@ -9,7 +9,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
-## 2.12.0.dev (development stage/unreleased/unstable)
+## 2.12.1.dev (development stage/unreleased/unstable)
+
+## 2.12.1
 ### Fixed
 - `MANIFEST.in`: the previous pattern `include unicorn_binance_websocket_api/*.*`
   only matched top-level files and excluded the `api/` subpackage, so the

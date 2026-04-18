@@ -9,7 +9,58 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
-## 2.12.0.dev (development stage/unreleased/unstable)
+## 2.12.2.dev (development stage/unreleased/unstable)
+### Changed
+- Bumped minimum `unicorn-fy` dependency from `>=0.15.0` to `>=0.17.2`
+  in `setup.py`, `requirements.txt`, `pyproject.toml`,
+  `environment.yml` and `meta.yaml`. 0.17.2 is the first release of
+  the suite-wide LUCIT-cleanup round.
+- Bumped minimum `unicorn-binance-rest-api` dependency from `>=2.7.0`
+  to `>=2.11.0` in `setup.py`, `requirements.txt`, `pyproject.toml`,
+  `environment.yml` and `meta.yaml`. 2.11.0 is the cleanup-round
+  release.
+- `CONTRIBUTING.md` and `.github/pull_request_template.md`: removed the
+  "submitted code becomes LUCIT IT-Management GmbH's property"
+  clause and the LSOSL reference. Contributions are MIT-licensed now.
+- `SECURITY.md`: replaced the lucit.tech contact form URL with the
+  GitHub Security Advisories private-reporting URL.
+- `dev/test_*.py`: updated the copyright header from
+  "LUCIT Systems and Development" to "Oliver Zehentleitner" and
+  dropped the `# https://shop.lucit.services` license-shop references.
+- `unittest_binance_websocket_api.py`: changed the
+  `print_summary_to_png()` footer from "By LUCIT" to "UBWA".
+### Removed
+- `dev/test_license.py`: tested the old LUCIT licensing manager which
+  has been removed from the codebase; the test file is obsolete.
+- README: switched all conda references from the legacy `lucit` channel
+  to `conda-forge`. Added conda-forge version / downloads / feedstock
+  build badges. Removed the "There is no conda support until migration"
+  placeholders. Install section is now a single
+  `conda install -c conda-forge unicorn-binance-websocket-api`.
+- Aligned dependency lists across `requirements.txt`, `setup.py`,
+  `pyproject.toml`, `environment.yml` and `meta.yaml`
+  (`typing_extensions` was missing from `requirements.txt` and
+  `pyproject.toml`; versions pinned consistently).
+- `meta.yaml`: removed the leftover `channels:` and `dependencies:`
+  blocks (they are `environment.yml` keys, not valid in `meta.yaml`).
+  Dropped the `lucit::` channel prefixes from the suite deps.
+  Refreshed `about.description` by re-embedding the current `README.md`.
+- `environment.yml`: dropped the `lucit` channel and the `lucit::`
+  prefixes on suite dependencies — conda-forge provides them now.
+### Removed
+- `.github/workflows/build_conda.yml`: the conda-forge feedstock
+  (`conda-forge/unicorn-binance-websocket-api-feedstock`) now builds
+  and publishes the conda package; no in-repo build is needed anymore.
+
+## 2.12.1
+### Fixed
+- `MANIFEST.in`: the previous pattern `include unicorn_binance_websocket_api/*.*`
+  only matched top-level files and excluded the `api/` subpackage, so the
+  source tarball on PyPI shipped `api/*.c` but no `api/*.py` or `api/*.pyi`.
+  Building from the sdist (e.g. conda-forge) therefore failed with
+  `ValueError: 'unicorn_binance_websocket_api/api/*.py' doesn't match any files`.
+  Switched to `recursive-include` so all Python, stub, Cython and binary
+  files in every subpackage are packaged.
 
 ## 2.12.0
 ### Added

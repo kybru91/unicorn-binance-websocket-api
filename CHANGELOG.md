@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 2.12.1.dev (development stage/unreleased/unstable)
 ### Changed
+- Bumped minimum `unicorn-binance-rest-api` dependency from `>=2.7.0`
+  to `>=2.11.0` in `setup.py`, `requirements.txt`, `pyproject.toml`,
+  `environment.yml` and `meta.yaml`. 2.11.0 is the cleanup-round
+  release.
 - `CONTRIBUTING.md` and `.github/pull_request_template.md`: removed the
   "submitted code becomes LUCIT IT-Management GmbH's property"
   clause and the LSOSL reference. Contributions are MIT-licensed now.

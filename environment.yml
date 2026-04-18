@@ -6,7 +6,7 @@ channels:
 dependencies:
   - python>=3.9
   - unicorn-fy>=0.15.0
-  - unicorn-binance-rest-api>=2.7.0
+  - unicorn-binance-rest-api>=2.11.0
   - colorama
   - Cython
   - orjson

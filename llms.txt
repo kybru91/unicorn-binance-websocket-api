@@ -159,6 +159,7 @@ stream2 = ubwa.create_stream(channels="!userData", markets="arr",
 ## Docs
 
 - Repo: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api
+- AGENTS.md (for AI agents working on this repo): https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/AGENTS.md
 - Docs: https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/
 - Full manager reference: https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html
 - PyPI: https://pypi.org/project/unicorn-binance-websocket-api/

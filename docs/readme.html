@@ -99,7 +99,7 @@
 <li><a class="reference internal" href="#change-log">Change Log</a></li>
 <li><a class="reference internal" href="#documentation">Documentation</a></li>
 <li><a class="reference internal" href="#examples">Examples</a></li>
-<li><a class="reference internal" href="#howto">Howto</a></li>
+<li><a class="reference internal" href="#related-articles">Related Articles</a></li>
 <li><a class="reference internal" href="#project-homepage">Project Homepage</a></li>
 <li><a class="reference internal" href="#wiki">Wiki</a></li>
 <li><a class="reference internal" href="#social">Social</a></li>
@@ -238,16 +238,14 @@
 <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml"><img alt="Build and Publish GH+PyPi" src="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml/badge.svg" /></a>
 <a class="reference external" href="https://github.com/conda-forge/unicorn-binance-websocket-api-feedstock"><img alt="Conda-Forge Build" src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/unicorn-binance-websocket-api-feedstock?branchName=main" /></a>
 <a class="reference external" href="https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api"><img alt="Read the Docs" src="https://img.shields.io/badge/read-%20docs-yellow" /></a>
-<a class="reference external" href="https://technopathy.club"><img alt="Read How To`s" src="https://img.shields.io/badge/read-%20howto-yellow" /></a>
+<a class="reference external" href="https://blog.technopathy.club/series/unicorn-binance-suite"><img alt="Read How To`s" src="https://img.shields.io/badge/read-%20howto-yellow" /></a>
 <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api"><img alt="Github" src="https://img.shields.io/badge/source-github-cbc2c8" /></a>
 <a class="reference external" href="https://t.me/unicorndevs"><img alt="Telegram" src="https://img.shields.io/badge/community-telegram-41ab8c" /></a></p>
 <p><a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-suite"><img alt="UBS-Banner" src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-suite/master/images/logo/UBS-Banner-Readme.png" /></a></p>
 <section id="unicorn-binance-websocket-api">
 <h1>UNICORN Binance WebSocket API<a class="headerlink" href="#unicorn-binance-websocket-api" title="Link to this heading">¶</a></h1>
-<p><a class="reference internal" href="#description">Description</a> | <a class="reference internal" href="#installation-and-upgrade">Installation</a> | <a class="reference internal" href="#howto">How To</a> |
-<a class="reference internal" href="#documentation">Documentation</a> | <a class="reference internal" href="#examples">Examples</a> | <a class="reference internal" href="#change-log">Change Log</a> | <a class="reference internal" href="#wiki">Wiki</a> | <a class="reference internal" href="#social">Social</a> |
-<a class="reference internal" href="#receive-notifications">Notifications</a> | <a class="reference internal" href="#how-to-report-bugs-or-suggest-improvements">Bugs</a> |
-<a class="reference internal" href="#contributing">Contributing</a> | <a class="reference internal" href="#disclaimer">Disclaimer</a></p>
+<p><a class="reference internal" href="#description">Description</a> | <a class="reference internal" href="#installation-and-upgrade">Installation</a> | <a class="reference internal" href="#documentation">Documentation</a> | <a class="reference internal" href="#examples">Examples</a> | <a class="reference internal" href="#change-log">Change Log</a> |
+<a class="reference internal" href="#wiki">Wiki</a> | <a class="reference internal" href="#social">Social</a> | <a class="reference internal" href="#receive-notifications">Notifications</a> | <a class="reference internal" href="#how-to-report-bugs-or-suggest-improvements">Bugs</a> | <a class="reference internal" href="#contributing">Contributing</a> | <a class="reference internal" href="#disclaimer">Disclaimer</a></p>
 <p>A Python SDK to use the Binance Websocket API`s (com+testnet, com-margin+testnet, com-isolated_margin+testnet,
 com-futures+testnet, com-coin_futures, com-vanilla-options+testnet, us, tr) in a simple, fast, flexible, robust and
 fully-featured way.</p>
@@ -719,6 +717,7 @@ for more information or try
 <h2>Installation and Upgrade<a class="headerlink" href="#installation-and-upgrade" title="Link to this heading">¶</a></h2>
 <p>The module requires Python 3.9 and runs smoothly up to and including Python 3.14.</p>
 <p>PyPy wheels are available for all supported Python versions.</p>
+<p><strong>conda-forge note:</strong> Conda packages are provided for Python 3.10 – 3.14. Python 3.9 is not available on conda-forge — it was dropped from the global pinning after reaching end-of-life in October 2025. For Python 3.9, use <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code>.</p>
 <p>The current dependencies are listed <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/requirements.txt">here</a>.</p>
 <p>If you run into errors during the installation take a look <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-suite/wiki/Installation">here</a>.</p>
 <section id="packages-are-created-automatically-with-github-actions">
@@ -801,14 +800,15 @@ this may take some time!</p>
 <li><p><a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/examples/">Look here!</a></p></li>
 </ul>
 </section>
-<section id="howto">
-<h2>Howto<a class="headerlink" href="#howto" title="Link to this heading">¶</a></h2>
+<section id="related-articles">
+<h2>Related Articles<a class="headerlink" href="#related-articles" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://technopathy.club/create-and-cancel-orders-via-websocket-on-binance-7f828831404">Create and Cancel Orders via WebSocket on Binance</a></p></li>
-<li><p><a class="reference external" href="https://technopathy.club/how-to-download-data-from-binance-using-python-8f1b6e8f19f3">How to Download Klines from Binance using Python?</a></p></li>
-<li><p><a class="reference external" href="https://technopathy.club/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka-570541574655">Passing Binance Market Data to Apache Kafka in Python with aiokafka</a></p></li>
-<li><p><a class="reference external" href="https://technopathy.club/how-to-connect-to-binance-com-websockets-using-python-via-a-socks5-proxy-3c5a3e063f12">How to Connect to binance.com Websockets using Python via a Socks5 Proxy</a></p></li>
-<li><p><a class="reference external" href="https://technopathy.club/when-ip-whitelisting-isnt-what-it-seems-a-real-world-case-study-from-the-binance-api-816c4312d6d0">When IP Whitelisting Isn’t What It Seems: A Real-World Case Study from the Binance API</a></p></li>
+<li><p><a class="reference external" href="https://blog.technopathy.club/create-and-cancel-orders-via-websocket-on-binance">Create and Cancel Orders via WebSocket on Binance</a></p></li>
+<li><p><a class="reference external" href="https://blog.technopathy.club/how-to-download-klines-from-binance-using-python">How to Download Klines from Binance using Python?</a></p></li>
+<li><p><a class="reference external" href="https://blog.technopathy.club/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka">Passing Binance Market Data to Apache Kafka in Python with aiokafka</a></p></li>
+<li><p><a class="reference external" href="https://blog.technopathy.club/binance-websocket-via-socks5">How to Connect to binance.com Websockets using Python via a Socks5 Proxy</a></p></li>
+<li><p><a class="reference external" href="https://blog.technopathy.club/when-ip-whitelisting-isn-t-what-it-seems-a-real-world-case-study-from-the-binance-api">When IP Whitelisting Isn’t What It Seems: A Real-World Case Study from the Binance API</a></p></li>
+<li><p><a class="reference external" href="https://blog.technopathy.club/series/unicorn-binance-suite">UNICORN Binance Suite Article Series</a></p></li>
 </ul>
 </section>
 <section id="project-homepage">
@@ -960,7 +960,7 @@ companies from the US analyze binance.com market data - as long as they do not t
 <li><a class="reference internal" href="#change-log">Change Log</a></li>
 <li><a class="reference internal" href="#documentation">Documentation</a></li>
 <li><a class="reference internal" href="#examples">Examples</a></li>
-<li><a class="reference internal" href="#howto">Howto</a></li>
+<li><a class="reference internal" href="#related-articles">Related Articles</a></li>
 <li><a class="reference internal" href="#project-homepage">Project Homepage</a></li>
 <li><a class="reference internal" href="#wiki">Wiki</a></li>
 <li><a class="reference internal" href="#social">Social</a></li>
@@ -1082,7 +1082,7 @@ companies from the US analyze binance.com market data - as long as they do not t
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Apr 18 2026 at 19:46 (CET).
+    Last updated on Apr 21 2026 at 11:59 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
     Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.

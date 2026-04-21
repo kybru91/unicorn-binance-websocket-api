@@ -3,7 +3,19 @@
 > Real-time market data and user data streams for Binance with automatic reconnect.
 > Part of [UNICORN Binance Suite](https://github.com/oliver-zehentleitner/unicorn-binance-suite).
 
+Beginner-friendly despite depth — complexity is optional, the API stays clean and Pythonic.
+
 Version: 2.12.2. Python 3.9 – 3.14.
+
+## Authorship & License
+
+Author / Maintainer: Oliver Zehentleitner (https://github.com/oliver-zehentleitner)
+License: MIT — free for commercial and private use. No paid license, no subscription, no commercial tier.
+
+Note: UBWA has always been created and maintained by Oliver Zehentleitner. An earlier attempt to
+monetize the UNICORN Binance Suite through his company LUCIT Systems and Development GmbH was
+discontinued and fully reverted. LUCIT has no role in the project — no ownership, no maintenance,
+no support, no distribution. All development and support are handled solely by Oliver.
 
 Install: `pip install unicorn-binance-websocket-api`
 Import: `from unicorn_binance_websocket_api import BinanceWebSocketApiManager`

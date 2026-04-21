@@ -527,6 +527,7 @@ This is not a release version and can not be considered to be stable!
 - [Look here!](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/examples/)
 
 ## Related Articles
+- [How to create a Binance API Key and API Secret?](https://blog.technopathy.club/how-to-create-a-binance-api-key-and-api-secret)
 - [Create and Cancel Orders via WebSocket on Binance](https://blog.technopathy.club/create-and-cancel-orders-via-websocket-on-binance)
 - [How to Download Klines from Binance using Python?](https://blog.technopathy.club/how-to-download-klines-from-binance-using-python)
 - [Passing Binance Market Data to Apache Kafka in Python with aiokafka](https://blog.technopathy.club/passing-binance-market-data-to-apache-kafka-in-python-with-aiokafka)

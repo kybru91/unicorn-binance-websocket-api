@@ -1,3 +1,7 @@
+> ⚠️ Security Warning: There are currently fraudulent repositories (e.g., under the user gesine1541ro7) impersonating this project to distribute malware. Please ensure you are only using the official source: oliver-zehentleitner/unicorn-binance-websocket-api.
+[Read the full technical analysis and campaign details here!](https://blog.technopathy.club/security-warning-fraudulent-github-repository-impersonating-unicorn-binance-websocket-api)
+
+
 [![GitHub Release](https://img.shields.io/github/release/oliver-zehentleitner/unicorn-binance-websocket-api.svg?label=github)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases)
 [![GitHub Downloads](https://img.shields.io/github/downloads/oliver-zehentleitner/unicorn-binance-websocket-api/total?color=blue)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases)
 [![PyPi Release](https://img.shields.io/pypi/v/unicorn-binance-websocket-api?color=blue)](https://pypi.org/project/unicorn-binance-websocket-api/)

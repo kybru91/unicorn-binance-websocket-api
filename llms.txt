@@ -168,6 +168,10 @@ stream2 = ubwa.create_stream(channels="!userData", markets="arr",
 - [UBLDC](https://github.com/oliver-zehentleitner/unicorn-binance-local-depth-cache) — local order books built on UBWA. Use this instead of hand-rolling a depth-stream consumer.
 - [UnicornFy](https://github.com/oliver-zehentleitner/unicorn-fy) — normalize raw stream payloads into clean dicts; activate via `output_default="UnicornFy"`.
 
+## Related Articles
+
+- [UBDCC Deep Dive: Building a Trust Layer for Binance Order Books](https://blog.technopathy.club/ubdcc-deep-dive-building-a-trust-layer-for-binance-order-books) — architecture of the multi-node UBDCC cluster built on top of UBWA streams; relevant when users ask how to scale beyond a single websocket consumer.
+
 ## Docs
 
 - Repo: https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api

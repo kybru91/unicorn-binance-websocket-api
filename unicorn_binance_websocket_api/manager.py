@@ -38,7 +38,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from .connection_settings import CEX_EXCHANGES, CONNECTION_SETTINGS, USERDATA_WS_API_EXCHANGES
+from .connection_settings import (
+    BINANCE_FUTURES_EXCHANGES,
+    CEX_EXCHANGES,
+    CONNECTION_SETTINGS,
+    USERDATA_WS_API_EXCHANGES,
+)
 from .exceptions import *
 from .restclient import BinanceWebSocketApiRestclient
 from .sockets import BinanceWebSocketApiSocket
@@ -71,10 +76,70 @@ import orjson
 import websockets
 
 __app_name__: str = "unicorn-binance-websocket-api"
-__version__: str = "2.12.2.dev"
+__version__: str = "2.13.0.dev"
 __logger__: logging.getLogger = logging.getLogger("unicorn_binance_websocket_api")
 
 logger = __logger__
+
+
+# UBWA-internal channel/market suffix markers — they don't pin a Futures category.
+_FUTURES_SUFFIX_MARKERS = frozenset({"arr", "$all"})
+
+
+def _classify_futures_token(token: str) -> str:
+    """
+    Classify a single channel name or `!`-prefixed special market into one of the
+    Binance USDT-M Futures WebSocket categories: ``public``, ``market``, ``private``.
+
+    Per Binance announcement effective 2026-04-23, Futures streams are routed
+    via three distinct base paths:
+
+    * ``/public``  — bookTicker, depth (top-levels and diff)
+    * ``/market``  — aggTrade, kline, ticker, miniTicker, forceOrder, markPrice, ...
+    * ``/private`` — user data via listenKey
+    """
+    t = str(token).lower().lstrip("!").split("@", 1)[0]
+    if t == "bookticker":
+        return "public"
+    if t.startswith("depth"):
+        return "public"
+    if t == "userdata":
+        return "private"
+    return "market"
+
+
+def _resolve_futures_category(channels, markets) -> str:
+    """
+    Resolve the Futures WS category for a (channels, markets) combination.
+
+    Plain symbols (e.g. ``btcusdt``) and UBWA suffix markers (``arr``, ``$all``) do not
+    pin a category — only real channel names and ``!``-prefixed special markets do.
+
+    Raises ``ValueError`` when channels/markets resolve to more than one category.
+    Binance no longer permits multiple categories on a single WebSocket connection,
+    and UBWA does not silently split a stream into multiple connections — fail loud
+    so the caller opens one ``create_stream`` per category.
+    """
+    if isinstance(channels, str):
+        channels = [channels]
+    if isinstance(markets, str):
+        markets = [markets]
+    categories = set()
+    for ch in channels or []:
+        if str(ch).lower() in _FUTURES_SUFFIX_MARKERS:
+            continue
+        categories.add(_classify_futures_token(ch))
+    for mk in markets or []:
+        if str(mk).startswith("!"):
+            categories.add(_classify_futures_token(mk))
+    if len(categories) > 1:
+        raise ValueError(
+            f"BINANCE_FUTURES: mixing WebSocket categories on a single stream is not "
+            f"supported. Detected categories: {sorted(categories)}. "
+            f"Since 2026-04-23 Binance routes /public, /market, and /private separately "
+            f"for USDT-M Futures — open one create_stream() call per category."
+        )
+    return categories.pop() if categories else "market"
 
 
 class BinanceWebSocketApiManager(threading.Thread):
@@ -1682,6 +1747,12 @@ class BinanceWebSocketApiManager(threading.Thread):
             channels = [channels]
         if type(markets) is str:
             markets = [markets]
+        if api is False and self.exchange in BINANCE_FUTURES_EXCHANGES:
+            # Binance routes USDT-M Futures WS via /public, /market, /private since
+            # 2026-04-23 — a single connection cannot mix categories. Fail loud here
+            # before allocating a stream slot, instead of silently subscribing only
+            # part of the requested channels.
+            _resolve_futures_category(channels, markets)
         output = output or self.output_default
         close_timeout = close_timeout or self.close_timeout_default
         ping_interval = ping_interval or self.ping_interval_default
@@ -1766,6 +1837,16 @@ class BinanceWebSocketApiManager(threading.Thread):
                 else:
                     logger.error(f"BinanceWebSocketApiManager.create_stream({stream_id} - No valid asyncio loop!")
         return stream_id
+
+    def _futures_path_prefix(self, channels, markets) -> str:
+        """
+        Return the Futures category segment (``public/``, ``market/``, ``private/``)
+        to prepend before ``ws/`` or ``stream?streams=`` when building a Futures URI,
+        or empty string for any other exchange.
+        """
+        if self.exchange not in BINANCE_FUTURES_EXCHANGES:
+            return ""
+        return f"{_resolve_futures_category(channels, markets)}/"
 
     def create_websocket_uri(self, channels, markets, stream_id=None, symbols=None, api=False):
         """
@@ -1864,8 +1945,9 @@ class BinanceWebSocketApiManager(threading.Thread):
                         pass
                     if response:
                         try:
-                            uri = self.websocket_base_uri + "ws/" + str(response['listenKey'])
-                            uri_hidden = self.websocket_base_uri + "ws/" + self.replacement_text
+                            path_prefix = self._futures_path_prefix(channels, markets)
+                            uri = self.websocket_base_uri + path_prefix + "ws/" + str(response['listenKey'])
+                            uri_hidden = self.websocket_base_uri + path_prefix + "ws/" + self.replacement_text
                             if self.show_secrets_in_logs is True:
                                 logger.info("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) +
                                             ", " + str(markets) + ", " + str(symbols) + ") - result: " + uri)
@@ -1909,7 +1991,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                         self.stream_list[stream_id]['subscriptions'] = subscriptions
                         logger.debug(f"BinanceWebSocketApiManager.create_websocket_uri() - Leaving "
                                      f"`stream_list_lock`")
-                return self.websocket_base_uri + "ws/!bookTicker"
+                return self.websocket_base_uri + self._futures_path_prefix(channels, markets) + "ws/!bookTicker"
             elif "arr" in channels or "$all" in markets:
                 if stream_id:
                     subscriptions = self.get_number_of_subscriptions(stream_id)
@@ -1919,7 +2001,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                         self.stream_list[stream_id]['subscriptions'] = subscriptions
                         logger.debug(f"BinanceWebSocketApiManager.create_websocket_uri() - Leaving "
                                      f"`stream_list_lock`")
-                return self.websocket_base_uri + "ws/" + markets[0] + "@" + channels[0]
+                return self.websocket_base_uri + self._futures_path_prefix(channels, markets) + "ws/" + markets[0] + "@" + channels[0]
             elif "arr" in markets or "$all" in channels:
                 if stream_id:
                     subscriptions = self.get_number_of_subscriptions(stream_id)
@@ -1929,7 +2011,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                         self.stream_list[stream_id]['subscriptions'] = subscriptions
                         logger.debug(f"BinanceWebSocketApiManager.create_websocket_uri() - Leaving "
                                      f"`stream_list_lock`")
-                return self.websocket_base_uri + "ws/" + channels[0] + "@" + markets[0]
+                return self.websocket_base_uri + self._futures_path_prefix(channels, markets) + "ws/" + channels[0] + "@" + markets[0]
         query = "stream?streams="
         final_market = "@arr"
         market = ""
@@ -1970,10 +2052,11 @@ class BinanceWebSocketApiManager(threading.Thread):
                 return None
         except KeyError:
             pass
+        path_prefix = self._futures_path_prefix(channels, markets)
         logger.info("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) + ", " +
                     str(markets) + ", " + ", " + str(symbols) + ") - Created websocket URI for stream_id=" +
-                    str(stream_id) + " is " + self.websocket_base_uri + str(query))
-        return self.websocket_base_uri + str(query)
+                    str(stream_id) + " is " + self.websocket_base_uri + path_prefix + str(query))
+        return self.websocket_base_uri + path_prefix + str(query)
 
     def delete_listen_key_by_stream_id(self, stream_id) -> bool:
         """

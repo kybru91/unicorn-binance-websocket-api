@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unicorn_binance_websocket_api.manager &#8212; unicorn-binance-websocket-api 2.12.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unicorn_binance_websocket_api.manager &#8212; unicorn-binance-websocket-api 2.13.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
     <link rel="stylesheet" type="text/css" href="../../_static/pydoctheme.css?v=fdf8e9ae" />
@@ -167,7 +167,12 @@
 <span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS</span>
 <span class="c1"># IN THE SOFTWARE.</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.connection_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">CEX_EXCHANGES</span><span class="p">,</span> <span class="n">CONNECTION_SETTINGS</span><span class="p">,</span> <span class="n">USERDATA_WS_API_EXCHANGES</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.connection_settings</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BINANCE_FUTURES_EXCHANGES</span><span class="p">,</span>
+    <span class="n">CEX_EXCHANGES</span><span class="p">,</span>
+    <span class="n">CONNECTION_SETTINGS</span><span class="p">,</span>
+    <span class="n">USERDATA_WS_API_EXCHANGES</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.restclient</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiRestclient</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sockets</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceWebSocketApiSocket</span>
@@ -200,10 +205,70 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">websockets</span>
 
 <span class="n">__app_name__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unicorn-binance-websocket-api&quot;</span>
-<span class="n">__version__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.12.2.dev&quot;</span>
+<span class="n">__version__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.13.0&quot;</span>
 <span class="n">__logger__</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;unicorn_binance_websocket_api&quot;</span><span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">__logger__</span>
+
+
+<span class="c1"># UBWA-internal channel/market suffix markers — they don&#39;t pin a Futures category.</span>
+<span class="n">_FUTURES_SUFFIX_MARKERS</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">&quot;arr&quot;</span><span class="p">,</span> <span class="s2">&quot;$all&quot;</span><span class="p">})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_classify_futures_token</span><span class="p">(</span><span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classify a single channel name or `!`-prefixed special market into one of the</span>
+<span class="sd">    Binance USDT-M Futures WebSocket categories: ``public``, ``market``, ``private``.</span>
+
+<span class="sd">    Per Binance announcement effective 2026-04-23, Futures streams are routed</span>
+<span class="sd">    via three distinct base paths:</span>
+
+<span class="sd">    * ``/public``  — bookTicker, depth (top-levels and diff)</span>
+<span class="sd">    * ``/market``  — aggTrade, kline, ticker, miniTicker, forceOrder, markPrice, ...</span>
+<span class="sd">    * ``/private`` — user data via listenKey</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">token</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="s2">&quot;bookticker&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;public&quot;</span>
+    <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;depth&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;public&quot;</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="s2">&quot;userdata&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;private&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;market&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolve_futures_category</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resolve the Futures WS category for a (channels, markets) combination.</span>
+
+<span class="sd">    Plain symbols (e.g. ``btcusdt``) and UBWA suffix markers (``arr``, ``$all``) do not</span>
+<span class="sd">    pin a category — only real channel names and ``!``-prefixed special markets do.</span>
+
+<span class="sd">    Raises ``ValueError`` when channels/markets resolve to more than one category.</span>
+<span class="sd">    Binance no longer permits multiple categories on a single WebSocket connection,</span>
+<span class="sd">    and UBWA does not silently split a stream into multiple connections — fail loud</span>
+<span class="sd">    so the caller opens one ``create_stream`` per category.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="n">channels</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">markets</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">markets</span> <span class="o">=</span> <span class="p">[</span><span class="n">markets</span><span class="p">]</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">channels</span> <span class="ow">or</span> <span class="p">[]:</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">_FUTURES_SUFFIX_MARKERS</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">categories</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_classify_futures_token</span><span class="p">(</span><span class="n">ch</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">mk</span> <span class="ow">in</span> <span class="n">markets</span> <span class="ow">or</span> <span class="p">[]:</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">mk</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">):</span>
+            <span class="n">categories</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_classify_futures_token</span><span class="p">(</span><span class="n">mk</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;BINANCE_FUTURES: mixing WebSocket categories on a single stream is not &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;supported. Detected categories: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span><span class="si">}</span><span class="s2">. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Since 2026-04-23 Binance routes /public, /market, and /private separately &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;for USDT-M Futures — open one create_stream() call per category.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">categories</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="k">if</span> <span class="n">categories</span> <span class="k">else</span> <span class="s2">&quot;market&quot;</span>
 
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager">
@@ -1860,6 +1925,12 @@
             <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="n">channels</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">markets</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
             <span class="n">markets</span> <span class="o">=</span> <span class="p">[</span><span class="n">markets</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">api</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange</span> <span class="ow">in</span> <span class="n">BINANCE_FUTURES_EXCHANGES</span><span class="p">:</span>
+            <span class="c1"># Binance routes USDT-M Futures WS via /public, /market, /private since</span>
+            <span class="c1"># 2026-04-23 — a single connection cannot mix categories. Fail loud here</span>
+            <span class="c1"># before allocating a stream slot, instead of silently subscribing only</span>
+            <span class="c1"># part of the requested channels.</span>
+            <span class="n">_resolve_futures_category</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">output</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_default</span>
         <span class="n">close_timeout</span> <span class="o">=</span> <span class="n">close_timeout</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_timeout_default</span>
         <span class="n">ping_interval</span> <span class="o">=</span> <span class="n">ping_interval</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">ping_interval_default</span>
@@ -1945,6 +2016,16 @@
                     <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiManager.create_stream(</span><span class="si">{</span><span class="n">stream_id</span><span class="si">}</span><span class="s2"> - No valid asyncio loop!&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">stream_id</span></div>
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_futures_path_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the Futures category segment (``public/``, ``market/``, ``private/``)</span>
+<span class="sd">        to prepend before ``ws/`` or ``stream?streams=`` when building a Futures URI,</span>
+<span class="sd">        or empty string for any other exchange.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">BINANCE_FUTURES_EXCHANGES</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_resolve_futures_category</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span><span class="w"> </span><span class="n">markets</span><span class="p">)</span><span class="si">}</span><span class="s2">/&quot;</span>
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.create_websocket_uri">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_websocket_uri">[docs]</a>
@@ -2045,8 +2126,9 @@
                         <span class="k">pass</span>
                     <span class="k">if</span> <span class="n">response</span><span class="p">:</span>
                         <span class="k">try</span><span class="p">:</span>
-                            <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;listenKey&#39;</span><span class="p">])</span>
-                            <span class="n">uri_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacement_text</span>
+                            <span class="n">path_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futures_path_prefix</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span>
+                            <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="n">path_prefix</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;listenKey&#39;</span><span class="p">])</span>
+                            <span class="n">uri_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="n">path_prefix</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacement_text</span>
                             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_secrets_in_logs</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;BinanceWebSocketApiManager.create_websocket_uri(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span> <span class="o">+</span>
                                             <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">markets</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbols</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;) - result: &quot;</span> <span class="o">+</span> <span class="n">uri</span><span class="p">)</span>
@@ -2090,7 +2172,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;subscriptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subscriptions</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiManager.create_websocket_uri() - Leaving &quot;</span>
                                      <span class="sa">f</span><span class="s2">&quot;`stream_list_lock`&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="s2">&quot;ws/!bookTicker&quot;</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futures_path_prefix</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;ws/!bookTicker&quot;</span>
             <span class="k">elif</span> <span class="s2">&quot;arr&quot;</span> <span class="ow">in</span> <span class="n">channels</span> <span class="ow">or</span> <span class="s2">&quot;$all&quot;</span> <span class="ow">in</span> <span class="n">markets</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">stream_id</span><span class="p">:</span>
                     <span class="n">subscriptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_subscriptions</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span>
@@ -2100,7 +2182,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;subscriptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subscriptions</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiManager.create_websocket_uri() - Leaving &quot;</span>
                                      <span class="sa">f</span><span class="s2">&quot;`stream_list_lock`&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="n">markets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="n">channels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futures_path_prefix</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="n">markets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="n">channels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">elif</span> <span class="s2">&quot;arr&quot;</span> <span class="ow">in</span> <span class="n">markets</span> <span class="ow">or</span> <span class="s2">&quot;$all&quot;</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">stream_id</span><span class="p">:</span>
                     <span class="n">subscriptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_subscriptions</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span>
@@ -2110,7 +2192,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;subscriptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subscriptions</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiManager.create_websocket_uri() - Leaving &quot;</span>
                                      <span class="sa">f</span><span class="s2">&quot;`stream_list_lock`&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="n">channels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="n">markets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futures_path_prefix</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="n">channels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="n">markets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;stream?streams=&quot;</span>
         <span class="n">final_market</span> <span class="o">=</span> <span class="s2">&quot;@arr&quot;</span>
         <span class="n">market</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -2151,10 +2233,11 @@
                 <span class="k">return</span> <span class="kc">None</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">pass</span>
+        <span class="n">path_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futures_path_prefix</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;BinanceWebSocketApiManager.create_websocket_uri(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span>
                     <span class="nb">str</span><span class="p">(</span><span class="n">markets</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbols</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;) - Created websocket URI for stream_id=&quot;</span> <span class="o">+</span>
-                    <span class="nb">str</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; is &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; is &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="n">path_prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="n">path_prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="BinanceWebSocketApiManager.delete_listen_key_by_stream_id">
@@ -5081,7 +5164,7 @@
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Apr 21 2026 at 11:59 (CET).
+    Last updated on Apr 30 2026 at 09:34 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
     Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.

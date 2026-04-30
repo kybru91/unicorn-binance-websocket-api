@@ -9,7 +9,30 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
-## 2.12.2.dev (development stage/unreleased/unstable)
+## 2.13.0.dev (development stage/unreleased/unstable)
+
+## 2.13.0
+### Changed
+- USDT-M Futures (`BINANCE_FUTURES`, `BINANCE_FUTURES_TESTNET`):
+  WebSocket streams are now routed via the per-category base paths
+  `/public`, `/market` and `/private` introduced by Binance on
+  2026-04-23. Channels are auto-classified at connection time and
+  the matching path segment is prepended to `ws/` and
+  `stream?streams=`. The legacy `/ws` and `/stream` paths have been
+  decommissioned by Binance.
+  See [issue #437](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/437).
+### Added
+- `connection_settings.BINANCE_FUTURES_EXCHANGES` frozenset
+  containing the exchanges that route through the new per-category
+  Futures base paths.
+- `create_stream()` now raises `ValueError` on
+  `BINANCE_FUTURES`/`BINANCE_FUTURES_TESTNET` when
+  `channels`/`markets` resolve to more than one Futures category
+  (`public`/`market`/`private`). A single WebSocket connection can
+  no longer carry multiple categories; UBWA does not silently split
+  a stream into several connections — open one `create_stream()`
+  per category instead. Mirrors the existing `!userData`-in-
+  combined-stream rejection.
 
 ## 2.12.2
 ### Changed

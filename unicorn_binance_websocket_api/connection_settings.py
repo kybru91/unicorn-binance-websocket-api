@@ -107,3 +107,10 @@ USERDATA_WS_API_EXCHANGES = frozenset([
     Exchanges.BINANCE_ISOLATED_MARGIN,
     Exchanges.BINANCE_ISOLATED_MARGIN_TESTNET,
 ])
+
+# Exchanges that route USDT-M Futures WebSocket streams via the per-category base
+# paths /public, /market, /private (Binance announcement effective 2026-04-23).
+BINANCE_FUTURES_EXCHANGES = frozenset([
+    Exchanges.BINANCE_FUTURES,
+    Exchanges.BINANCE_FUTURES_TESTNET,
+])

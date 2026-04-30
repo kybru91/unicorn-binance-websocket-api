@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
+## 2.12.2.dev (development stage/unreleased/unstable)
+
 ## 2.13.0
 ### Changed
 - USDT-M Futures (`BINANCE_FUTURES`, `BINANCE_FUTURES_TESTNET`):

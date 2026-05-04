@@ -115,7 +115,7 @@ python setup.py bdist_wheel
 
 ## Code Conventions
 
-- **File header:** Always include the full MIT license block with author/copyright (2019-2025)
+- **File header:** Always include the full MIT license block with author/copyright (2019-2026)
 - **Encoding:** UTF-8, UNIX line endings
 - **Logging:** `logging.getLogger("unicorn_binance_websocket_api")`
 - **Type hints:** Present in key methods; `typing_extensions` for Python < 3.9

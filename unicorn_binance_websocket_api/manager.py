@@ -1946,8 +1946,9 @@ class BinanceWebSocketApiManager(threading.Thread):
                     if response:
                         try:
                             path_prefix = self._futures_path_prefix(channels, markets)
-                            uri = self.websocket_base_uri + path_prefix + "ws/" + str(response['listenKey'])
-                            uri_hidden = self.websocket_base_uri + path_prefix + "ws/" + self.replacement_text
+                            events = "&events=ORDER_TRADE_UPDATE/ACCOUNT_UPDATE"
+                            uri = self.websocket_base_uri + path_prefix + "ws?listenKey=" + str(response['listenKey']) + events
+                            uri_hidden = self.websocket_base_uri + path_prefix + "ws?listenKey=" + self.replacement_text + events
                             if self.show_secrets_in_logs is True:
                                 logger.info("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) +
                                             ", " + str(markets) + ", " + str(symbols) + ") - result: " + uri)
@@ -2016,6 +2017,7 @@ class BinanceWebSocketApiManager(threading.Thread):
         final_market = "@arr"
         market = ""
         channel = ""
+        events = ""
         for market in markets:
             if "arr@" in market:
                 final_market = "@" + market

@@ -20,7 +20,7 @@ Names are not validated against an allow-list, so additional event types Binance
 can be passed through immediately.
 
 ## Prerequisites
-Ensure you have Python 3.7+ installed on your system.
+Ensure you have Python 3.9+ installed on your system.
 
 Before running the provided script, install the required Python packages:
 ```bash

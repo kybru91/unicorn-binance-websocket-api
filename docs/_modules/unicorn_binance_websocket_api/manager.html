@@ -144,7 +144,7 @@
 <span class="c1">#</span>
 <span class="c1"># Author: Oliver Zehentleitner</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2019-2025, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)</span>
+<span class="c1"># Copyright (c) 2019-2026, Oliver Zehentleitner (https://about.me/oliver-zehentleitner)</span>
 <span class="c1">#</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
@@ -169,6 +169,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.connection_settings</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BINANCE_FUTURES_EXCHANGES</span><span class="p">,</span>
+    <span class="n">BINANCE_FUTURES_USERDATA_EVENTS</span><span class="p">,</span>
     <span class="n">CEX_EXCHANGES</span><span class="p">,</span>
     <span class="n">CONNECTION_SETTINGS</span><span class="p">,</span>
     <span class="n">USERDATA_WS_API_EXCHANGES</span><span class="p">,</span>
@@ -182,7 +183,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">itemgetter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Literal</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">colorama</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
@@ -205,7 +206,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">websockets</span>
 
 <span class="n">__app_name__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unicorn-binance-websocket-api&quot;</span>
-<span class="n">__version__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.13.0&quot;</span>
+<span class="n">__version__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.13.0.dev&quot;</span>
 <span class="n">__logger__</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;unicorn_binance_websocket_api&quot;</span><span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">__logger__</span>
@@ -860,6 +861,7 @@
                                    <span class="n">keep_listen_key_alive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                    <span class="n">stream_buffer_maxlen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">api</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                   <span class="n">events</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                                    <span class="n">process_stream_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                                    <span class="n">process_stream_data_async</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                                    <span class="n">process_asyncio_queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -972,6 +974,7 @@
                                            <span class="s1">&#39;close_timeout&#39;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">close_timeout</span><span class="p">),</span>
                                            <span class="s1">&#39;provided_listen_key&#39;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">provided_listen_key</span><span class="p">),</span>
                                            <span class="s1">&#39;keep_listen_key_alive&#39;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">keep_listen_key_alive</span><span class="p">),</span>
+                                           <span class="s1">&#39;events&#39;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">events</span><span class="p">),</span>
                                            <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;starting&#39;</span><span class="p">,</span>
                                            <span class="s1">&#39;start_time&#39;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span>
                                            <span class="s1">&#39;processed_receives_total&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -1781,6 +1784,7 @@
                       <span class="n">keep_listen_key_alive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                       <span class="n">stream_buffer_maxlen</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">api</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                      <span class="n">events</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">process_stream_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">process_stream_data_async</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">process_asyncio_queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -1883,6 +1887,32 @@
 <span class="sd">                    Needs `api_key` and `api_secret` in combination. This type of stream can not be combined with a UserData</span>
 <span class="sd">                    stream or another public endpoint. (Default is `False`)</span>
 <span class="sd">        :type api: bool</span>
+<span class="sd">        :param events: Only applied to USDT-M Futures (`binance.com-futures`,</span>
+<span class="sd">                       `binance.com-futures-testnet`) `!userData` streams. Selects which event</span>
+<span class="sd">                       types Binance should push on the `/private/ws?listenKey=...&amp;events=...`</span>
+<span class="sd">                       endpoint. Accepts a single event name as a string, an iterable of event</span>
+<span class="sd">                       names, or `None` (default).</span>
+
+<span class="sd">                       When `None` UBWA subscribes to all event types listed in</span>
+<span class="sd">                       `BINANCE_FUTURES_USERDATA_EVENTS</span>
+<span class="sd">                       &lt;https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/unicorn_binance_websocket_api/connection_settings.py&gt;`__</span>
+<span class="sd">                       — preserves the behaviour of the pre-2026-04-23 `/ws/&lt;listenKey&gt;` URL</span>
+<span class="sd">                       that streamed every event.</span>
+
+<span class="sd">                       Known event types as of 2026-05: `ORDER_TRADE_UPDATE`, `ACCOUNT_UPDATE`,</span>
+<span class="sd">                       `MARGIN_CALL`, `TRADE_LITE`, `ACCOUNT_CONFIG_UPDATE`, `STRATEGY_UPDATE`,</span>
+<span class="sd">                       `GRID_UPDATE`, `CONDITIONAL_ORDER_TRIGGER_REJECT`, `ALGO_ORDER_UPDATE`,</span>
+<span class="sd">                       `listenKeyExpired`. The current authoritative list lives in the Binance</span>
+<span class="sd">                       `USDⓈ-M Futures user data streams docs</span>
+<span class="sd">                       &lt;https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams&gt;`__.</span>
+
+<span class="sd">                       UBWA does **not** validate the names against an allow-list — Binance may</span>
+<span class="sd">                       add new event types between UBWA releases and they can be passed through</span>
+<span class="sd">                       immediately without waiting for a UBWA bump. The trade-off is that typos</span>
+<span class="sd">                       in event names will silently produce a stream with no matching events.</span>
+
+<span class="sd">                       Ignored for non-Futures exchanges and for non-userData streams.</span>
+<span class="sd">        :type events: str, Iterable[str] or None</span>
 <span class="sd">        :param process_stream_data: Provide a function/method to process the received webstream data (callback). The</span>
 <span class="sd">                            function will be called instead of</span>
 <span class="sd">                            `add_to_stream_buffer() &lt;unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.add_to_stream_buffer&gt;`__</span>
@@ -1931,6 +1961,17 @@
             <span class="c1"># before allocating a stream slot, instead of silently subscribing only</span>
             <span class="c1"># part of the requested channels.</span>
             <span class="n">_resolve_futures_category</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span>
+        <span class="c1"># Normalize `events` to a tuple. None → default set (all documented events).</span>
+        <span class="c1"># No validation against an allow-list — Binance may add events between UBWA</span>
+        <span class="c1"># releases, so unknown names are passed through as-is. Empty input also</span>
+        <span class="c1"># falls back to the default to avoid building a `&amp;events=` query with no</span>
+        <span class="c1"># value (which Binance rejects on production).</span>
+        <span class="k">if</span> <span class="n">events</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">events_tuple</span> <span class="o">=</span> <span class="n">BINANCE_FUTURES_USERDATA_EVENTS</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">events_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">events</span><span class="p">,)</span> <span class="k">if</span> <span class="n">events</span> <span class="k">else</span> <span class="n">BINANCE_FUTURES_USERDATA_EVENTS</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">events_tuple</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">)</span> <span class="ow">or</span> <span class="n">BINANCE_FUTURES_USERDATA_EVENTS</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">output</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_default</span>
         <span class="n">close_timeout</span> <span class="o">=</span> <span class="n">close_timeout</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_timeout_default</span>
         <span class="n">ping_interval</span> <span class="o">=</span> <span class="n">ping_interval</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">ping_interval_default</span>
@@ -1968,6 +2009,7 @@
                                         <span class="n">keep_listen_key_alive</span><span class="o">=</span><span class="n">keep_listen_key_alive</span><span class="p">,</span>
                                         <span class="n">stream_buffer_maxlen</span><span class="o">=</span><span class="n">stream_buffer_maxlen</span><span class="p">,</span>
                                         <span class="n">api</span><span class="o">=</span><span class="n">api</span><span class="p">,</span>
+                                        <span class="n">events</span><span class="o">=</span><span class="n">events_tuple</span><span class="p">,</span>
                                         <span class="n">process_stream_data</span><span class="o">=</span><span class="n">process_stream_data</span><span class="p">,</span>
                                         <span class="n">process_stream_data_async</span><span class="o">=</span><span class="n">process_stream_data_async</span><span class="p">,</span>
                                         <span class="n">process_asyncio_queue</span><span class="o">=</span><span class="n">process_asyncio_queue</span><span class="p">)</span>
@@ -2127,8 +2169,22 @@
                     <span class="k">if</span> <span class="n">response</span><span class="p">:</span>
                         <span class="k">try</span><span class="p">:</span>
                             <span class="n">path_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futures_path_prefix</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">markets</span><span class="p">)</span>
-                            <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="n">path_prefix</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;listenKey&#39;</span><span class="p">])</span>
-                            <span class="n">uri_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="n">path_prefix</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacement_text</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange</span> <span class="ow">in</span> <span class="n">BINANCE_FUTURES_EXCHANGES</span><span class="p">:</span>
+                                <span class="c1"># USDT-M Futures post-2026-04-23: listenKey is a query</span>
+                                <span class="c1"># parameter on /private/ws, and the events filter must</span>
+                                <span class="c1"># be supplied explicitly or Binance delivers nothing.</span>
+                                <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;events&#39;</span><span class="p">)</span> \
+                                    <span class="ow">or</span> <span class="n">BINANCE_FUTURES_USERDATA_EVENTS</span>
+                                <span class="n">events_qs</span> <span class="o">=</span> <span class="s2">&quot;&amp;events=&quot;</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+                                <span class="n">uri</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="n">path_prefix</span>
+                                       <span class="o">+</span> <span class="s2">&quot;ws?listenKey=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;listenKey&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">events_qs</span><span class="p">)</span>
+                                <span class="n">uri_hidden</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="n">path_prefix</span>
+                                              <span class="o">+</span> <span class="s2">&quot;ws?listenKey=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacement_text</span> <span class="o">+</span> <span class="n">events_qs</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="c1"># Other exchanges where REST listenKey is still served</span>
+                                <span class="c1"># via the legacy /ws/&lt;listenKey&gt; path form.</span>
+                                <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="n">path_prefix</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;listenKey&#39;</span><span class="p">])</span>
+                                <span class="n">uri_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_base_uri</span> <span class="o">+</span> <span class="n">path_prefix</span> <span class="o">+</span> <span class="s2">&quot;ws/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacement_text</span>
                             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_secrets_in_logs</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;BinanceWebSocketApiManager.create_websocket_uri(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span> <span class="o">+</span>
                                             <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">markets</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbols</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;) - result: &quot;</span> <span class="o">+</span> <span class="n">uri</span><span class="p">)</span>
@@ -4299,7 +4355,8 @@
                        <span class="n">new_ping_interval</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
                        <span class="n">new_ping_timeout</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
                        <span class="n">new_close_timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                       <span class="n">new_stream_buffer_maxlen</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                       <span class="n">new_stream_buffer_maxlen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">new_events</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Replace a stream</span>
 
@@ -4355,21 +4412,29 @@
 <span class="sd">                                     `stream_buffer`. The generic `stream_buffer` uses always the value of</span>
 <span class="sd">                                     `BinanceWebSocketApiManager()`.</span>
 <span class="sd">        :type new_stream_buffer_maxlen: int or None</span>
+<span class="sd">        :param new_events: USDT-M Futures `!userData` event filter — see the `events` parameter</span>
+<span class="sd">                           of `create_stream() &lt;#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream&gt;`__</span>
+<span class="sd">                           for accepted values and behaviour.</span>
+<span class="sd">        :type new_events: str, Iterable[str] or None</span>
 <span class="sd">        :return: stream_id or &#39;None&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># starting a new socket and stop the old stream not before the new stream received its first record</span>
-        <span class="n">new_stream_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_stream</span><span class="p">(</span><span class="n">new_channels</span><span class="p">,</span>
-                                           <span class="n">new_markets</span><span class="p">,</span>
-                                           <span class="n">new_stream_label</span><span class="p">,</span>
-                                           <span class="n">new_stream_buffer_name</span><span class="p">,</span>
-                                           <span class="n">new_api_key</span><span class="p">,</span>
-                                           <span class="n">new_api_secret</span><span class="p">,</span>
-                                           <span class="n">new_symbols</span><span class="p">,</span>
-                                           <span class="n">new_output</span><span class="p">,</span>
-                                           <span class="n">new_ping_interval</span><span class="p">,</span>
-                                           <span class="n">new_ping_timeout</span><span class="p">,</span>
-                                           <span class="n">new_close_timeout</span><span class="p">,</span>
-                                           <span class="n">new_stream_buffer_maxlen</span><span class="p">)</span>
+        <span class="c1"># starting a new socket and stop the old stream not before the new stream received its first record.</span>
+        <span class="c1"># All arguments are passed by keyword so that future additions to `create_stream()` (and the</span>
+        <span class="c1"># 12th-positional `listen_key` introduced between the original `replace_stream()` design and the</span>
+        <span class="c1"># WS-API rework) cannot silently shift into the wrong parameter slot.</span>
+        <span class="n">new_stream_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_stream</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="n">new_channels</span><span class="p">,</span>
+                                           <span class="n">markets</span><span class="o">=</span><span class="n">new_markets</span><span class="p">,</span>
+                                           <span class="n">stream_label</span><span class="o">=</span><span class="n">new_stream_label</span><span class="p">,</span>
+                                           <span class="n">stream_buffer_name</span><span class="o">=</span><span class="n">new_stream_buffer_name</span><span class="p">,</span>
+                                           <span class="n">api_key</span><span class="o">=</span><span class="n">new_api_key</span><span class="p">,</span>
+                                           <span class="n">api_secret</span><span class="o">=</span><span class="n">new_api_secret</span><span class="p">,</span>
+                                           <span class="n">symbols</span><span class="o">=</span><span class="n">new_symbols</span><span class="p">,</span>
+                                           <span class="n">output</span><span class="o">=</span><span class="n">new_output</span><span class="p">,</span>
+                                           <span class="n">ping_interval</span><span class="o">=</span><span class="n">new_ping_interval</span><span class="p">,</span>
+                                           <span class="n">ping_timeout</span><span class="o">=</span><span class="n">new_ping_timeout</span><span class="p">,</span>
+                                           <span class="n">close_timeout</span><span class="o">=</span><span class="n">new_close_timeout</span><span class="p">,</span>
+                                           <span class="n">stream_buffer_maxlen</span><span class="o">=</span><span class="n">new_stream_buffer_maxlen</span><span class="p">,</span>
+                                           <span class="n">events</span><span class="o">=</span><span class="n">new_events</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_till_stream_has_started</span><span class="p">(</span><span class="n">new_stream_id</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stop_stream</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="n">stream_id</span><span class="p">,</span> <span class="n">delete_listen_key</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_stream_id</span></div>
@@ -5164,7 +5229,7 @@
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Apr 30 2026 at 09:34 (CET).
+    Last updated on May 21 2026 at 16:13 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
     Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.

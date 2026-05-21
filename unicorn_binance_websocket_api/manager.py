@@ -40,6 +40,7 @@
 
 from .connection_settings import (
     BINANCE_FUTURES_EXCHANGES,
+    BINANCE_FUTURES_USERDATA_EVENTS,
     CEX_EXCHANGES,
     CONNECTION_SETTINGS,
     USERDATA_WS_API_EXCHANGES,
@@ -53,7 +54,7 @@ from unicorn_fy.unicorn_fy import UnicornFy
 from collections import deque
 from datetime import datetime, timezone
 from operator import itemgetter
-from typing import Optional, Union, Callable, List, Set, Literal
+from typing import Optional, Union, Callable, Iterable, List, Set, Literal
 import asyncio
 import colorama
 import copy
@@ -717,6 +718,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                                    keep_listen_key_alive=True,
                                    stream_buffer_maxlen=None,
                                    api=False,
+                                   events: Optional[tuple] = None,
                                    process_stream_data: Optional[Callable] = None,
                                    process_stream_data_async: Optional[Callable] = None,
                                    process_asyncio_queue: Optional[Callable] = None):
@@ -829,6 +831,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                                            'close_timeout': copy.deepcopy(close_timeout),
                                            'provided_listen_key': copy.deepcopy(provided_listen_key),
                                            'keep_listen_key_alive': copy.deepcopy(keep_listen_key_alive),
+                                           'events': copy.deepcopy(events),
                                            'status': 'starting',
                                            'start_time': time.time(),
                                            'processed_receives_total': 0,
@@ -1603,6 +1606,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                       keep_listen_key_alive: bool = True,
                       stream_buffer_maxlen: int = None,
                       api: bool = False,
+                      events: Union[str, Iterable[str], None] = None,
                       process_stream_data: Optional[Callable] = None,
                       process_stream_data_async: Optional[Callable] = None,
                       process_asyncio_queue: Optional[Callable] = None):
@@ -1705,6 +1709,32 @@ class BinanceWebSocketApiManager(threading.Thread):
                     Needs `api_key` and `api_secret` in combination. This type of stream can not be combined with a UserData
                     stream or another public endpoint. (Default is `False`)
         :type api: bool
+        :param events: Only applied to USDT-M Futures (`binance.com-futures`,
+                       `binance.com-futures-testnet`) `!userData` streams. Selects which event
+                       types Binance should push on the `/private/ws?listenKey=...&events=...`
+                       endpoint. Accepts a single event name as a string, an iterable of event
+                       names, or `None` (default).
+
+                       When `None` UBWA subscribes to all event types listed in
+                       `BINANCE_FUTURES_USERDATA_EVENTS
+                       <https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/unicorn_binance_websocket_api/connection_settings.py>`__
+                       — preserves the behaviour of the pre-2026-04-23 `/ws/<listenKey>` URL
+                       that streamed every event.
+
+                       Known event types as of 2026-05: `ORDER_TRADE_UPDATE`, `ACCOUNT_UPDATE`,
+                       `MARGIN_CALL`, `TRADE_LITE`, `ACCOUNT_CONFIG_UPDATE`, `STRATEGY_UPDATE`,
+                       `GRID_UPDATE`, `CONDITIONAL_ORDER_TRIGGER_REJECT`, `ALGO_ORDER_UPDATE`,
+                       `listenKeyExpired`. The current authoritative list lives in the Binance
+                       `USDⓈ-M Futures user data streams docs
+                       <https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams>`__.
+
+                       UBWA does **not** validate the names against an allow-list — Binance may
+                       add new event types between UBWA releases and they can be passed through
+                       immediately without waiting for a UBWA bump. The trade-off is that typos
+                       in event names will silently produce a stream with no matching events.
+
+                       Ignored for non-Futures exchanges and for non-userData streams.
+        :type events: str, Iterable[str] or None
         :param process_stream_data: Provide a function/method to process the received webstream data (callback). The
                             function will be called instead of
                             `add_to_stream_buffer() <unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.add_to_stream_buffer>`__
@@ -1753,6 +1783,17 @@ class BinanceWebSocketApiManager(threading.Thread):
             # before allocating a stream slot, instead of silently subscribing only
             # part of the requested channels.
             _resolve_futures_category(channels, markets)
+        # Normalize `events` to a tuple. None → default set (all documented events).
+        # No validation against an allow-list — Binance may add events between UBWA
+        # releases, so unknown names are passed through as-is. Empty input also
+        # falls back to the default to avoid building a `&events=` query with no
+        # value (which Binance rejects on production).
+        if events is None:
+            events_tuple = BINANCE_FUTURES_USERDATA_EVENTS
+        elif isinstance(events, str):
+            events_tuple = (events,) if events else BINANCE_FUTURES_USERDATA_EVENTS
+        else:
+            events_tuple = tuple(str(e) for e in events) or BINANCE_FUTURES_USERDATA_EVENTS
         output = output or self.output_default
         close_timeout = close_timeout or self.close_timeout_default
         ping_interval = ping_interval or self.ping_interval_default
@@ -1790,6 +1831,7 @@ class BinanceWebSocketApiManager(threading.Thread):
                                         keep_listen_key_alive=keep_listen_key_alive,
                                         stream_buffer_maxlen=stream_buffer_maxlen,
                                         api=api,
+                                        events=events_tuple,
                                         process_stream_data=process_stream_data,
                                         process_stream_data_async=process_stream_data_async,
                                         process_asyncio_queue=process_asyncio_queue)
@@ -1946,9 +1988,22 @@ class BinanceWebSocketApiManager(threading.Thread):
                     if response:
                         try:
                             path_prefix = self._futures_path_prefix(channels, markets)
-                            events = "&events=ORDER_TRADE_UPDATE/ACCOUNT_UPDATE"
-                            uri = self.websocket_base_uri + path_prefix + "ws?listenKey=" + str(response['listenKey']) + events
-                            uri_hidden = self.websocket_base_uri + path_prefix + "ws?listenKey=" + self.replacement_text + events
+                            if self.exchange in BINANCE_FUTURES_EXCHANGES:
+                                # USDT-M Futures post-2026-04-23: listenKey is a query
+                                # parameter on /private/ws, and the events filter must
+                                # be supplied explicitly or Binance delivers nothing.
+                                events = self.stream_list[stream_id].get('events') \
+                                    or BINANCE_FUTURES_USERDATA_EVENTS
+                                events_qs = "&events=" + "/".join(events)
+                                uri = (self.websocket_base_uri + path_prefix
+                                       + "ws?listenKey=" + str(response['listenKey']) + events_qs)
+                                uri_hidden = (self.websocket_base_uri + path_prefix
+                                              + "ws?listenKey=" + self.replacement_text + events_qs)
+                            else:
+                                # Other exchanges where REST listenKey is still served
+                                # via the legacy /ws/<listenKey> path form.
+                                uri = self.websocket_base_uri + path_prefix + "ws/" + str(response['listenKey'])
+                                uri_hidden = self.websocket_base_uri + path_prefix + "ws/" + self.replacement_text
                             if self.show_secrets_in_logs is True:
                                 logger.info("BinanceWebSocketApiManager.create_websocket_uri(" + str(channels) +
                                             ", " + str(markets) + ", " + str(symbols) + ") - result: " + uri)
@@ -2017,7 +2072,6 @@ class BinanceWebSocketApiManager(threading.Thread):
         final_market = "@arr"
         market = ""
         channel = ""
-        events = ""
         for market in markets:
             if "arr@" in market:
                 final_market = "@" + market
@@ -3886,7 +3940,8 @@ class BinanceWebSocketApiManager(threading.Thread):
                        new_ping_interval=20,
                        new_ping_timeout=20,
                        new_close_timeout=10,
-                       new_stream_buffer_maxlen=None):
+                       new_stream_buffer_maxlen=None,
+                       new_events: Union[str, Iterable[str], None] = None):
         """
         Replace a stream
 
@@ -3942,6 +3997,10 @@ class BinanceWebSocketApiManager(threading.Thread):
                                      `stream_buffer`. The generic `stream_buffer` uses always the value of
                                      `BinanceWebSocketApiManager()`.
         :type new_stream_buffer_maxlen: int or None
+        :param new_events: USDT-M Futures `!userData` event filter — see the `events` parameter
+                           of `create_stream() <#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager.create_stream>`__
+                           for accepted values and behaviour.
+        :type new_events: str, Iterable[str] or None
         :return: stream_id or 'None'
         """
         # starting a new socket and stop the old stream not before the new stream received its first record
@@ -3956,7 +4015,8 @@ class BinanceWebSocketApiManager(threading.Thread):
                                            new_ping_interval,
                                            new_ping_timeout,
                                            new_close_timeout,
-                                           new_stream_buffer_maxlen)
+                                           new_stream_buffer_maxlen,
+                                           events=new_events)
         if self.wait_till_stream_has_started(new_stream_id):
             self.stop_stream(stream_id=stream_id, delete_listen_key=False)
         return new_stream_id

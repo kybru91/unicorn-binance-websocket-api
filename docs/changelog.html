@@ -54,19 +54,19 @@
 <li><a class="reference internal" href="#">unicorn-binance-websocket-api Change Log</a><ul>
 <li><a class="reference internal" href="#dev-development-stage-unreleased-unstable">2.14.0.dev (development stage/unreleased/unstable)</a></li>
 <li><a class="reference internal" href="#id1">2.14.0</a><ul>
-<li><a class="reference internal" href="#fixed">Fixed</a></li>
 <li><a class="reference internal" href="#added">Added</a></li>
+<li><a class="reference internal" href="#changed">Changed</a></li>
+<li><a class="reference internal" href="#fixed">Fixed</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#id2">2.13.0</a><ul>
-<li><a class="reference internal" href="#changed">Changed</a></li>
 <li><a class="reference internal" href="#id3">Added</a></li>
+<li><a class="reference internal" href="#id4">Changed</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id4">2.12.2</a><ul>
-<li><a class="reference internal" href="#id5">Changed</a></li>
+<li><a class="reference internal" href="#id5">2.12.2</a><ul>
+<li><a class="reference internal" href="#id6">Changed</a></li>
 <li><a class="reference internal" href="#removed">Removed</a></li>
-<li><a class="reference internal" href="#id6">Removed</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#id7">2.12.1</a><ul>
@@ -920,27 +920,6 @@
 </section>
 <section id="id1">
 <h2>2.14.0<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
-<section id="fixed">
-<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading">¶</a></h3>
-<ul class="simple">
-<li><p>USDT-M Futures <code class="docutils literal notranslate"><span class="pre">!userData</span></code> streams (<code class="docutils literal notranslate"><span class="pre">BINANCE_FUTURES</span></code>,
-<code class="docutils literal notranslate"><span class="pre">BINANCE_FUTURES_TESTNET</span></code>): the <code class="docutils literal notranslate"><span class="pre">listenKey</span></code> is now passed as a
-query parameter (<code class="docutils literal notranslate"><span class="pre">/private/ws?listenKey=...</span></code>) instead of as a path
-segment (<code class="docutils literal notranslate"><span class="pre">/private/ws/&lt;listenKey&gt;</span></code>). The path form has been
-decommissioned by Binance on the mainnet <code class="docutils literal notranslate"><span class="pre">fstream</span></code> host; testnet
-was still accepting both forms which masked the issue during the
-2.13.0 verification round. Reported by
-<a class="reference external" href="https://github.com/andykarpov">&#64;andykarpov</a> on
-<a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/437#issuecomment-4492250065">issue #437</a>
-and originally fixed in <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/445">PR #445</a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">replace_stream()</span></code>: forwarded its arguments to <code class="docutils literal notranslate"><span class="pre">create_stream()</span></code>
-positionally, but the 12th slot of <code class="docutils literal notranslate"><span class="pre">create_stream()</span></code> had become
-<code class="docutils literal notranslate"><span class="pre">listen_key</span></code> (introduced with the WS API rework), so
-<code class="docutils literal notranslate"><span class="pre">new_stream_buffer_maxlen</span></code> was silently bound to <code class="docutils literal notranslate"><span class="pre">listen_key</span></code>.
-All arguments are now passed by keyword, eliminating the silent
-parameter shift and future-proofing against signature additions.</p></li>
-</ul>
-</section>
 <section id="added">
 <h3>Added<a class="headerlink" href="#added" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -963,22 +942,43 @@ containing the default event subscription set, mirroring the
 Binance docs for the USDⓈ-M Futures user data stream.</p></li>
 </ul>
 </section>
-</section>
-<section id="id2">
-<h2>2.13.0<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <section id="changed">
 <h3>Changed<a class="headerlink" href="#changed" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>USDT-M Futures (<code class="docutils literal notranslate"><span class="pre">BINANCE_FUTURES</span></code>, <code class="docutils literal notranslate"><span class="pre">BINANCE_FUTURES_TESTNET</span></code>):
-WebSocket streams are now routed via the per-category base paths
-<code class="docutils literal notranslate"><span class="pre">/public</span></code>, <code class="docutils literal notranslate"><span class="pre">/market</span></code> and <code class="docutils literal notranslate"><span class="pre">/private</span></code> introduced by Binance on
-2026-04-23. Channels are auto-classified at connection time and
-the matching path segment is prepended to <code class="docutils literal notranslate"><span class="pre">ws/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">stream?streams=</span></code>. The legacy <code class="docutils literal notranslate"><span class="pre">/ws</span></code> and <code class="docutils literal notranslate"><span class="pre">/stream</span></code> paths have been
-decommissioned by Binance.
-See <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/437">issue #437</a>.</p></li>
+<li><p>Internal cleanup: moved the UBWA-internal Futures-category resolution
+helpers (<code class="docutils literal notranslate"><span class="pre">_classify_futures_token</span></code>, <code class="docutils literal notranslate"><span class="pre">_resolve_futures_category</span></code>) from
+module scope into <code class="docutils literal notranslate"><span class="pre">BinanceWebSocketApiManager</span></code> as private
+<code class="docutils literal notranslate"><span class="pre">&#64;staticmethod</span></code> / <code class="docutils literal notranslate"><span class="pre">&#64;classmethod</span></code>. The routing-token constant
+<code class="docutils literal notranslate"><span class="pre">FUTURES_SUFFIX_MARKERS</span></code> moves from <code class="docutils literal notranslate"><span class="pre">manager.py</span></code> into
+<code class="docutils literal notranslate"><span class="pre">connection_settings.py</span></code>, next to the other Futures routing
+constants. No behaviour change.
+(<a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/449">PR #449</a>)</p></li>
 </ul>
 </section>
+<section id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>USDT-M Futures <code class="docutils literal notranslate"><span class="pre">!userData</span></code> streams (<code class="docutils literal notranslate"><span class="pre">BINANCE_FUTURES</span></code>,
+<code class="docutils literal notranslate"><span class="pre">BINANCE_FUTURES_TESTNET</span></code>): the <code class="docutils literal notranslate"><span class="pre">listenKey</span></code> is now passed as a
+query parameter (<code class="docutils literal notranslate"><span class="pre">/private/ws?listenKey=...</span></code>) instead of as a path
+segment (<code class="docutils literal notranslate"><span class="pre">/private/ws/&lt;listenKey&gt;</span></code>). The path form has been
+decommissioned by Binance on the mainnet <code class="docutils literal notranslate"><span class="pre">fstream</span></code> host; testnet
+was still accepting both forms which masked the issue during the
+2.13.0 verification round. Reported by
+<a class="reference external" href="https://github.com/andykarpov">&#64;andykarpov</a> on
+<a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/437#issuecomment-4492250065">issue #437</a>
+and originally fixed in <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/445">PR #445</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">replace_stream()</span></code>: forwarded its arguments to <code class="docutils literal notranslate"><span class="pre">create_stream()</span></code>
+positionally, but the 12th slot of <code class="docutils literal notranslate"><span class="pre">create_stream()</span></code> had become
+<code class="docutils literal notranslate"><span class="pre">listen_key</span></code> (introduced with the WS API rework), so
+<code class="docutils literal notranslate"><span class="pre">new_stream_buffer_maxlen</span></code> was silently bound to <code class="docutils literal notranslate"><span class="pre">listen_key</span></code>.
+All arguments are now passed by keyword, eliminating the silent
+parameter shift and future-proofing against signature additions.</p></li>
+</ul>
+</section>
+</section>
+<section id="id2">
+<h2>2.13.0<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <section id="id3">
 <h3>Added<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -995,11 +995,24 @@ per category instead. Mirrors the existing <code class="docutils literal notrans
 combined-stream rejection.</p></li>
 </ul>
 </section>
-</section>
 <section id="id4">
-<h2>2.12.2<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<h3>Changed<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>USDT-M Futures (<code class="docutils literal notranslate"><span class="pre">BINANCE_FUTURES</span></code>, <code class="docutils literal notranslate"><span class="pre">BINANCE_FUTURES_TESTNET</span></code>):
+WebSocket streams are now routed via the per-category base paths
+<code class="docutils literal notranslate"><span class="pre">/public</span></code>, <code class="docutils literal notranslate"><span class="pre">/market</span></code> and <code class="docutils literal notranslate"><span class="pre">/private</span></code> introduced by Binance on
+2026-04-23. Channels are auto-classified at connection time and
+the matching path segment is prepended to <code class="docutils literal notranslate"><span class="pre">ws/</span></code> and
+<code class="docutils literal notranslate"><span class="pre">stream?streams=</span></code>. The legacy <code class="docutils literal notranslate"><span class="pre">/ws</span></code> and <code class="docutils literal notranslate"><span class="pre">/stream</span></code> paths have been
+decommissioned by Binance.
+See <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/437">issue #437</a>.</p></li>
+</ul>
+</section>
+</section>
 <section id="id5">
-<h3>Changed<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<h2>2.12.2<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<section id="id6">
+<h3>Changed<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Bumped minimum <code class="docutils literal notranslate"><span class="pre">unicorn-fy</span></code> dependency from <code class="docutils literal notranslate"><span class="pre">&gt;=0.15.0</span></code> to <code class="docutils literal notranslate"><span class="pre">&gt;=0.17.2</span></code>
 in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>, <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>, <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>,
@@ -1041,11 +1054,6 @@ Dropped the <code class="docutils literal notranslate"><span class="pre">lucit::
 Refreshed <code class="docutils literal notranslate"><span class="pre">about.description</span></code> by re-embedding the current <code class="docutils literal notranslate"><span class="pre">README.md</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">environment.yml</span></code>: dropped the <code class="docutils literal notranslate"><span class="pre">lucit</span></code> channel and the <code class="docutils literal notranslate"><span class="pre">lucit::</span></code>
 prefixes on suite dependencies — conda-forge provides them now.</p></li>
-</ul>
-</section>
-<section id="id6">
-<h3>Removed<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
-<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">.github/workflows/build_conda.yml</span></code>: the conda-forge feedstock
 (<code class="docutils literal notranslate"><span class="pre">conda-forge/unicorn-binance-websocket-api-feedstock</span></code>) now builds
 and publishes the conda package; no in-repo build is needed anymore.</p></li>
@@ -3786,19 +3794,19 @@ flapping network connection</p></li>
 <li><a class="reference internal" href="#">unicorn-binance-websocket-api Change Log</a><ul>
 <li><a class="reference internal" href="#dev-development-stage-unreleased-unstable">2.14.0.dev (development stage/unreleased/unstable)</a></li>
 <li><a class="reference internal" href="#id1">2.14.0</a><ul>
-<li><a class="reference internal" href="#fixed">Fixed</a></li>
 <li><a class="reference internal" href="#added">Added</a></li>
+<li><a class="reference internal" href="#changed">Changed</a></li>
+<li><a class="reference internal" href="#fixed">Fixed</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#id2">2.13.0</a><ul>
-<li><a class="reference internal" href="#changed">Changed</a></li>
 <li><a class="reference internal" href="#id3">Added</a></li>
+<li><a class="reference internal" href="#id4">Changed</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id4">2.12.2</a><ul>
-<li><a class="reference internal" href="#id5">Changed</a></li>
+<li><a class="reference internal" href="#id5">2.12.2</a><ul>
+<li><a class="reference internal" href="#id6">Changed</a></li>
 <li><a class="reference internal" href="#removed">Removed</a></li>
-<li><a class="reference internal" href="#id6">Removed</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#id7">2.12.1</a><ul>
@@ -4638,7 +4646,7 @@ flapping network connection</p></li>
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on May 21 2026 at 20:45 (CET).
+    Last updated on May 21 2026 at 20:59 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
     Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.

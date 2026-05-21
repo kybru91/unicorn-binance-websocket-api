@@ -12,23 +12,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## 2.14.0.dev (development stage/unreleased/unstable)
 
 ## 2.14.0
-### Fixed
-- USDT-M Futures `!userData` streams (`BINANCE_FUTURES`,
-  `BINANCE_FUTURES_TESTNET`): the `listenKey` is now passed as a
-  query parameter (`/private/ws?listenKey=...`) instead of as a path
-  segment (`/private/ws/<listenKey>`). The path form has been
-  decommissioned by Binance on the mainnet `fstream` host; testnet
-  was still accepting both forms which masked the issue during the
-  2.13.0 verification round. Reported by
-  [@andykarpov](https://github.com/andykarpov) on
-  [issue #437](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/437#issuecomment-4492250065)
-  and originally fixed in [PR #445](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/445).
-- `replace_stream()`: forwarded its arguments to `create_stream()`
-  positionally, but the 12th slot of `create_stream()` had become
-  `listen_key` (introduced with the WS API rework), so
-  `new_stream_buffer_maxlen` was silently bound to `listen_key`.
-  All arguments are now passed by keyword, eliminating the silent
-  parameter shift and future-proofing against signature additions.
 ### Added
 - `create_stream()` and `replace_stream()`: new optional `events` /
   `new_events` parameter selecting which event types Binance pushes
@@ -47,17 +30,34 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `connection_settings.BINANCE_FUTURES_USERDATA_EVENTS` tuple
   containing the default event subscription set, mirroring the
   Binance docs for the USDⓈ-M Futures user data stream.
+### Changed
+- Internal cleanup: moved the UBWA-internal Futures-category resolution
+  helpers (`_classify_futures_token`, `_resolve_futures_category`) from
+  module scope into `BinanceWebSocketApiManager` as private
+  `@staticmethod` / `@classmethod`. The routing-token constant
+  `FUTURES_SUFFIX_MARKERS` moves from `manager.py` into
+  `connection_settings.py`, next to the other Futures routing
+  constants. No behaviour change.
+  ([PR #449](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/449))
+### Fixed
+- USDT-M Futures `!userData` streams (`BINANCE_FUTURES`,
+  `BINANCE_FUTURES_TESTNET`): the `listenKey` is now passed as a
+  query parameter (`/private/ws?listenKey=...`) instead of as a path
+  segment (`/private/ws/<listenKey>`). The path form has been
+  decommissioned by Binance on the mainnet `fstream` host; testnet
+  was still accepting both forms which masked the issue during the
+  2.13.0 verification round. Reported by
+  [@andykarpov](https://github.com/andykarpov) on
+  [issue #437](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/437#issuecomment-4492250065)
+  and originally fixed in [PR #445](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/445).
+- `replace_stream()`: forwarded its arguments to `create_stream()`
+  positionally, but the 12th slot of `create_stream()` had become
+  `listen_key` (introduced with the WS API rework), so
+  `new_stream_buffer_maxlen` was silently bound to `listen_key`.
+  All arguments are now passed by keyword, eliminating the silent
+  parameter shift and future-proofing against signature additions.
 
 ## 2.13.0
-### Changed
-- USDT-M Futures (`BINANCE_FUTURES`, `BINANCE_FUTURES_TESTNET`):
-  WebSocket streams are now routed via the per-category base paths
-  `/public`, `/market` and `/private` introduced by Binance on
-  2026-04-23. Channels are auto-classified at connection time and
-  the matching path segment is prepended to `ws/` and
-  `stream?streams=`. The legacy `/ws` and `/stream` paths have been
-  decommissioned by Binance.
-  See [issue #437](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/437).
 ### Added
 - `connection_settings.BINANCE_FUTURES_EXCHANGES` frozenset
   containing the exchanges that route through the new per-category
@@ -70,6 +70,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   a stream into several connections — open one `create_stream()`
   per category instead. Mirrors the existing `!userData`-in-
   combined-stream rejection.
+### Changed
+- USDT-M Futures (`BINANCE_FUTURES`, `BINANCE_FUTURES_TESTNET`):
+  WebSocket streams are now routed via the per-category base paths
+  `/public`, `/market` and `/private` introduced by Binance on
+  2026-04-23. Channels are auto-classified at connection time and
+  the matching path segment is prepended to `ws/` and
+  `stream?streams=`. The legacy `/ws` and `/stream` paths have been
+  decommissioned by Binance.
+  See [issue #437](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/437).
 
 ## 2.12.2
 ### Changed
@@ -109,7 +118,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   Refreshed `about.description` by re-embedding the current `README.md`.
 - `environment.yml`: dropped the `lucit` channel and the `lucit::`
   prefixes on suite dependencies — conda-forge provides them now.
-### Removed
 - `.github/workflows/build_conda.yml`: the conda-forge feedstock
   (`conda-forge/unicorn-binance-websocket-api-feedstock`) now builds
   and publishes the conda package; no in-repo build is needed anymore.

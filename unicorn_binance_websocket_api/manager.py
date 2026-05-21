@@ -43,6 +43,7 @@ from .connection_settings import (
     BINANCE_FUTURES_USERDATA_EVENTS,
     CEX_EXCHANGES,
     CONNECTION_SETTINGS,
+    FUTURES_SUFFIX_MARKERS,
     USERDATA_WS_API_EXCHANGES,
 )
 from .exceptions import *
@@ -81,66 +82,6 @@ __version__: str = "2.14.0.dev"
 __logger__: logging.getLogger = logging.getLogger("unicorn_binance_websocket_api")
 
 logger = __logger__
-
-
-# UBWA-internal channel/market suffix markers — they don't pin a Futures category.
-_FUTURES_SUFFIX_MARKERS = frozenset({"arr", "$all"})
-
-
-def _classify_futures_token(token: str) -> str:
-    """
-    Classify a single channel name or `!`-prefixed special market into one of the
-    Binance USDT-M Futures WebSocket categories: ``public``, ``market``, ``private``.
-
-    Per Binance announcement effective 2026-04-23, Futures streams are routed
-    via three distinct base paths:
-
-    * ``/public``  — bookTicker, depth (top-levels and diff)
-    * ``/market``  — aggTrade, kline, ticker, miniTicker, forceOrder, markPrice, ...
-    * ``/private`` — user data via listenKey
-    """
-    t = str(token).lower().lstrip("!").split("@", 1)[0]
-    if t == "bookticker":
-        return "public"
-    if t.startswith("depth"):
-        return "public"
-    if t == "userdata":
-        return "private"
-    return "market"
-
-
-def _resolve_futures_category(channels, markets) -> str:
-    """
-    Resolve the Futures WS category for a (channels, markets) combination.
-
-    Plain symbols (e.g. ``btcusdt``) and UBWA suffix markers (``arr``, ``$all``) do not
-    pin a category — only real channel names and ``!``-prefixed special markets do.
-
-    Raises ``ValueError`` when channels/markets resolve to more than one category.
-    Binance no longer permits multiple categories on a single WebSocket connection,
-    and UBWA does not silently split a stream into multiple connections — fail loud
-    so the caller opens one ``create_stream`` per category.
-    """
-    if isinstance(channels, str):
-        channels = [channels]
-    if isinstance(markets, str):
-        markets = [markets]
-    categories = set()
-    for ch in channels or []:
-        if str(ch).lower() in _FUTURES_SUFFIX_MARKERS:
-            continue
-        categories.add(_classify_futures_token(ch))
-    for mk in markets or []:
-        if str(mk).startswith("!"):
-            categories.add(_classify_futures_token(mk))
-    if len(categories) > 1:
-        raise ValueError(
-            f"BINANCE_FUTURES: mixing WebSocket categories on a single stream is not "
-            f"supported. Detected categories: {sorted(categories)}. "
-            f"Since 2026-04-23 Binance routes /public, /market, and /private separately "
-            f"for USDT-M Futures — open one create_stream() call per category."
-        )
-    return categories.pop() if categories else "market"
 
 
 class BinanceWebSocketApiManager(threading.Thread):
@@ -1782,7 +1723,7 @@ class BinanceWebSocketApiManager(threading.Thread):
             # 2026-04-23 — a single connection cannot mix categories. Fail loud here
             # before allocating a stream slot, instead of silently subscribing only
             # part of the requested channels.
-            _resolve_futures_category(channels, markets)
+            self._resolve_futures_category(channels, markets)
         # Normalize `events` to a tuple. None → default set (all documented events).
         # No validation against an allow-list — Binance may add events between UBWA
         # releases, so unknown names are passed through as-is. Empty input also
@@ -1880,6 +1821,62 @@ class BinanceWebSocketApiManager(threading.Thread):
                     logger.error(f"BinanceWebSocketApiManager.create_stream({stream_id} - No valid asyncio loop!")
         return stream_id
 
+    @staticmethod
+    def _classify_futures_token(token: str) -> str:
+        """
+        Classify a single channel name or `!`-prefixed special market into one of the
+        Binance USDT-M Futures WebSocket categories: ``public``, ``market``, ``private``.
+
+        Per Binance announcement effective 2026-04-23, Futures streams are routed
+        via three distinct base paths:
+
+        * ``/public``  — bookTicker, depth (top-levels and diff)
+        * ``/market``  — aggTrade, kline, ticker, miniTicker, forceOrder, markPrice, ...
+        * ``/private`` — user data via listenKey
+        """
+        t = str(token).lower().lstrip("!").split("@", 1)[0]
+        if t == "bookticker":
+            return "public"
+        if t.startswith("depth"):
+            return "public"
+        if t == "userdata":
+            return "private"
+        return "market"
+
+    @classmethod
+    def _resolve_futures_category(cls, channels, markets) -> str:
+        """
+        Resolve the Futures WS category for a (channels, markets) combination.
+
+        Plain symbols (e.g. ``btcusdt``) and UBWA suffix markers (``arr``, ``$all``) do not
+        pin a category — only real channel names and ``!``-prefixed special markets do.
+
+        Raises ``ValueError`` when channels/markets resolve to more than one category.
+        Binance no longer permits multiple categories on a single WebSocket connection,
+        and UBWA does not silently split a stream into multiple connections — fail loud
+        so the caller opens one ``create_stream`` per category.
+        """
+        if isinstance(channels, str):
+            channels = [channels]
+        if isinstance(markets, str):
+            markets = [markets]
+        categories = set()
+        for ch in channels or []:
+            if str(ch).lower() in FUTURES_SUFFIX_MARKERS:
+                continue
+            categories.add(cls._classify_futures_token(ch))
+        for mk in markets or []:
+            if str(mk).startswith("!"):
+                categories.add(cls._classify_futures_token(mk))
+        if len(categories) > 1:
+            raise ValueError(
+                f"BINANCE_FUTURES: mixing WebSocket categories on a single stream is not "
+                f"supported. Detected categories: {sorted(categories)}. "
+                f"Since 2026-04-23 Binance routes /public, /market, and /private separately "
+                f"for USDT-M Futures — open one create_stream() call per category."
+            )
+        return categories.pop() if categories else "market"
+
     def _futures_path_prefix(self, channels, markets) -> str:
         """
         Return the Futures category segment (``public/``, ``market/``, ``private/``)
@@ -1888,7 +1885,7 @@ class BinanceWebSocketApiManager(threading.Thread):
         """
         if self.exchange not in BINANCE_FUTURES_EXCHANGES:
             return ""
-        return f"{_resolve_futures_category(channels, markets)}/"
+        return f"{self._resolve_futures_category(channels, markets)}/"
 
     def create_websocket_uri(self, channels, markets, stream_id=None, symbols=None, api=False):
         """

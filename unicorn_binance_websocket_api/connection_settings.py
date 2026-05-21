@@ -115,6 +115,12 @@ BINANCE_FUTURES_EXCHANGES = frozenset([
     Exchanges.BINANCE_FUTURES_TESTNET,
 ])
 
+# UBWA-internal channel/market suffix markers — tokens that may appear in `channels`
+# or `markets` but do not pin a Futures WS category (e.g. `arr` as in `!ticker@arr`,
+# or `$all` for the full-symbol form). Used by Futures category resolution to skip
+# these tokens when classifying.
+FUTURES_SUFFIX_MARKERS = frozenset({"arr", "$all"})
+
 # Default event subscription for the /private listenKey WebSocket on USDT-M Futures.
 # Since 2026-04-23 the private endpoint requires an explicit `&events=` filter — if
 # omitted, Binance production silently delivers nothing. To preserve the behaviour of

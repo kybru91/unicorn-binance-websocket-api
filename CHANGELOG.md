@@ -9,7 +9,42 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
-## 2.13.0.dev (development stage/unreleased/unstable)
+## 2.14.0.dev (development stage/unreleased/unstable)
+### Fixed
+- USDT-M Futures `!userData` streams (`BINANCE_FUTURES`,
+  `BINANCE_FUTURES_TESTNET`): the `listenKey` is now passed as a
+  query parameter (`/private/ws?listenKey=...`) instead of as a path
+  segment (`/private/ws/<listenKey>`). The path form has been
+  decommissioned by Binance on the mainnet `fstream` host; testnet
+  was still accepting both forms which masked the issue during the
+  2.13.0 verification round. Reported by
+  [@andykarpov](https://github.com/andykarpov) on
+  [issue #437](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/437#issuecomment-4492250065)
+  and originally fixed in [PR #445](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/445).
+- `replace_stream()`: forwarded its arguments to `create_stream()`
+  positionally, but the 12th slot of `create_stream()` had become
+  `listen_key` (introduced with the WS API rework), so
+  `new_stream_buffer_maxlen` was silently bound to `listen_key`.
+  All arguments are now passed by keyword, eliminating the silent
+  parameter shift and future-proofing against signature additions.
+### Added
+- `create_stream()` and `replace_stream()`: new optional `events` /
+  `new_events` parameter selecting which event types Binance pushes
+  on a USDT-M Futures `!userData` stream
+  (`ORDER_TRADE_UPDATE`, `ACCOUNT_UPDATE`, `MARGIN_CALL`,
+  `TRADE_LITE`, `ACCOUNT_CONFIG_UPDATE`, `STRATEGY_UPDATE`,
+  `GRID_UPDATE`, `CONDITIONAL_ORDER_TRIGGER_REJECT`,
+  `ALGO_ORDER_UPDATE`, `listenKeyExpired`). Accepts a `str`, an
+  iterable of event names or `None`. `None` (the default) subscribes
+  to the full set, preserving the behaviour of the pre-2026-04-23
+  `/ws/<listenKey>` URL where every event arrived unfiltered. User-
+  supplied event names are not validated against an allow-list so
+  that Binance-side additions can be passed through immediately
+  without waiting for a UBWA release. Ignored for non-Futures
+  exchanges and non-userData streams.
+- `connection_settings.BINANCE_FUTURES_USERDATA_EVENTS` tuple
+  containing the default event subscription set, mirroring the
+  Binance docs for the USDⓈ-M Futures user data stream.
 
 ## 2.13.0
 ### Changed

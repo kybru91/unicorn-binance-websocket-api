@@ -114,3 +114,28 @@ BINANCE_FUTURES_EXCHANGES = frozenset([
     Exchanges.BINANCE_FUTURES,
     Exchanges.BINANCE_FUTURES_TESTNET,
 ])
+
+# Default event subscription for the /private listenKey WebSocket on USDT-M Futures.
+# Since 2026-04-23 the private endpoint requires an explicit `&events=` filter — if
+# omitted, Binance production silently delivers nothing. To preserve the behaviour of
+# the previous `/ws/<listenKey>` URL (which streamed every event), UBWA subscribes to
+# all event types listed below by default. The user can override this with the
+# `events` parameter on `create_stream()` / `replace_stream()`.
+#
+# The list mirrors the event types documented at
+# https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams
+# as of UBWA's release date. UBWA does not validate user-supplied event names against
+# this list — Binance may add new events between releases and they can be passed
+# through immediately without waiting for a UBWA bump.
+BINANCE_FUTURES_USERDATA_EVENTS = (
+    "ORDER_TRADE_UPDATE",
+    "ACCOUNT_UPDATE",
+    "MARGIN_CALL",
+    "TRADE_LITE",
+    "ACCOUNT_CONFIG_UPDATE",
+    "STRATEGY_UPDATE",
+    "GRID_UPDATE",
+    "CONDITIONAL_ORDER_TRIGGER_REJECT",
+    "ALGO_ORDER_UPDATE",
+    "listenKeyExpired",
+)

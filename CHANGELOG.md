@@ -21,6 +21,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [@andykarpov](https://github.com/andykarpov) on
   [issue #437](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/437#issuecomment-4492250065)
   and originally fixed in [PR #445](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/445).
+- `replace_stream()`: forwarded its arguments to `create_stream()`
+  positionally, but the 12th slot of `create_stream()` had become
+  `listen_key` (introduced with the WS API rework), so
+  `new_stream_buffer_maxlen` was silently bound to `listen_key`.
+  All arguments are now passed by keyword, eliminating the silent
+  parameter shift and future-proofing against signature additions.
 ### Added
 - `create_stream()` and `replace_stream()`: new optional `events` /
   `new_events` parameter selecting which event types Binance pushes

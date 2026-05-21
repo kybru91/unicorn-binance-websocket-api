@@ -4003,19 +4003,22 @@ class BinanceWebSocketApiManager(threading.Thread):
         :type new_events: str, Iterable[str] or None
         :return: stream_id or 'None'
         """
-        # starting a new socket and stop the old stream not before the new stream received its first record
-        new_stream_id = self.create_stream(new_channels,
-                                           new_markets,
-                                           new_stream_label,
-                                           new_stream_buffer_name,
-                                           new_api_key,
-                                           new_api_secret,
-                                           new_symbols,
-                                           new_output,
-                                           new_ping_interval,
-                                           new_ping_timeout,
-                                           new_close_timeout,
-                                           new_stream_buffer_maxlen,
+        # starting a new socket and stop the old stream not before the new stream received its first record.
+        # All arguments are passed by keyword so that future additions to `create_stream()` (and the
+        # 12th-positional `listen_key` introduced between the original `replace_stream()` design and the
+        # WS-API rework) cannot silently shift into the wrong parameter slot.
+        new_stream_id = self.create_stream(channels=new_channels,
+                                           markets=new_markets,
+                                           stream_label=new_stream_label,
+                                           stream_buffer_name=new_stream_buffer_name,
+                                           api_key=new_api_key,
+                                           api_secret=new_api_secret,
+                                           symbols=new_symbols,
+                                           output=new_output,
+                                           ping_interval=new_ping_interval,
+                                           ping_timeout=new_ping_timeout,
+                                           close_timeout=new_close_timeout,
+                                           stream_buffer_maxlen=new_stream_buffer_maxlen,
                                            events=new_events)
         if self.wait_till_stream_has_started(new_stream_id):
             self.stop_stream(stream_id=stream_id, delete_listen_key=False)

@@ -10,6 +10,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.14.0.dev (development stage/unreleased/unstable)
+### Changed
+- Internal cleanup: moved the UBWA-internal Futures-category resolution
+  helpers (`_classify_futures_token`, `_resolve_futures_category`) from
+  module scope into `BinanceWebSocketApiManager` as private
+  `@staticmethod` / `@classmethod`. The routing-token constant
+  `FUTURES_SUFFIX_MARKERS` moves from `manager.py` into
+  `connection_settings.py`, next to the other Futures routing
+  constants. No behaviour change.
+  ([PR #449](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/pull/449))
 
 ## 2.14.0
 ### Fixed

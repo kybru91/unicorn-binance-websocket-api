@@ -20,6 +20,7 @@
 [![Read How To`s](https://img.shields.io/badge/read-%20howto-yellow)](https://blog.technopathy.club/series/unicorn-binance-suite)
 [![Github](https://img.shields.io/badge/source-github-cbc2c8)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
 [![Telegram](https://img.shields.io/badge/community-telegram-41ab8c)](https://t.me/unicorndevs)
+[![Reddit](https://img.shields.io/badge/community-reddit-41ab8c)](https://www.reddit.com/r/UNICORNBinanceSuite)
 
 [![UBS-Banner](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-suite/master/images/logo/UBS-Banner-Readme.png)](https://github.com/oliver-zehentleitner/unicorn-binance-suite)
 

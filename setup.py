@@ -92,7 +92,7 @@ setup(
              'binance-websocket, binance-webstream, webstream, websocket, api, binance-dex, '
              'binance-futures, binance-margin, binance-us',
     project_urls={
-        'Howto': 'https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api#howto',
+        'Howto': 'https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api#related-articles',
         'Documentation': 'https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api',
         'Wiki': 'https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/wiki',
         'Author': 'https://www.linkedin.com/in/oliver-zehentleitner',

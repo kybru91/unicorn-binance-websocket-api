@@ -79,9 +79,9 @@ setup(
     version="2.14.0",
     author="Oliver Zehentleitner",
     url="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api",
-    description="A Python SDK to use the Binance Websocket API`s (com+testnet, "
-                "com-margin+testnet, com-isolated_margin+testnet, com-futures+testnet, com-coin_futures, us, tr, "
-                "dex/chain+testnet) in a simple, fast, flexible, robust and fully-featured way.",
+    description="A Python SDK to use the Binance Websocket API`s (com+testnet, com-margin+testnet, "
+                "com-isolated_margin+testnet, com-futures+testnet, com-coin_futures, com-vanilla-options+testnet, us, "
+                "tr) in a simple, fast, flexible, robust and fully-featured way.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license='MIT',
@@ -100,6 +100,7 @@ setup(
         'License': 'https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/license.html',
         'Issue Tracker': 'https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues',
         'Telegram': 'https://t.me/unicorndevs',
+        'Umbrella Project': 'https://github.com/oliver-zehentleitner/unicorn-binance-suite',
     },
     packages=find_packages(exclude=[f"dev/{source_dir}"], include=[source_dir]),
     ext_modules=cythonize(extensions, compiler_directives={'language_level': "3"}),

@@ -152,6 +152,12 @@ class BinanceWebSocketApiRestclient(object):
                     result = self.ubra.futures_coin_stream_close(listenKey=self.stream_list[stream_id]['listen_key'],
                                                                  throw_exception=False,
                                                                  **kwargs)
+                elif self.exchange == "binance.com-portfolio_margin":
+                    if self.restful_base_uri is not None:
+                        self.ubra.PAPI_URL = self.restful_base_uri
+                    result = self.ubra.portfolio_margin_stream_close(listenKey=self.stream_list[stream_id]['listen_key'],
+                                                                     throw_exception=False,
+                                                                     **kwargs)
                 else:
                     if self.restful_base_uri is not None:
                         self.ubra.API_URL = self.restful_base_uri
@@ -257,6 +263,17 @@ class BinanceWebSocketApiRestclient(object):
                     logger.critical(f"BinanceWebSocketApiRestclient.get_listen_key() - error: 8 - "
                                     f"error_msg: {error_msg} - Can not acquire listen_key for coin futures!!")
                     return None, None
+            elif self.exchange == "binance.com-portfolio_margin":
+                try:
+                    if self.restful_base_uri is not None:
+                        self.ubra.PAPI_URL = self.restful_base_uri
+                    response = self.ubra.portfolio_margin_stream_get_listen_key(output="raw_data",
+                                                                                throw_exception=False,
+                                                                                **kwargs)
+                except AttributeError as error_msg:
+                    logger.critical(f"BinanceWebSocketApiRestclient.get_listen_key() - error: 8 - "
+                                    f"error_msg: {error_msg} - Can not acquire listen_key for portfolio margin!!")
+                    return None, None
             else:
                 try:
                     if self.restful_base_uri is not None:
@@ -332,6 +349,12 @@ class BinanceWebSocketApiRestclient(object):
                 result = self.ubra.futures_stream_keepalive(listenKey=self.stream_list[stream_id]['listen_key'],
                                                             throw_exception=False,
                                                             **kwargs)
+            elif self.exchange == "binance.com-portfolio_margin":
+                if self.restful_base_uri is not None:
+                    self.ubra.PAPI_URL = self.restful_base_uri
+                result = self.ubra.portfolio_margin_stream_keepalive(listenKey=self.stream_list[stream_id]['listen_key'],
+                                                                     throw_exception=False,
+                                                                     **kwargs)
             else:
                 if self.restful_base_uri is not None:
                     self.ubra.API_URL = self.restful_base_uri

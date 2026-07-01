@@ -39,6 +39,7 @@
 # IN THE SOFTWARE.
 
 from unicorn_binance_rest_api import BinanceRestApiManager
+from unicorn_binance_rest_api.exceptions import UnknownExchange
 from typing import Optional, Union, Tuple
 import logging
 import requests
@@ -87,16 +88,26 @@ class BinanceWebSocketApiRestclient(object):
         """
         Init UBRA if necessary.
 
+        :return: `True` if `self.ubra` is ready to use, `False` if the installed UBRA version
+                 does not (yet) know `self.exchange` - callers must check this and bail out
+                 gracefully instead of letting `UnknownExchange` propagate uncaught.
         """
         if self.ubra is None:
             logger.debug(f"Init UBRA for UBWA restclient.")
-            self.ubra = BinanceRestApiManager(debug=self.debug,
-                                              disable_colorama=self.disable_colorama,
-                                              exchange=self.exchange,
-                                              socks5_proxy_server=self.socks5_proxy_server,
-                                              socks5_proxy_user=self.socks5_proxy_user,
-                                              socks5_proxy_pass=self.socks5_proxy_pass,
-                                              warn_on_update=self.warn_on_update)
+            try:
+                self.ubra = BinanceRestApiManager(debug=self.debug,
+                                                  disable_colorama=self.disable_colorama,
+                                                  exchange=self.exchange,
+                                                  socks5_proxy_server=self.socks5_proxy_server,
+                                                  socks5_proxy_user=self.socks5_proxy_user,
+                                                  socks5_proxy_pass=self.socks5_proxy_pass,
+                                                  warn_on_update=self.warn_on_update)
+            except UnknownExchange as error_msg:
+                logger.critical(f"BinanceWebSocketApiRestclient._init_ubra() - The installed "
+                                f"`unicorn-binance-rest-api` version does not support "
+                                f"exchange='{self.exchange}' yet - please upgrade UBRA - "
+                                f"error_msg: {error_msg}")
+                return False
         return True
 
     def delete_listen_key(self, stream_id=None) -> Tuple[Union[str, None], Union[dict, None]]:
@@ -116,7 +127,8 @@ class BinanceWebSocketApiRestclient(object):
 
         try:
             with (self.threading_lock):
-                self._init_ubra()
+                if self._init_ubra() is False:
+                    return None, None
 
                 try:
                     kwargs = {'api_key': self.stream_list[stream_id]['api_key'],
@@ -202,7 +214,8 @@ class BinanceWebSocketApiRestclient(object):
             return None, None
 
         with (self.threading_lock):
-            self._init_ubra()
+            if self._init_ubra() is False:
+                return None, None
 
             try:
                 kwargs = {'api_key': self.stream_list[stream_id]['api_key'],
@@ -313,7 +326,8 @@ class BinanceWebSocketApiRestclient(object):
             return None, None
 
         with (self.threading_lock):
-            self._init_ubra()
+            if self._init_ubra() is False:
+                return None, None
 
             try:
                 kwargs = {'api_key': self.stream_list[stream_id]['api_key'],

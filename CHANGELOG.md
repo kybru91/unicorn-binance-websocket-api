@@ -26,6 +26,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     [issue #452](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/452).
     The full Portfolio Margin REST surface (account, positions, orders,
     etc.) is out of scope for now; deferred to the planned UBRA rewrite.
+  - `restclient.py`: `_init_ubra()` now catches UBRA's `UnknownExchange` and
+    returns `False` instead of letting it propagate — before this, using an
+    exchange the installed UBRA doesn't recognize yet (as is currently the
+    case for `binance.com-portfolio_margin` until UBRA ships it) crashed the
+    calling stream thread with an uncaught exception instead of the intended
+    graceful `(None, None)` degradation. `get_listen_key()`,
+    `keepalive_listen_key()` and `delete_listen_key()` now check this return
+    value and bail out cleanly.
 
 ## 2.14.0
 ### Added

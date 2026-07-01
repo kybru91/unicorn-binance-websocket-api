@@ -905,6 +905,43 @@ class TestPortfolioMarginRestclientRouting(unittest.TestCase):
             listenKey="existing-key", throw_exception=False, api_key="key", api_secret="secret")
 
 
+class TestRestclientUnknownExchangeIsHandled(unittest.TestCase):
+    """Regression test: `_init_ubra()` must not let `UnknownExchange` propagate uncaught.
+
+    This can happen for ANY exchange string UBWA knows but the installed UBRA doesn't (yet) -
+    e.g. right after a new exchange is added to UBWA ahead of the corresponding UBRA release,
+    as was the case for `binance.com-portfolio_margin` in issue #452. Uses a bogus exchange
+    string instead of `binance.com-portfolio_margin` so this test stays meaningful even after
+    UBRA ships Portfolio Margin support.
+    """
+
+    @staticmethod
+    def _make_restclient():
+        stream_list = {
+            "id1": {
+                "api_key": "key",
+                "api_secret": "secret",
+                "symbols": None,
+                "listen_key": "existing-key",
+            }
+        }
+        return BinanceWebSocketApiRestclient(exchange="bogus-exchange-for-unittest",
+                                             stream_list=stream_list)
+
+    def test_get_listen_key_returns_none_instead_of_raising(self):
+        rc = self._make_restclient()
+        self.assertEqual(rc.get_listen_key(stream_id="id1"), (None, None))
+        self.assertIsNone(rc.ubra)
+
+    def test_keepalive_listen_key_returns_none_instead_of_raising(self):
+        rc = self._make_restclient()
+        self.assertEqual(rc.keepalive_listen_key(stream_id="id1"), (None, None))
+
+    def test_delete_listen_key_returns_none_instead_of_raising(self):
+        rc = self._make_restclient()
+        self.assertEqual(rc.delete_listen_key(stream_id="id1"), (None, None))
+
+
 if __name__ == '__main__':
     try:
         unittest.main()

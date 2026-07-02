@@ -6,6 +6,18 @@ Tasks collected from codebase analysis (2026-04-01). Ordered by priority within 
 
 ## High Priority
 
+### [x] Bump UBRA dependency pin once Portfolio Margin PAPI methods are released
+- `connection_settings.py`/`restclient.py` route `binance.com-portfolio_margin`
+  to `ubra.portfolio_margin_stream_get_listen_key()` / `_keepalive()` / `_close()`
+  (see [issue #452](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/452))
+- UBRA 2.12.0 (containing the PAPI methods) was merged
+  ([oliver-zehentleitner/unicorn-binance-rest-api#128](https://github.com/oliver-zehentleitner/unicorn-binance-rest-api/pull/128))
+  and its release build was in progress when Oliver had the `unicorn-binance-rest-api`
+  pin in `pyproject.toml`/`setup.py`/`requirements.txt` bumped to `>=2.12.0` ahead of the
+  PyPI publish landing — confirm the PyPI package is actually live before releasing UBWA itself
+- Previously, `binance.com-portfolio_margin` streams would fail at listenKey acquisition on
+  a freshly `pip install`ed UBWA
+
 ### [x] Remove DEX support
 - Remove `binance.org` and `binance.org-testnet` from `connection_settings.py` (`Exchanges` enum, `DEX_EXCHANGES`, `CONNECTION_SETTINGS`)
 - Remove all `if self.exchange == "binance.org"` branches in `sockets.py`, `manager.py`, `restclient.py`

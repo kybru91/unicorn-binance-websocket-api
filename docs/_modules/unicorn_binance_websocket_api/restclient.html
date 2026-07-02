@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unicorn_binance_websocket_api.restclient &#8212; unicorn-binance-websocket-api 2.13.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unicorn_binance_websocket_api.restclient &#8212; unicorn-binance-websocket-api 2.15.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
     <link rel="stylesheet" type="text/css" href="../../_static/pydoctheme.css?v=fdf8e9ae" />
@@ -40,7 +40,7 @@
         <nav class="menu" role="navigation" aria-label="main navigation">
             <p class="logo">
                 <div style="text-align: center;">
-                    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite">
+                    <a href="https://blog.technopathy.club/page/unicorn-binance-suite">
                         <img src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-suite/refs/heads/master/images/logo/UBS-Logo.png">
                     </a>
                 </div>
@@ -168,6 +168,7 @@
 <span class="c1"># IN THE SOFTWARE.</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_binance_rest_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinanceRestApiManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unicorn_binance_rest_api.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnknownExchange</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
@@ -218,16 +219,26 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Init UBRA if necessary.</span>
 
+<span class="sd">        :return: `True` if `self.ubra` is ready to use, `False` if the installed UBRA version</span>
+<span class="sd">                 does not (yet) know `self.exchange` - callers must check this and bail out</span>
+<span class="sd">                 gracefully instead of letting `UnknownExchange` propagate uncaught.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Init UBRA for UBWA restclient.&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span> <span class="o">=</span> <span class="n">BinanceRestApiManager</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">,</span>
-                                              <span class="n">disable_colorama</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">disable_colorama</span><span class="p">,</span>
-                                              <span class="n">exchange</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange</span><span class="p">,</span>
-                                              <span class="n">socks5_proxy_server</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">socks5_proxy_server</span><span class="p">,</span>
-                                              <span class="n">socks5_proxy_user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">socks5_proxy_user</span><span class="p">,</span>
-                                              <span class="n">socks5_proxy_pass</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">socks5_proxy_pass</span><span class="p">,</span>
-                                              <span class="n">warn_on_update</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">warn_on_update</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span> <span class="o">=</span> <span class="n">BinanceRestApiManager</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">,</span>
+                                                  <span class="n">disable_colorama</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">disable_colorama</span><span class="p">,</span>
+                                                  <span class="n">exchange</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange</span><span class="p">,</span>
+                                                  <span class="n">socks5_proxy_server</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">socks5_proxy_server</span><span class="p">,</span>
+                                                  <span class="n">socks5_proxy_user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">socks5_proxy_user</span><span class="p">,</span>
+                                                  <span class="n">socks5_proxy_pass</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">socks5_proxy_pass</span><span class="p">,</span>
+                                                  <span class="n">warn_on_update</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">warn_on_update</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">UnknownExchange</span> <span class="k">as</span> <span class="n">error_msg</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiRestclient._init_ubra() - The installed &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;`unicorn-binance-rest-api` version does not support &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;exchange=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange</span><span class="si">}</span><span class="s2">&#39; yet - please upgrade UBRA - &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;error_msg: </span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="BinanceWebSocketApiRestclient.delete_listen_key">
@@ -249,7 +260,8 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">threading_lock</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_init_ubra</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_ubra</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
 
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;api_key&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;api_key&#39;</span><span class="p">],</span>
@@ -285,6 +297,12 @@
                     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span><span class="o">.</span><span class="n">futures_coin_stream_close</span><span class="p">(</span><span class="n">listenKey</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;listen_key&#39;</span><span class="p">],</span>
                                                                  <span class="n">throw_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                                                  <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange</span> <span class="o">==</span> <span class="s2">&quot;binance.com-portfolio_margin&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restful_base_uri</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span><span class="o">.</span><span class="n">PAPI_URL</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restful_base_uri</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span><span class="o">.</span><span class="n">portfolio_margin_stream_close</span><span class="p">(</span><span class="n">listenKey</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;listen_key&#39;</span><span class="p">],</span>
+                                                                     <span class="n">throw_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restful_base_uri</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span><span class="o">.</span><span class="n">API_URL</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restful_base_uri</span>
@@ -335,7 +353,8 @@
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
 
         <span class="k">with</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">threading_lock</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init_ubra</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_ubra</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;api_key&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;api_key&#39;</span><span class="p">],</span>
@@ -396,6 +415,17 @@
                     <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiRestclient.get_listen_key() - error: 8 - &quot;</span>
                                     <span class="sa">f</span><span class="s2">&quot;error_msg: </span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2"> - Can not acquire listen_key for coin futures!!&quot;</span><span class="p">)</span>
                     <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange</span> <span class="o">==</span> <span class="s2">&quot;binance.com-portfolio_margin&quot;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restful_base_uri</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span><span class="o">.</span><span class="n">PAPI_URL</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restful_base_uri</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span><span class="o">.</span><span class="n">portfolio_margin_stream_get_listen_key</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="s2">&quot;raw_data&quot;</span><span class="p">,</span>
+                                                                                <span class="n">throw_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">error_msg</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiRestclient.get_listen_key() - error: 8 - &quot;</span>
+                                    <span class="sa">f</span><span class="s2">&quot;error_msg: </span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2"> - Can not acquire listen_key for portfolio margin!!&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restful_base_uri</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -438,7 +468,8 @@
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
 
         <span class="k">with</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">threading_lock</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init_ubra</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_ubra</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;api_key&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;api_key&#39;</span><span class="p">],</span>
@@ -474,6 +505,12 @@
                 <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span><span class="o">.</span><span class="n">futures_stream_keepalive</span><span class="p">(</span><span class="n">listenKey</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;listen_key&#39;</span><span class="p">],</span>
                                                             <span class="n">throw_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                                             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange</span> <span class="o">==</span> <span class="s2">&quot;binance.com-portfolio_margin&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restful_base_uri</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span><span class="o">.</span><span class="n">PAPI_URL</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restful_base_uri</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span><span class="o">.</span><span class="n">portfolio_margin_stream_keepalive</span><span class="p">(</span><span class="n">listenKey</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="n">stream_id</span><span class="p">][</span><span class="s1">&#39;listen_key&#39;</span><span class="p">],</span>
+                                                                     <span class="n">throw_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restful_base_uri</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">ubra</span><span class="o">.</span><span class="n">API_URL</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restful_base_uri</span>
@@ -511,7 +548,7 @@
         <div class="sphinxsidebarwrapper">
             <p class="logo">
                 <div style="text-align: center;">
-                    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite"><img src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-suite/refs/heads/master/images/logo/UBS-Logo.png"></a><br>
+                    <a href="https://blog.technopathy.club/page/unicorn-binance-suite"><img src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-suite/refs/heads/master/images/logo/UBS-Logo.png"></a><br>
                 </div>
             </p>
 <div id="searchbox" style="display: block" role="search">
@@ -590,10 +627,10 @@
       </ul>
     </div>  
     <div class="footer">
-    <a href="https://github.com/oliver-zehentleitner/unicorn-binance-suite#documentation">Index of all docs</a><br />
+    <a href="https://oliver-zehentleitner.github.io/unicorn-binance-suite/docs_index.html">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on May 21 2026 at 16:13 (CET).
+    Last updated on Jul 02 2026 at 12:37 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
     Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.

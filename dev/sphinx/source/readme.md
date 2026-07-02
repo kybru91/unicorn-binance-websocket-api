@@ -346,8 +346,13 @@ Use the [UNICORN Binance REST API](https://github.com/oliver-zehentleitner/unico
 | [Binance Coin-M Futures](https://www.binance.com)                  | `binance.com-coin_futures`            | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
 | [Binance European Options](https://www.binance.com)                | `binance.com-vanilla-options`         | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
 | [Binance European Options Testnet](https://testnet.binancefuture.com) | `binance.com-vanilla-options-testnet` | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+| [Binance Portfolio Margin](https://www.binance.com)*                | `binance.com-portfolio_margin`        | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
 | [Binance US](https://www.binance.us)                               | `binance.us`                          | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
 | [Binance TR](https://www.trbinance.com)                            | `trbinance.com`                       | ![yes](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png) | ![no](https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png)   |
+
+\* Portfolio Margin support is currently limited to the user data stream (`!userData`), see the
+[Portfolio Margin example](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/examples/binance_websocket_api_portfolio_margin)
+and [issue #452](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/452).
 
 - Streams are processing asynchronous/concurrent (Python asyncio) and each stream is started in a separate thread, so 
 you don't need to deal with asyncio in your code! But you can consume with 
@@ -508,10 +513,10 @@ Run in bash:
 `pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/$(curl -s https://api.github.com/repos/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")').tar.gz --upgrade`
 
 #### Windows
-Use the below command with the version (such as 2.14.0) you determined 
+Use the below command with the version (such as 2.15.0) you determined 
 [here](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest):
 
-`pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.14.0.tar.gz --upgrade`
+`pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.15.0.tar.gz --upgrade`
 ### From the latest source (dev-stage) with PIP from [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
 This is not a release version and can not be considered to be stable!
 

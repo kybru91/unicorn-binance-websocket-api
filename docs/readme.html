@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>UNICORN Binance WebSocket API &#8212; unicorn-binance-websocket-api 2.14.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNICORN Binance WebSocket API &#8212; unicorn-binance-websocket-api 2.15.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
     <link rel="stylesheet" type="text/css" href="_static/pydoctheme.css?v=fdf8e9ae" />
@@ -616,6 +616,12 @@ and <a class="reference external" href="https://oliver-zehentleitner.github.io/u
 <td><img alt="no" src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png" /></td>
 </tr>
 <tr>
+<td><a href="https://www.binance.com">Binance Portfolio Margin</a>*</td>
+<td><code>binance.com-portfolio_margin</code></td>
+<td><img alt="yes" src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png" /></td>
+<td><img alt="no" src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/x-icon.png" /></td>
+</tr>
+<tr>
 <td><a href="https://www.binance.us">Binance US</a></td>
 <td><code>binance.us</code></td>
 <td><img alt="yes" src="https://raw.githubusercontent.com/oliver-zehentleitner/unicorn-binance-websocket-api/master/images/misc/ok-icon.png" /></td>
@@ -629,6 +635,9 @@ and <a class="reference external" href="https://oliver-zehentleitner.github.io/u
 </tr>
 </tbody>
 </table>
+<p>* Portfolio Margin support is currently limited to the user data stream (<code class="docutils literal notranslate"><span class="pre">!userData</span></code>), see the
+<a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/examples/binance_websocket_api_portfolio_margin">Portfolio Margin example</a>
+and <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/452">issue #452</a>.</p>
 <ul>
 <li><p>Streams are processing asynchronous/concurrent (Python asyncio) and each stream is started in a separate thread, so
 you don’t need to deal with asyncio in your code! But you can consume with
@@ -773,9 +782,9 @@ this may take some time!</p>
 </section>
 <section id="windows">
 <h4>Windows<a class="headerlink" href="#windows" title="Link to this heading">¶</a></h4>
-<p>Use the below command with the version (such as 2.14.0) you determined
+<p>Use the below command with the version (such as 2.15.0) you determined
 <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest">here</a>:</p>
-<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.14.0.tar.gz</span> <span class="pre">--upgrade</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.15.0.tar.gz</span> <span class="pre">--upgrade</span></code></p>
 </section>
 </section>
 <section id="from-the-latest-source-dev-stage-with-pip-from-github">
@@ -1086,7 +1095,7 @@ companies from the US analyze binance.com market data - as long as they do not t
     <a href="https://oliver-zehentleitner.github.io/unicorn-binance-suite/docs_index.html">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Jun 17 2026 at 10:25 (CET).
+    Last updated on Jul 02 2026 at 12:37 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
     Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.

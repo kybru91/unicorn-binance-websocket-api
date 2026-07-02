@@ -9,7 +9,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
-## 2.14.0.dev (development stage/unreleased/unstable)
+## 2.15.0.dev (development stage/unreleased/unstable)
+
+## 2.15.0
 ### Added
 - Portfolio Margin support (`binance.com-portfolio_margin` exchange), scoped
   to the `!userData` stream for now:

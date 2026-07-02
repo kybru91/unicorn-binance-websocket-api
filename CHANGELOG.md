@@ -22,7 +22,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     `portfolio_margin_stream_*()` methods.
   - New example:
     [`binance_websocket_api_portfolio_margin`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/examples/binance_websocket_api_portfolio_margin).
-  - Requires an unreleased UBRA version — see
+  - Requires UBRA >= 2.12.0 (bumped in `pyproject.toml`/`setup.py`/
+    `requirements.txt`) — see
     [issue #452](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/452).
     The full Portfolio Margin REST surface (account, positions, orders,
     etc.) is out of scope for now; deferred to the planned UBRA rewrite.

@@ -3,6 +3,10 @@
 > **End-user cheatsheet for AI-assisted consumption:** [`llms.txt`](llms.txt) — use that one if you're writing code *against* this library.
 > **This file** is for AI agents working *on* this repo itself.
 
+## Why things are the way they are
+
+See [`context/index.md`](context/index.md) before making non-trivial changes — it points to the reasoning behind design decisions, rejected alternatives, and constraints that aren't visible in the code. If `AGENTS.local.md` exists in this repo, that's personal/local notes, not relevant to anyone else.
+
 ## Planning & Backlog
 
 Open development tasks and decisions are tracked in **[TASKS.md](TASKS.md)**.
@@ -28,7 +32,6 @@ unicorn_binance_websocket_api/     # Main package
     connection.py                  # Individual WebSocket connections (asyncio)
     sockets.py                     # Socket implementation with stream processing
     restclient.py                  # REST client for stream management
-    restserver.py                  # Flask REST server for external control
     connection_settings.py         # Exchanges enum + connection parameters
     exceptions.py                  # Custom exceptions
     api/                           # WebSocket API (trading) for Spot & Futures
@@ -60,12 +63,10 @@ Defined in `unicorn_binance_websocket_api/connection_settings.py` as the `Exchan
 Portfolio Margin (`binance.com-portfolio_margin`) is scoped to the user data
 stream lifecycle: `wss://fstream.binance.com/pm/ws/<listenKey>`, with the
 listenKey acquired/kept-alive/closed via UBRA's PAPI methods
-(`portfolio_margin_stream_get_listen_key()` etc.). It is intentionally NOT
-part of `BINANCE_FUTURES_EXCHANGES` — it keeps the legacy `/ws/<listenKey>`
-path form, not the `/private/ws?listenKey=...&events=...` form used by
-`binance.com-futures`/`binance.com-futures-testnet`. There is no
-`websocket_api_base_uri` (no WS API) and no public market-data endpoint for
-this exchange yet. See [issue #452](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/452).
+(`portfolio_margin_stream_get_listen_key()` etc.). Why it's scoped this way
+and deliberately not part of `BINANCE_FUTURES_EXCHANGES`:
+[`context/portfolio-margin.md`](context/portfolio-margin.md). See also
+[issue #452](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/452).
 
 ---
 
@@ -120,7 +121,8 @@ python setup.py bdist_wheel
 - `unit-tests.yml` — Python 3.8–3.13 on Ubuntu, Codecov upload
 - `build_wheels.yml` — Manual trigger, builds wheels for Linux/macOS/Windows, PyPI release
 - `codeql-analysis.yml` — Security scanning
-- `build_conda.yml` — Conda package build
+
+No in-repo conda build — conda-forge's own feedstock is the only conda source (same as the rest of the suite; see `context/history.md`).
 
 ---
 
@@ -143,7 +145,6 @@ python setup.py bdist_wheel
 | `BinanceWebSocketApiConnection` | `connection.py` | Individual WS connection (asyncio) |
 | `BinanceWebSocketApiSocket` | `sockets.py` | Stream processing |
 | `BinanceWebSocketApiRestclient` | `restclient.py` | REST client |
-| `BinanceWebSocketApiRestServer` | `restserver.py` | Flask REST server |
 | `WsApi` | `api/api.py` | Trading via WebSocket (Spot & Futures) |
 | `Exchanges` | `connection_settings.py` | Enum of all supported exchanges |
 
@@ -171,3 +172,8 @@ async def main():
     async with ubwa.get_stream_data_from_asyncio_queue(stream_id) as data:
         print(data)
 ```
+
+<!-- keep-the-why:config -->
+- context: `context/`
+- init: complete
+<!-- /keep-the-why:config -->

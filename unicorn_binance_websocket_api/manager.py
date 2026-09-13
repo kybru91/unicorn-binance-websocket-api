@@ -92,7 +92,7 @@ import uuid
 import orjson
 
 __app_name__: str = "unicorn-binance-websocket-api"
-__version__: str = "2.16.0"
+__version__: str = "2.16.0.dev"
 __logger__: logging.getLogger = logging.getLogger("unicorn_binance_websocket_api")
 
 logger = __logger__

@@ -22,7 +22,9 @@ its own thread/event loop. Reusing that path means zero duplicated stream
 logic and no second code path to keep in sync. Chosen as the first step
 explicitly; a native integration was to be *assessed*, not built (next entry).
 
-**Version floor `picows>=2.2.0`**: 2.2.0 is the first release whose
+**Version floor `picows>=2.3.0`**: 2.3.0 (2026-09-13) is the release whose
+`connect(proxy=...)` path UBWA uses for SOCKS5 in picows mode (see "picows
+mode uses picows' native proxy path" below); 2.2.0 was the first whose
 `InvalidStatus.response` is the `websockets`-shaped `Response` with
 `status_code` ([tarasko/picows#108](https://github.com/tarasko/picows/issues/108),
 fixed 2026-09-11, verified against 2.2.0 by the scenario suite). Before that
@@ -30,8 +32,8 @@ the floor was 2.1.0 rather than 2.0.0 (where `picows.websockets` first
 appeared) because 2.1.0 completed the compat surface (`open`/`closed`
 attributes, `protocol.State`, `WebSocketClientProtocol` alias) - UBWA does
 not use those today, the floor bought the complete API in case it does.
-Raising to 2.2.0 keeps that and removes the need to handle two response
-shapes.
+Raising to 2.2.0 kept that and removed the need to handle two response
+shapes; 2.3.0 adds the proxy path.
 
 ## Native picows core API (`ws_connect()` + `WSListener`) - measured, not built
 
@@ -171,13 +173,13 @@ an unknown value raises `ValueError` - no silent fallback to `websockets`.
 Follows the suite-wide "fail loud" rule: a deployment that thinks it runs
 picows but silently runs websockets is a hidden configuration bug.
 
-## SOCKS5 proxy path is shared
+## SOCKS5 proxy path was shared (picows < 2.3.0)
 
 **Type:** decision
-**Status:** active
+**Status:** superseded
 **Evidence:** confirmed
-**Source:** maintainer confirmation 2026-09-10; picows 2.1.3 source (`picows/websockets/asyncio/client.py`, `picows/api.py`); [tarasko/picows#80](https://github.com/tarasko/picows/pull/80); verified locally with a SOCKS5 server + TLS endpoint for both libraries
-**Revisit when:** picows' proxy support matures (HTTPS proxies in #80 land, or its SOCKS path is declared stable) - then re-evaluate whether the picows mode should use the native `proxy=` path
+**Source:** maintainer confirmation 2026-09-10; picows 2.1.3 source (`picows/websockets/asyncio/client.py`, `picows/api.py`); [tarasko/picows#80](https://github.com/tarasko/picows/pull/80); superseded 2026-09-13 by the next entry after picows 2.3.0 shipped its proxy support; verified locally with a SOCKS5 server + TLS endpoint for both libraries
+**Revisit when:** (resolved) picows 2.3.0 shipped HTTP/HTTPS/SOCKS4/SOCKS5 proxy support with tests; the picows mode switched to it, see the next entry
 
 Both libraries get the pre-connected PySocks socket via `sock=` +
 `server_hostname=` (UBWA's existing SOCKS5 handling). For picows the
@@ -196,6 +198,101 @@ configuration identical for both libraries until picows has settled.
 **Rejected alternative (for now):** picows' own proxy support
 (`proxy="socks5://..."` via python-socks, async, no PySocks). Not rejected
 on merit - deferred until picows' proxy support is stable.
+
+## Proxies are passed to both libraries natively (`proxy=` URL)
+
+**Type:** decision
+**Status:** active
+**Evidence:** confirmed
+**Source:** maintainer instructions 2026-09-13 ("picows 2.3.0 ... https proxy support, check and update the implementation", then "websockets floor to 15 and we just pass through cleanly, why not"); picows 2.3.0 release notes and `picows/proxy.py`; websockets 15.0 changelog (proxy support, `proxy_ssl` for `https://` proxies); scenario tests `test_socks5_proxy_*` / `test_http_proxy_*` against local SOCKS5 and HTTP CONNECT stand-ins for both libraries; live check 2026-09-13 through the SOCKS5 stand-in to wss://stream.binance.com for both libraries with verification on and off
+**Revisit when:** `unicorn-binance-rest-api` accepts a generic proxy URL - then the REST side (listenKey) can follow `http(s)://` proxies too and the derived `socks5_proxy_*` hand-over can go
+
+`BinanceWebSocketApiManager(proxy="scheme://[user:pass@]host:port")` is
+handed to `connect(proxy=...)` of whichever library is selected; the legacy
+`socks5_proxy_*` parameters are converted into a `socks5://` URL
+(`websocket_library.build_socks5_proxy_url()`, credentials percent-encoded)
+and either form derives the `socks5_proxy_*` attributes the REST client
+needs. `validate_proxy_url()` rejects unknown schemes and hostless URLs at
+construction (fail loud), `proxy_connect_kwargs()` adds the TLS context for
+the hop to an `https://` proxy under the name each library wants
+(`proxy_ssl` vs. `proxy_ssl_context`). Failures during the hop -
+`ProxyError`/`InvalidProxy` of either family, python-socks errors, and any
+other `OSError` while a proxy is configured (the client then only ever
+connects to the proxy) - become `ProxyConnectionError`
+(`Socks5ProxyConnectionError` stays as alias) and the stream restarts.
+Without a configured proxy the kwarg is not passed, so both libraries keep
+their documented default of honouring `wss_proxy`/`https_proxy` from the
+environment.
+
+**Reason:** both libraries now ship a tested proxy layer covering the same
+schemes (websockets since 15.0, picows since 2.3.0 - the first step of this
+change, on 2026-09-13, used it for picows only). Passing the URL through
+removes the blocking PySocks connect from the event loop, the manual
+netloc parsing, the socket hand-over that the compat layer only tolerated
+(`sock=` + `proxy=None`), the PySocks dependency of this package, and it
+adds HTTP/HTTPS proxies without UBWA-side code. The price is the floor
+`websockets>=15.0` (released 2025-02, the version that introduced `proxy=`),
+which the maintainer accepted as "logical to stay up to date".
+
+**Rejected alternative:** keeping the PySocks path for `websockets` to hold
+the 14.0 floor. Rejected by the maintainer: two proxy implementations for
+one parameter, and no HTTP/HTTPS proxies on the default library.
+
+**Consequence:** `unicorn-binance-rest-api` (listenKey requests) still only
+understands SOCKS5, so an `http(s)://` proxy covers the WebSocket
+connections only; UBWA logs a warning at construction in that case.
+
+## `websockets` sends proxy credentials without percent-decoding - refused at construction
+
+**Type:** workaround
+**Status:** active
+**Evidence:** confirmed
+**Source:** `websockets/proxy.py` `parse_proxy()` (16.0: `username`/`password` taken from `urlparse` as they are, no `unquote`), reproduced 2026-09-13 against the SOCKS5 stand-in (`ProxyError: failed to connect to SOCKS proxy`, proxy counted a rejected login); python-socks `parse_proxy_url()` does `unquote()`, so `picows` logs in with the same URL; reported upstream as [python-websockets/websockets#1761](https://github.com/python-websockets/websockets/issues/1761)
+**Revisit when:** #1761 is fixed and released - then raise the `websockets` floor to that version and drop `check_proxy_credentials()`
+
+A proxy password like `s3cret:@/` must be percent-encoded to fit into the
+URL; `websockets` passes the encoded string to python-socks and to the
+`Proxy-Authorization` header literally, the proxy rejects it, and UBWA
+would restart the stream forever with `ProxyConnectionError`. Before the
+native path the legacy `socks5_proxy_pass` went to PySocks raw and such
+passwords worked, so this would have been a silent regression for
+`websockets` users. `websocket_library.check_proxy_credentials()` therefore
+raises `ValueError` at construction when the selected library is
+`websockets` and the URL's user or password contain percent-escapes (both
+for `proxy=` and for the legacy parameters, which are encoded into the
+URL). `picows` is unaffected and covered by
+`test_socks5_proxy_credentials_with_reserved_characters`.
+
+**Rejected alternative:** decoding the credentials in UBWA and passing
+them raw. Not possible through `connect(proxy=...)`, which only takes the
+URL; raw reserved characters break `urlparse`.
+
+## TLS through the SOCKS5 proxy was never verified (fixed)
+
+**Type:** incident
+**Status:** active
+**Evidence:** confirmed
+**Source:** found 2026-09-13 while moving the picows proxy path (`manager.py`, `ssl.SSLContext()` with no protocol argument: `verify_mode=CERT_NONE`, `check_hostname=False` by default, checked on Python 3.13); fixed in the same change, covered by the live check through a SOCKS5 stand-in to binance.com with verification on and off
+
+The proxy path built the SSL context for the Binance endpoint with
+`ssl.SSLContext()` and only *disabled* verification when
+`socks5_proxy_ssl_verification=False`; with the default `True` nothing was
+enabled, so the certificate was never checked. The direct (no proxy) path
+uses the libraries' default context and verifies. Additionally the PySocks
+path passed `server_hostname="host:port"` (the netloc), which cannot match a
+certificate; it was harmless only because nothing was verified.
+
+**Reason it slipped through:** `ssl.SSLContext()` looks like "a default
+context", is not (`create_default_context()` is), and the deprecation
+warning for the missing protocol argument was not surfaced by the test runs.
+No test exercised the proxy path at all until the SOCKS5 stand-in.
+
+**Fix:** the libraries' default context (verifying) when verification is
+on - no custom context at all; `SSLContext(PROTOCOL_TLS_CLIENT)` with
+`check_hostname=False` / `CERT_NONE` when off; TLS kwargs are only passed
+for `wss://` (so the proxy path can be tested against a local `ws://`
+server). Users whose proxy setup relied on the missing verification
+(MITM proxies) get a certificate error now and have to opt out explicitly.
 
 ## Benchmark results
 

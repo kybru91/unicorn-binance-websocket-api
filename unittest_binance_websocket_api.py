@@ -49,6 +49,7 @@ import os
 import platform
 import time
 import threading
+import socket
 from unittest.mock import Mock, patch
 
 import tracemalloc
@@ -1847,6 +1848,211 @@ class _LocalWebSocketServer:
             await ws.send(self._trade("bytes", i) + " " * (100 * i))
 
 
+class _LocalSocks5Proxy:
+    """
+    Minimal SOCKS5 server (RFC 1928, user/password auth per RFC 1929) for
+    `TestWebSocketLibrary`: no auth or user/password, CONNECT to IPv4/IPv6/
+    domain targets, then pipes bytes in both directions. Counts established
+    tunnels and rejected logins.
+    """
+
+    def __init__(self, user=None, password=None):
+        self.user = user
+        self.password = password
+        self.port = None
+        self.ready = threading.Event()
+        self.connections = 0
+        self.rejected = 0
+        self.thread = None
+
+    def start(self):
+        self.thread = threading.Thread(
+            target=lambda: asyncio.run(self._serve()), daemon=True
+        )
+        self.thread.start()
+        self.ready.wait(10)
+
+    async def _serve(self):
+        server = await asyncio.start_server(self._handle, "127.0.0.1", 0)
+        self.port = server.sockets[0].getsockname()[1]
+        self.ready.set()
+        async with server:
+            await server.serve_forever()
+
+    async def _handle(self, reader, writer):
+        try:
+            version, method_count = await reader.readexactly(2)
+            methods = await reader.readexactly(method_count)
+            if self.user is not None:
+                if 2 not in methods:
+                    writer.write(b"\x05\xff")
+                    await writer.drain()
+                    return
+                writer.write(b"\x05\x02")
+                await writer.drain()
+                await reader.readexactly(1)  # auth version
+                user_length = (await reader.readexactly(1))[0]
+                user = (await reader.readexactly(user_length)).decode()
+                password_length = (await reader.readexactly(1))[0]
+                password = (await reader.readexactly(password_length)).decode()
+                if user != self.user or password != self.password:
+                    self.rejected += 1
+                    writer.write(b"\x01\x01")
+                    await writer.drain()
+                    return
+                writer.write(b"\x01\x00")
+                await writer.drain()
+            else:
+                writer.write(b"\x05\x00")
+                await writer.drain()
+            version, command, reserved, address_type = await reader.readexactly(4)
+            if address_type == 1:
+                host = socket.inet_ntoa(await reader.readexactly(4))
+            elif address_type == 3:
+                host_length = (await reader.readexactly(1))[0]
+                host = (await reader.readexactly(host_length)).decode()
+            else:
+                host = socket.inet_ntop(socket.AF_INET6, await reader.readexactly(16))
+            port = int.from_bytes(await reader.readexactly(2), "big")
+            if command != 1:
+                writer.write(b"\x05\x07\x00\x01" + b"\x00" * 6)
+                await writer.drain()
+                return
+            try:
+                target_reader, target_writer = await asyncio.open_connection(host, port)
+            except OSError:
+                writer.write(b"\x05\x05\x00\x01" + b"\x00" * 6)
+                await writer.drain()
+                return
+            self.connections += 1
+            writer.write(b"\x05\x00\x00\x01" + b"\x00" * 6)
+            await writer.drain()
+
+            async def pipe(source, sink):
+                try:
+                    while True:
+                        data = await source.read(65536)
+                        if not data:
+                            break
+                        sink.write(data)
+                        await sink.drain()
+                except Exception:
+                    pass
+                finally:
+                    try:
+                        sink.close()
+                    except Exception:
+                        pass
+
+            await asyncio.gather(
+                pipe(reader, target_writer), pipe(target_reader, writer)
+            )
+        except Exception:
+            pass
+        finally:
+            try:
+                writer.close()
+            except Exception:
+                pass
+
+
+class _LocalHttpConnectProxy:
+    """
+    Minimal HTTP proxy for `TestWebSocketLibrary`: answers `CONNECT host:port`
+    (optionally with Proxy-Authorization: Basic) with `200 Connection
+    established` and pipes bytes. Counts tunnels and rejected logins.
+    """
+
+    def __init__(self, user=None, password=None):
+        self.user = user
+        self.password = password
+        self.port = None
+        self.ready = threading.Event()
+        self.connections = 0
+        self.rejected = 0
+        self.thread = None
+
+    def start(self):
+        self.thread = threading.Thread(
+            target=lambda: asyncio.run(self._serve()), daemon=True
+        )
+        self.thread.start()
+        self.ready.wait(10)
+
+    async def _serve(self):
+        server = await asyncio.start_server(self._handle, "127.0.0.1", 0)
+        self.port = server.sockets[0].getsockname()[1]
+        self.ready.set()
+        async with server:
+            await server.serve_forever()
+
+    async def _handle(self, reader, writer):
+        import base64
+
+        try:
+            head = await reader.readuntil(b"\r\n\r\n")
+            request_line, *header_lines = head.decode().split("\r\n")
+            method, target, _ = request_line.split(" ", 2)
+            headers = {}
+            for line in header_lines:
+                if ":" in line:
+                    name, value = line.split(":", 1)
+                    headers[name.strip().lower()] = value.strip()
+            if method != "CONNECT":
+                writer.write(b"HTTP/1.1 405 Method Not Allowed\r\n\r\n")
+                await writer.drain()
+                return
+            if self.user is not None:
+                expected = (
+                    "Basic "
+                    + base64.b64encode(f"{self.user}:{self.password}".encode()).decode()
+                )
+                if headers.get("proxy-authorization") != expected:
+                    self.rejected += 1
+                    writer.write(b"HTTP/1.1 407 Proxy Authentication Required\r\n\r\n")
+                    await writer.drain()
+                    return
+            host, port = target.rsplit(":", 1)
+            try:
+                target_reader, target_writer = await asyncio.open_connection(
+                    host, int(port)
+                )
+            except OSError:
+                writer.write(b"HTTP/1.1 502 Bad Gateway\r\n\r\n")
+                await writer.drain()
+                return
+            self.connections += 1
+            writer.write(b"HTTP/1.1 200 Connection established\r\n\r\n")
+            await writer.drain()
+
+            async def pipe(source, sink):
+                try:
+                    while True:
+                        data = await source.read(65536)
+                        if not data:
+                            break
+                        sink.write(data)
+                        await sink.drain()
+                except Exception:
+                    pass
+                finally:
+                    try:
+                        sink.close()
+                    except Exception:
+                        pass
+
+            await asyncio.gather(
+                pipe(reader, target_writer), pipe(target_reader, writer)
+            )
+        except Exception:
+            pass
+        finally:
+            try:
+                writer.close()
+            except Exception:
+                pass
+
+
 class TestWebSocketLibrary(unittest.TestCase):
     """
     `websocket_library` switch: `websockets` (default) vs. the optional `picows`
@@ -2095,6 +2301,231 @@ class TestWebSocketLibrary(unittest.TestCase):
                     time.sleep(0.2)
                     expected = sum(len(m) for m in received)
                     self.assertEqual(ubwa.get_total_received_bytes(), expected)
+                finally:
+                    ubwa.stop_manager()
+
+    # --- SOCKS5 proxy -------------------------------------------------------
+
+    def test_socks5_proxy_roundtrip(self):
+        # Both libraries tunnel through a SOCKS5 proxy with user/password
+        # auth via their native `proxy=` support; the legacy `socks5_proxy_*`
+        # parameters and the URL form must be equivalent. `high_performance`
+        # keeps `create_stream()` from blocking forever if the tunnel never
+        # comes up - the test then fails instead of hanging.
+        print(f"test_socks5_proxy_roundtrip():")
+        proxy = _LocalSocks5Proxy(user="alice", password="s3cret")
+        proxy.start()
+        forms = {
+            "legacy": dict(
+                socks5_proxy_server=f"127.0.0.1:{proxy.port}",
+                socks5_proxy_user="alice",
+                socks5_proxy_pass="s3cret",
+            ),
+            "url": dict(proxy=f"socks5://alice:s3cret@127.0.0.1:{proxy.port}"),
+        }
+        for library in self.libraries:
+            for form, proxy_kwargs in forms.items():
+                with self.subTest(library=library, form=form):
+                    proxy.connections = 0
+                    received = []
+                    ubwa = self._manager(
+                        library,
+                        scenario="bytes",
+                        process_stream_data=received.append,
+                        high_performance=True,
+                        **proxy_kwargs,
+                    )
+                    try:
+                        self.assertEqual(
+                            ubwa.proxy, f"socks5://alice:s3cret@127.0.0.1:{proxy.port}"
+                        )
+                        stream_id = ubwa.create_stream(["trade"], ["bytes"])
+                        self.assertTrue(
+                            self._wait_for(lambda: len(self._trades(received)) >= 3)
+                        )
+                        self.assertEqual(proxy.connections, 1)
+                        self.assertEqual(
+                            ubwa.get_stream_info(stream_id)["reconnects"], 0
+                        )
+                    finally:
+                        ubwa.stop_manager()
+
+    def test_socks5_proxy_credentials_with_reserved_characters(self):
+        # `websockets` does not percent-decode proxy credentials (reported
+        # upstream), UBWA refuses them at construction; `picows` decodes and
+        # must log in with them.
+        print(f"test_socks5_proxy_credentials_with_reserved_characters():")
+        proxy = _LocalSocks5Proxy(user="alice", password="s3cret:@/")
+        proxy.start()
+        for proxy_kwargs in (
+            dict(proxy=f"socks5://alice:s3cret%3A%40%2F@127.0.0.1:{proxy.port}"),
+            dict(
+                socks5_proxy_server=f"127.0.0.1:{proxy.port}",
+                socks5_proxy_user="alice",
+                socks5_proxy_pass="s3cret:@/",
+            ),
+        ):
+            with self.assertRaises(ValueError):
+                self._manager("websockets", **proxy_kwargs)
+        if "picows" not in self.libraries:
+            return
+        received = []
+        ubwa = self._manager(
+            "picows",
+            scenario="bytes",
+            process_stream_data=received.append,
+            high_performance=True,
+            proxy=f"socks5://alice:s3cret%3A%40%2F@127.0.0.1:{proxy.port}",
+        )
+        try:
+            ubwa.create_stream(["trade"], ["bytes"])
+            self.assertTrue(self._wait_for(lambda: len(self._trades(received)) >= 3))
+            self.assertEqual(proxy.connections, 1)
+            self.assertEqual(proxy.rejected, 0)
+        finally:
+            ubwa.stop_manager()
+
+    def test_http_proxy_roundtrip(self):
+        # `http://` proxy (CONNECT tunnel with basic auth) through the
+        # libraries' native proxy support, both libraries.
+        print(f"test_http_proxy_roundtrip():")
+        proxy = _LocalHttpConnectProxy(user="alice", password="s3cret")
+        proxy.start()
+        for library in self.libraries:
+            with self.subTest(library=library):
+                proxy.connections = 0
+                received = []
+                ubwa = self._manager(
+                    library,
+                    scenario="bytes",
+                    process_stream_data=received.append,
+                    high_performance=True,
+                    proxy=f"http://alice:s3cret@127.0.0.1:{proxy.port}",
+                )
+                try:
+                    stream_id = ubwa.create_stream(["trade"], ["bytes"])
+                    self.assertTrue(
+                        self._wait_for(lambda: len(self._trades(received)) >= 3)
+                    )
+                    self.assertEqual(proxy.connections, 1)
+                    self.assertEqual(ubwa.get_stream_info(stream_id)["reconnects"], 0)
+                finally:
+                    ubwa.stop_manager()
+
+    def test_http_proxy_rejected_credentials_keeps_restarting(self):
+        print(f"test_http_proxy_rejected_credentials_keeps_restarting():")
+        proxy = _LocalHttpConnectProxy(user="alice", password="right")
+        proxy.start()
+        for library in self.libraries:
+            with self.subTest(library=library):
+                proxy.rejected = 0
+                ubwa = self._manager(
+                    library,
+                    scenario="bytes",
+                    restart_timeout=1,
+                    high_performance=True,
+                    proxy=f"http://alice:wrong@127.0.0.1:{proxy.port}",
+                )
+                try:
+                    with self.assertLogs(
+                        "unicorn_binance_websocket_api", level="ERROR"
+                    ) as logs:
+                        stream_id = ubwa.create_stream(["trade"], ["bytes"])
+                        self.assertTrue(self._wait_for(lambda: proxy.rejected >= 3, 30))
+                    self.assertEqual(
+                        ubwa.get_stream_info(stream_id)["status"], "restarting"
+                    )
+                    self.assertTrue(
+                        any("ProxyConnectionError" in line for line in logs.output)
+                    )
+                finally:
+                    ubwa.stop_manager()
+
+    def test_proxy_configuration_fails_loud(self):
+        print(f"test_proxy_configuration_fails_loud():")
+        with self.assertRaises(ValueError):
+            self._manager("websockets", proxy="ftp://127.0.0.1:1")
+        with self.assertRaises(ValueError):
+            self._manager("websockets", proxy="socks5://:1080")
+        with self.assertRaises(ValueError):
+            self._manager(
+                "websockets",
+                proxy="socks5://127.0.0.1:1080",
+                socks5_proxy_server="127.0.0.1:1080",
+            )
+        with self.assertRaises(ValueError):
+            self._manager("websockets", socks5_proxy_server="127.0.0.1")
+        ubwa = self._manager("websockets", proxy="socks5://alice:pass@127.0.0.1:1080")
+        try:
+            # Legacy attributes are derived for the REST client, password masked in info.
+            self.assertEqual(ubwa.socks5_proxy_server, "127.0.0.1:1080")
+            self.assertEqual(ubwa.socks5_proxy_pass, "pass")
+            self.assertEqual(ubwa.get_proxy_info(), "socks5://alice:***@127.0.0.1:1080")
+        finally:
+            ubwa.stop_manager()
+
+    def test_socks5_proxy_rejected_credentials_keeps_restarting(self):
+        # Rejected login must surface as `ProxyConnectionError` and a
+        # restarting stream for both libraries - not as a silently dead
+        # stream thread (PySocks raises `SOCKS5AuthError`, python-socks
+        # `ProxyError`).
+        print(f"test_socks5_proxy_rejected_credentials_keeps_restarting():")
+        proxy = _LocalSocks5Proxy(user="alice", password="right")
+        proxy.start()
+        for library in self.libraries:
+            with self.subTest(library=library):
+                proxy.rejected = 0
+                ubwa = self._manager(
+                    library,
+                    scenario="bytes",
+                    restart_timeout=1,
+                    high_performance=True,
+                    proxy=f"socks5://alice:wrong@127.0.0.1:{proxy.port}",
+                )
+                try:
+                    with self.assertLogs(
+                        "unicorn_binance_websocket_api", level="ERROR"
+                    ) as logs:
+                        stream_id = ubwa.create_stream(["trade"], ["bytes"])
+                        self.assertTrue(self._wait_for(lambda: proxy.rejected >= 3, 30))
+                    self.assertEqual(
+                        ubwa.get_stream_info(stream_id)["status"], "restarting"
+                    )
+                    self.assertTrue(
+                        any("ProxyConnectionError" in line for line in logs.output)
+                    )
+                finally:
+                    ubwa.stop_manager()
+
+    def test_socks5_proxy_unreachable_keeps_restarting(self):
+        print(f"test_socks5_proxy_unreachable_keeps_restarting():")
+        for library in self.libraries:
+            with self.subTest(library=library):
+                ubwa = self._manager(
+                    library,
+                    scenario="bytes",
+                    restart_timeout=1,
+                    high_performance=True,
+                    socks5_proxy_server="127.0.0.1:1",
+                )
+                try:
+                    with self.assertLogs(
+                        "unicorn_binance_websocket_api", level="ERROR"
+                    ) as logs:
+                        stream_id = ubwa.create_stream(["trade"], ["bytes"])
+                        self.assertTrue(
+                            self._wait_for(
+                                lambda: sum(
+                                    "ProxyConnectionError" in line
+                                    for line in logs.output
+                                )
+                                >= 2,
+                                20,
+                            )
+                        )
+                    self.assertEqual(
+                        ubwa.get_stream_info(stream_id)["status"], "restarting"
+                    )
                 finally:
                     ubwa.stop_manager()
 

@@ -91,10 +91,10 @@ setup(
         "colorama",
         "requests>=2.31.0",
         "websocket-client",
-        "websockets>=14.0",
+        "websockets>=15.0",
         "orjson",
         "psutil",
-        "PySocks",
+        "python-socks>=2.0.0",
         "unicorn-fy>=0.17.2",
         "unicorn-binance-rest-api>=2.12.0",
         "typing_extensions",
@@ -102,7 +102,7 @@ setup(
     ],
     extras_require={
         # Optional alternative WebSocket client library, see README "WebSocket library"
-        "picows": ["picows>=2.2.0"],
+        "picows": ["picows>=2.3.0"],
     },
     keywords="binance, asyncio, async, asynchronous, concurrent, websocket-api, webstream-api, "
     "binance-websocket, binance-webstream, webstream, websocket, api, binance-dex, "

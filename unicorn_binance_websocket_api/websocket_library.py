@@ -52,6 +52,8 @@ families. This module is the single place where that choice is made.
 """
 
 from typing import Callable, Optional, Tuple, Type
+from urllib.parse import quote, unquote, urlparse
+import ssl
 import logging
 import websockets
 import websockets.exceptions
@@ -62,6 +64,13 @@ try:
 except ImportError:  # picows is an optional dependency
     picows = None
     picows_websockets = None
+
+try:
+    # Dependency of picows; carries the proxy errors of picows' native proxy
+    # path (`connect(proxy="socks5://...")`).
+    import python_socks
+except ImportError:
+    python_socks = None
 
 __logger__: logging.getLogger = logging.getLogger("unicorn_binance_websocket_api")
 
@@ -92,6 +101,168 @@ CONNECTION_CLOSED_EXCEPTIONS = _exception_tuple("ConnectionClosed")
 INVALID_STATUS_EXCEPTIONS = _exception_tuple("InvalidStatus")
 INVALID_MESSAGE_EXCEPTIONS = _exception_tuple("InvalidMessage")
 NEGOTIATION_ERROR_EXCEPTIONS = _exception_tuple("NegotiationError")
+
+# Raised while the connection is entered when the proxy hop fails: the
+# libraries' own `ProxyError` (`websockets` wraps python-socks failures and
+# HTTP CONNECT rejections, picows the CONNECT ones), `InvalidProxy` (proxy URL
+# the library cannot use) and python-socks' errors, which picows lets through
+# on its SOCKS path. UBWA maps all of them to `ProxyConnectionError`.
+PROXY_EXCEPTIONS: Tuple[Type[BaseException], ...] = (
+    _exception_tuple("ProxyError")
+    + _exception_tuple("InvalidProxy")
+    + (
+        (
+            python_socks.ProxyError,
+            python_socks.ProxyConnectionError,
+            python_socks.ProxyTimeoutError,
+        )
+        if python_socks is not None
+        else ()
+    )
+)
+
+SUPPORTED_PROXY_SCHEMES: Tuple[str, ...] = (
+    "http",
+    "https",
+    "socks4",
+    "socks4a",
+    "socks5",
+    "socks5h",
+)
+
+
+def validate_proxy_url(proxy: Optional[str]) -> Optional[str]:
+    """
+    Check a `proxy` URL for `BinanceWebSocketApiManager(proxy=...)` and return
+    it unchanged, `None` for `None`. Raises `ValueError` for anything the
+    libraries cannot use (unknown scheme, missing host), so a typo fails at
+    construction time instead of in every stream's restart loop.
+
+    Schemes: `http://`, `https://` (TLS to the proxy itself), `socks4://`,
+    `socks4a://`, `socks5://`, `socks5h://` (hostname resolved by the proxy).
+    Credentials go into the URL (`socks5://user:pass@host:1080`), percent-
+    encoded if they contain `@`, `:` or `/`.
+    """
+    if proxy is None:
+        return None
+    if not isinstance(proxy, str) or not proxy:
+        raise ValueError(f"`proxy` must be a URL string, got {proxy!r}")
+    parsed = urlparse(proxy)
+    if parsed.scheme not in SUPPORTED_PROXY_SCHEMES:
+        raise ValueError(
+            f"Unsupported proxy scheme {parsed.scheme!r} in {proxy!r}, "
+            f"supported: {', '.join(f'{scheme}://' for scheme in SUPPORTED_PROXY_SCHEMES)}"
+        )
+    if not parsed.hostname:
+        raise ValueError(f"`proxy` URL {proxy!r} has no host")
+    try:
+        parsed.port
+    except ValueError as error_msg:
+        raise ValueError(f"`proxy` URL {proxy!r}: {error_msg}")
+    return proxy
+
+
+def check_proxy_credentials(websocket_library: str, proxy: Optional[str]) -> None:
+    """
+    Fail loud on proxy credentials the selected library would send wrongly.
+
+    `websockets` (checked up to 16.0) passes `username`/`password` of the
+    proxy URL to the proxy *without* percent-decoding them, so a password
+    that had to be encoded to fit into the URL (`p@ss` -> `p%40ss`) arrives
+    as the literal `p%40ss` and is rejected (reported upstream:
+    python-websockets/websockets, see context/websocket-library.md).
+    `picows` decodes (python-socks does it for it). Rather than letting the
+    stream restart forever on an authentication error, refuse such
+    credentials for `websockets` at construction time.
+    """
+    if proxy is None or websocket_library == WEBSOCKET_LIBRARY_PICOWS:
+        return
+    parsed = urlparse(proxy)
+    for name, value in (("user", parsed.username), ("password", parsed.password)):
+        if value is not None and unquote(value) != value:
+            raise ValueError(
+                f"The proxy {name} contains characters that need percent-encoding in a URL, but "
+                f"`websockets` sends proxy credentials without decoding them (upstream limitation), "
+                f'so this proxy login cannot work with websocket_library="websockets". Use '
+                f"credentials without `@`, `:`, `/`, `%` and similar characters, or "
+                f'websocket_library="picows".'
+            )
+
+
+def proxy_display(
+    scheme: str,
+    user: Optional[str],
+    host: str,
+    port: Optional[int],
+    has_credentials: bool,
+) -> str:
+    """
+    Display form of a proxy for logs and summaries, built from the non-secret
+    parts only: `scheme://[user:***@]host[:port]`. Takes no password argument
+    on purpose - nothing derived from one may end up in a log line.
+    """
+    auth = (
+        f"{quote(str(user), safe='') if user is not None else ''}:***@"
+        if has_credentials
+        else ""
+    )
+    port_part = f":{int(port)}" if port is not None else ""
+    return f"{scheme}://{auth}{host}{port_part}"
+
+
+def mask_proxy_url(proxy: str) -> str:
+    """
+    `proxy_display()` for a proxy URL; whether credentials are present is
+    read from the netloc, the password itself is never touched.
+    """
+    parsed = urlparse(proxy)
+    return proxy_display(
+        parsed.scheme,
+        parsed.username,
+        parsed.hostname,
+        parsed.port,
+        "@" in parsed.netloc,
+    )
+
+
+def proxy_connect_kwargs(websocket_library: str, proxy: Optional[str]) -> dict:
+    """
+    `connect()` kwargs for the configured proxy: the URL itself plus, for an
+    `https://` proxy, the TLS context for the hop to the proxy - `websockets`
+    (>= 15.0) requires it as `proxy_ssl`, `picows` (>= 2.3.0) takes it as
+    `proxy_ssl_context`. Empty when no proxy is configured, so the libraries
+    keep their own default (`proxy=True`: environment `wss_proxy`/`https_proxy`).
+    """
+    if proxy is None:
+        return {}
+    kwargs = {"proxy": proxy}
+    if urlparse(proxy).scheme == "https":
+        if websocket_library == WEBSOCKET_LIBRARY_PICOWS:
+            kwargs["proxy_ssl_context"] = ssl.create_default_context()
+        else:
+            kwargs["proxy_ssl"] = ssl.create_default_context()
+    return kwargs
+
+
+def build_socks5_proxy_url(
+    address: str,
+    port: int,
+    user: Optional[str] = None,
+    password: Optional[str] = None,
+) -> str:
+    """
+    `socks5://[user:password@]address:port` from the legacy `socks5_proxy_*`
+    manager parameters, for `connect(proxy=...)` of both libraries. User and
+    password are percent-encoded so that `@`, `:` or `/` in credentials
+    survive the URL round trip.
+    """
+    auth = ""
+    if user is not None:
+        auth = quote(str(user), safe="")
+        if password is not None:
+            auth += ":" + quote(str(password), safe="")
+        auth += "@"
+    return f"socks5://{auth}{address}:{int(port)}"
 
 
 def get_http_status_code(error: BaseException) -> Optional[int]:

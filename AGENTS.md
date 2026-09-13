@@ -75,8 +75,8 @@ and deliberately not part of `BINANCE_FUTURES_EXCHANGES`:
 
 Managed in `requirements.txt`, `setup.py`, and `pyproject.toml` — **all three must be kept in sync manually** (IDE find/replace):
 
-- `websocket-client`, `websockets>=14.0` — WebSocket connections
-- `picows>=2.2.0` — **optional** (extra `picows`), alternative WebSocket library via its
+- `websocket-client`, `websockets>=15.0` — WebSocket connections
+- `picows>=2.3.0` — **optional** (extra `picows`), alternative WebSocket library via its
   `websockets`-compatible API; selected with `BinanceWebSocketApiManager(websocket_library="picows")`,
   see [`context/websocket-library.md`](context/websocket-library.md). Benchmark:
   `dev/test_websocket_library_benchmark.py`, profile of the stream thread:
@@ -88,7 +88,7 @@ Managed in `requirements.txt`, `setup.py`, and `pyproject.toml` — **all three 
 - `unicorn-fy>=0.15.0` — stream data normalization
 - `unicorn-binance-rest-api>=2.7.0` — REST API support
 - `Cython` — C extension compilation (performance, release builds only)
-- `PySocks` — SOCKS5 proxy support
+- `python-socks>=2.0.0` — SOCKS proxy hop of both WebSocket libraries (`proxy="socks5://..."`); HTTP/HTTPS proxies need no extra package
 - `psutil` — system info
 
 ---

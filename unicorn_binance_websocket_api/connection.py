@@ -39,12 +39,17 @@
 # IN THE SOFTWARE.
 
 from .exceptions import *
-from .websocket_library import WEBSOCKET_LIBRARY_PICOWS, get_connect
+from .websocket_library import (
+    PROXY_EXCEPTIONS,
+    WEBSOCKET_LIBRARY_PICOWS,
+    get_connect,
+    proxy_connect_kwargs,
+)
 from urllib.parse import urlparse
 import asyncio
 import copy
 import logging
-import socks  # PySocks https://pypi.org/project/PySocks/
+import ssl
 import sys
 
 __logger__: logging.getLogger = logging.getLogger("unicorn_binance_websocket_api")
@@ -141,73 +146,38 @@ class BinanceWebSocketApiConnection(object):
                 f"KeyError: {error_msg}"
             )
             print(f"KeyError: {error_msg}")
+        connect_kwargs = dict(
+            ping_interval=self.ping_interval,
+            ping_timeout=self.ping_timeout,
+            close_timeout=self.close_timeout,
+            additional_headers={"User-Agent": str(self.manager.get_user_agent())},
+            **self._library_specific_connect_kwargs(),
+        )
+        # Proxies are passed to the library as URL (`websockets` >= 15.0,
+        # `picows` >= 2.3.0 handle http/https/socks4/socks5 natively, the SOCKS
+        # handshake runs inside the event loop); without a configured proxy the
+        # kwarg is not passed at all and the library keeps its own default.
+        connect_kwargs.update(
+            proxy_connect_kwargs(self.websocket_library, self.manager.proxy)
+        )
+        # TLS to the Binance endpoint: the libraries' default context verifies;
+        # a custom context is only needed to switch verification off, and only
+        # for wss:// (never for a plain ws:// URI, e.g. a local test server).
         if (
-            self.manager.socks5_proxy_address is None
-            or self.manager.socks5_proxy_port is None
+            urlparse(str(uri)).scheme == "wss"
+            and self.manager.websocket_ssl_context is not None
         ):
-            self._conn = self.connect(
-                str(uri),
-                ping_interval=self.ping_interval,
-                ping_timeout=self.ping_timeout,
-                close_timeout=self.close_timeout,
-                additional_headers={"User-Agent": str(self.manager.get_user_agent())},
-                **self._library_specific_connect_kwargs(),
-            )
+            connect_kwargs["ssl"] = self.manager.websocket_ssl_context
+        self._conn = self.connect(str(uri), **connect_kwargs)
+        if self.manager.proxy is None:
             logger.info(
                 f"BinanceWebSocketApiConnection.__aenter__({self.stream_id}, {self.channels}"
                 f", {self.markets}) - No proxy used! (websocket_library: {self.websocket_library})"
             )
         else:
-            websocket_socks5_proxy = socks.socksocket()
-            websocket_socks5_proxy.set_proxy(
-                proxy_type=socks.SOCKS5,
-                addr=self.manager.socks5_proxy_address,
-                port=int(self.manager.socks5_proxy_port),
-                username=self.manager.socks5_proxy_user,
-                password=self.manager.socks5_proxy_pass,
-            )
-            # Use the actual stream URI, not `websocket_base_uri`: for WebSocket API
-            # streams and the WS API userData subscription flow, `uri` resolves to
-            # `websocket_api_base_uri`, a different host (see connection_settings.py).
-            netloc = urlparse(str(uri)).netloc
-            try:
-                host, port = netloc.split(":")
-            except ValueError as error_msg:
-                logger.debug(f"'netloc' split error: {netloc} - {error_msg}")
-                host = netloc
-                port = 443
-            try:
-                logger.info(
-                    f"BinanceWebSocketApiConnection.__aenter__({self.stream_id}, {self.channels}"
-                    f", {self.markets}) - Connect to socks5 proxy {host}:{port} (ssl_verification: "
-                    f"{self.manager.socks5_proxy_ssl_verification})"
-                )
-                websocket_socks5_proxy.connect((host, int(port)))
-                websocket_server_hostname = netloc
-            except socks.ProxyConnectionError as error_msg:
-                error_msg = f"{error_msg} ({host}:{port})"
-                logger.critical(error_msg)
-                raise Socks5ProxyConnectionError(error_msg)
-            except socks.GeneralProxyError as error_msg:
-                error_msg = f"{error_msg} ({host}:{port})"
-                logger.critical(error_msg)
-                raise Socks5ProxyConnectionError(error_msg)
-
-            self._conn = self.connect(
-                str(uri),
-                ssl=self.manager.websocket_ssl_context,
-                sock=websocket_socks5_proxy,
-                server_hostname=websocket_server_hostname,
-                ping_interval=self.ping_interval,
-                ping_timeout=self.ping_timeout,
-                close_timeout=self.close_timeout,
-                additional_headers={"User-Agent": str(self.manager.get_user_agent())},
-                **self._library_specific_connect_kwargs(proxy_socket=True),
-            )
             logger.info(
-                f'BinanceWebSocketApiConnection.__aenter__("{self.stream_id}, {self.channels}'
-                f', {self.markets}") - Using proxy: {self.manager.socks5_proxy_address} '
-                f"{self.manager.socks5_proxy_port} SSL: {self.manager.socks5_proxy_ssl_verification} "
+                f"BinanceWebSocketApiConnection.__aenter__({self.stream_id}, {self.channels}"
+                f", {self.markets}) - Using proxy: {self.manager.get_proxy_info()} "
                 f"(websocket_library: {self.websocket_library})"
             )
         try:
@@ -215,26 +185,39 @@ class BinanceWebSocketApiConnection(object):
         except asyncio.TimeoutError:
             self.manager.set_socket_is_ready(stream_id=self.stream_id)
             raise StreamIsRestarting(stream_id=self.stream_id, reason=f"timeout error")
+        except PROXY_EXCEPTIONS as error_msg:
+            # Proxy unreachable, credentials rejected, CONNECT refused, SOCKS
+            # handshake timeout - raised by the library or python-socks.
+            error_msg = f"{error_msg} (proxy: {self.manager.get_proxy_info()})"
+            logger.critical(error_msg)
+            raise ProxyConnectionError(error_msg)
+        except ssl.SSLError:
+            # TLS to Binance (through the proxy or not): not a proxy error,
+            # the manager handles it.
+            raise
+        except OSError as error_msg:
+            if self.manager.proxy is None:
+                raise
+            # With a proxy configured the client only ever connects to the
+            # proxy, so a socket-level failure here is the proxy hop (e.g.
+            # an `http://` proxy refusing the TCP connection).
+            error_msg = f"{error_msg} (proxy: {self.manager.get_proxy_info()})"
+            logger.critical(error_msg)
+            raise ProxyConnectionError(error_msg)
         return self
 
-    def _library_specific_connect_kwargs(self, proxy_socket: bool = False) -> dict:
+    def _library_specific_connect_kwargs(self) -> dict:
         """
         Extra `connect()` kwargs that only one of the libraries needs.
 
         picows: `picows.websockets.connect()` appends its own `User-Agent`
         header on top of `additional_headers` unless `user_agent_header` is
-        `None`, and its `proxy=True` default would pick up `wss_proxy`/
-        `https_proxy` environment variables. The SOCKS5 tunnel is already
-        established by PySocks on the pre-connected socket, so a second proxy
-        hop must be disabled explicitly in that case. `websockets` (>=14.0)
-        neither duplicates the header nor is passed a `proxy` kwarg (that
-        parameter only exists since websockets 15.0), so it gets nothing here.
+        `None`. `websockets` (>=14.0) does not duplicate the header, so it
+        gets nothing here. Proxy kwargs come from
+        `websocket_library.proxy_connect_kwargs()`.
         """
         if self.websocket_library == WEBSOCKET_LIBRARY_PICOWS:
-            kwargs = {"user_agent_header": None}
-            if proxy_socket is True:
-                kwargs["proxy"] = None
-            return kwargs
+            return {"user_agent_header": None}
         return {}
 
     async def __aexit__(self, *args, **kwargs):

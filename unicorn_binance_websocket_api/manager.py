@@ -54,8 +54,13 @@ from .websocket_library import (
     INVALID_MESSAGE_EXCEPTIONS,
     INVALID_STATUS_EXCEPTIONS,
     NEGOTIATION_ERROR_EXCEPTIONS,
+    build_socks5_proxy_url,
+    check_proxy_credentials,
+    mask_proxy_url,
+    proxy_display,
     get_http_status_code,
     get_websocket_library_version,
+    validate_proxy_url,
     validate_websocket_library,
 )
 from .api.api import WsApi
@@ -78,6 +83,7 @@ import psutil
 import re
 import requests
 import ssl
+from urllib.parse import unquote, urlparse
 import sys
 import threading
 import time
@@ -217,15 +223,31 @@ class BinanceWebSocketApiManager(threading.Thread):
     :type max_subscriptions_per_stream:  int
     :param exchange_type: Override the exchange type. Valid option: 'cex'
     :type exchange_type:  str
-    :param socks5_proxy_server: Set this to activate the usage of a socks5 proxy. Example: '127.0.0.1:9050'
+    :param socks5_proxy_server: Legacy form of `proxy` for SOCKS5 only: 'address:port', e.g. '127.0.0.1:9050'. Not
+                                combinable with `proxy`.
     :type socks5_proxy_server:  str
-    :param socks5_proxy_user: Set this to activate the usage of a socks5 proxy user. Example: 'alice'
+    :param socks5_proxy_user: User for `socks5_proxy_server`. Example: 'alice'
     :type socks5_proxy_user:  str
-    :param socks5_proxy_pass: Set this to activate the usage of a socks5 proxy password.
+    :param socks5_proxy_pass: Password for `socks5_proxy_server`.
     :type socks5_proxy_pass:  str
-    :param socks5_proxy_ssl_verification: Set to `False` to disable SSL server verification. Default is `True`.
+    :param socks5_proxy_ssl_verification: Set to `False` to disable the TLS certificate verification of the Binance
+                                          endpoint when connecting through a proxy (`proxy` or
+                                          `socks5_proxy_server`). Default is `True`.
+    :type socks5_proxy_ssl_verification:  bool
     :param ubra_manager: Provide a shared unicorn_binance_rest_api.manager instance
     :type ubra_manager: BinanceRestApiManager
+    :param proxy: Proxy URL for all WebSocket connections of this instance, passed to the WebSocket library
+                  (`websockets` >= 15.0 and `picows` >= 2.3.0 support it natively): `http://host:port`,
+                  `https://host:port` (TLS to the proxy itself), `socks4://`, `socks4a://`, `socks5://` or
+                  `socks5h://host:port` (hostname resolved by the proxy). Credentials go into the URL:
+                  `socks5://user:pass@host:1080` (percent-encode `@`, `:`, `/` in them; for
+                  `websocket_library="websockets"` such credentials are refused with `ValueError` because websockets
+                  sends them undecoded, see python-websockets/websockets#1761). Unsupported schemes raise
+                  `ValueError`. Default `None`: no proxy is passed and the library keeps its own default (both honour
+                  the `wss_proxy`/`https_proxy` environment variables). REST requests (listenKey handling via
+                  unicorn-binance-rest-api) follow only a `socks5://` proxy; with `http(s)://` proxies they are sent
+                  directly and a warning is logged.
+    :type proxy: str
     :param websocket_library: The WebSocket client library to use for all streams of this manager instance.
                               `"websockets"` (default) uses `websockets <https://websockets.readthedocs.io>`__,
                               `"picows"` uses the `websockets`-compatible API of
@@ -267,6 +289,7 @@ class BinanceWebSocketApiManager(threading.Thread):
         auto_data_cleanup_stopped_streams: bool = False,
         ubra_manager: BinanceRestApiManager = None,
         websocket_library: Literal["websockets", "picows"] = "websockets",
+        proxy: Optional[str] = None,
     ):
         threading.Thread.__init__(self)
         self.name = __app_name__
@@ -355,24 +378,85 @@ class BinanceWebSocketApiManager(threading.Thread):
             self.exchange_type = "cex"
         logger.info(f"Using exchange_type '{self.exchange_type}' ...")
 
+        # Proxy: one URL for the WebSocket libraries (`proxy`), the legacy
+        # `socks5_proxy_*` parameters are converted into a `socks5://` URL.
+        if proxy is not None and socks5_proxy_server is not None:
+            raise ValueError(
+                "Use either `proxy` or the legacy `socks5_proxy_*` parameters, not both."
+            )
+        self.socks5_proxy_ssl_verification = socks5_proxy_ssl_verification
         self.socks5_proxy_server = socks5_proxy_server
-        if socks5_proxy_server is None:
-            self.socks5_proxy_address = None
-            self.socks5_proxy_user: Optional[str] = None
-            self.socks5_proxy_pass: Optional[str] = None
-            self.socks5_proxy_port = None
-        else:
-            # Prepare Socks Proxy usage
-            self.socks5_proxy_ssl_verification = socks5_proxy_ssl_verification
+        self.socks5_proxy_address: Optional[str] = None
+        self.socks5_proxy_port: Optional[str] = None
+        self.socks5_proxy_user: Optional[str] = None
+        self.socks5_proxy_pass: Optional[str] = None
+        if socks5_proxy_server is not None:
+            try:
+                self.socks5_proxy_address, self.socks5_proxy_port = (
+                    socks5_proxy_server.split(":")
+                )
+            except ValueError:
+                raise ValueError(
+                    f"`socks5_proxy_server` must be 'address:port', got {socks5_proxy_server!r}"
+                )
             self.socks5_proxy_user = socks5_proxy_user
             self.socks5_proxy_pass = socks5_proxy_pass
-            self.socks5_proxy_address, self.socks5_proxy_port = (
-                socks5_proxy_server.split(":")
+            # Display form without the password, built from the non-secret
+            # parts only (never derived from the password or the URL that
+            # carries it).
+            self._proxy_display: Optional[str] = proxy_display(
+                "socks5",
+                self.socks5_proxy_user,
+                self.socks5_proxy_address,
+                int(self.socks5_proxy_port),
+                self.socks5_proxy_user is not None,
             )
-            websocket_ssl_context = ssl.SSLContext()
-            if self.socks5_proxy_ssl_verification is False:
-                websocket_ssl_context.verify_mode = ssl.CERT_NONE
-                websocket_ssl_context.check_hostname = False
+            proxy = build_socks5_proxy_url(
+                self.socks5_proxy_address,
+                self.socks5_proxy_port,
+                self.socks5_proxy_user,
+                self.socks5_proxy_pass,
+            )
+        else:
+            self._proxy_display = (
+                mask_proxy_url(proxy) if validate_proxy_url(proxy) is not None else None
+            )
+        self.proxy: Optional[str] = validate_proxy_url(proxy)
+        check_proxy_credentials(self.websocket_library, self.proxy)
+        if self.proxy is not None and socks5_proxy_server is None:
+            parsed_proxy = urlparse(self.proxy)
+            if parsed_proxy.scheme in ("socks5", "socks5h"):
+                # The REST client (unicorn-binance-rest-api) understands SOCKS5
+                # only, hand the same proxy over in its parameter form.
+                self.socks5_proxy_address = parsed_proxy.hostname
+                self.socks5_proxy_port = str(parsed_proxy.port or 1080)
+                self.socks5_proxy_user = (
+                    unquote(parsed_proxy.username)
+                    if parsed_proxy.username is not None
+                    else None
+                )
+                self.socks5_proxy_pass = (
+                    unquote(parsed_proxy.password)
+                    if parsed_proxy.password is not None
+                    else None
+                )
+                self.socks5_proxy_server = (
+                    f"{self.socks5_proxy_address}:{self.socks5_proxy_port}"
+                )
+            else:
+                logger.warning(
+                    f"Proxy {self.get_proxy_info()} is used for the WebSocket connections only: REST "
+                    f"requests (listenKey handling) support SOCKS5 proxies only and are sent directly."
+                )
+        # TLS to Binance through a proxy: the libraries' default context
+        # verifies the certificate; a custom context exists only to switch
+        # verification off (`ssl.SSLContext()` without protocol, used until
+        # 2.15.2, never verified regardless of `socks5_proxy_ssl_verification`).
+        self.websocket_ssl_context: Optional[ssl.SSLContext] = None
+        if self.proxy is not None and self.socks5_proxy_ssl_verification is False:
+            websocket_ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+            websocket_ssl_context.check_hostname = False
+            websocket_ssl_context.verify_mode = ssl.CERT_NONE
             self.websocket_ssl_context = websocket_ssl_context
 
         self.asyncio_queue = {}
@@ -627,10 +711,10 @@ class BinanceWebSocketApiManager(threading.Thread):
                 self._stream_is_restarting(
                     stream_id=stream_id, error_msg=str(error_msg)
                 )
-            except Socks5ProxyConnectionError as error_msg:
+            except ProxyConnectionError as error_msg:
                 logger.error(
                     f"BinanceWebSocketApiManager._run_socket(stream_id={stream_id}), channels="
-                    f"{channels}), markets={markets}) - Socks5ProxyConnectionError: {error_msg}"
+                    f"{channels}), markets={markets}) - ProxyConnectionError: {error_msg}"
                 )
                 self._stream_is_restarting(
                     stream_id=stream_id, error_msg=str(error_msg)
@@ -4168,6 +4252,14 @@ class BinanceWebSocketApiManager(threading.Thread):
         """
         return self.total_receives
 
+    def get_proxy_info(self) -> Optional[str]:
+        """
+        The configured proxy URL with the password masked, `None` without a proxy.
+
+        :return: str or None
+        """
+        return self._proxy_display
+
     def get_user_agent(self):
         """
         Get the user_agent string "lib name + lib version + python version"
@@ -4487,11 +4579,8 @@ class BinanceWebSocketApiManager(threading.Thread):
             add_string = ""
         else:
             add_string = f" {add_string}\r\n"
-        if self.socks5_proxy_address is not None and self.socks5_proxy_port is not None:
-            proxy = (
-                f"\r\n proxy: {self.socks5_proxy_address}:{self.socks5_proxy_port} (ssl:"
-                f"{self.socks5_proxy_ssl_verification})"
-            )
+        if self.proxy is not None:
+            proxy = f"\r\n proxy: {self.get_proxy_info()} (ssl:{self.socks5_proxy_ssl_verification})"
         else:
             proxy = ""
         try:
@@ -4776,9 +4865,9 @@ class BinanceWebSocketApiManager(threading.Thread):
             f"{self.get_date_of_timestamp(self.receiving_speed_peak['timestamp'])})"
         )
 
-        if self.socks5_proxy_address is not None and self.socks5_proxy_port is not None:
+        if self.proxy is not None:
             proxy = (
-                f"\r\n proxy: {self.socks5_proxy_address}:{self.socks5_proxy_port} (ssl_verification: "
+                f"\r\n proxy: {self.get_proxy_info()} (ssl_verification: "
                 f"{self.socks5_proxy_ssl_verification})"
             )
         else:

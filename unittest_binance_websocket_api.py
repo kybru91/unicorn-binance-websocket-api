@@ -49,6 +49,7 @@ import os
 import platform
 import time
 import threading
+import socket
 from unittest.mock import Mock, patch
 
 import tracemalloc
@@ -1847,6 +1848,114 @@ class _LocalWebSocketServer:
             await ws.send(self._trade("bytes", i) + " " * (100 * i))
 
 
+class _LocalSocks5Proxy:
+    """
+    Minimal SOCKS5 server (RFC 1928, user/password auth per RFC 1929) for
+    `TestWebSocketLibrary`: no auth or user/password, CONNECT to IPv4/IPv6/
+    domain targets, then pipes bytes in both directions. Counts established
+    tunnels and rejected logins.
+    """
+
+    def __init__(self, user=None, password=None):
+        self.user = user
+        self.password = password
+        self.port = None
+        self.ready = threading.Event()
+        self.connections = 0
+        self.rejected = 0
+        self.thread = None
+
+    def start(self):
+        self.thread = threading.Thread(
+            target=lambda: asyncio.run(self._serve()), daemon=True
+        )
+        self.thread.start()
+        self.ready.wait(10)
+
+    async def _serve(self):
+        server = await asyncio.start_server(self._handle, "127.0.0.1", 0)
+        self.port = server.sockets[0].getsockname()[1]
+        self.ready.set()
+        async with server:
+            await server.serve_forever()
+
+    async def _handle(self, reader, writer):
+        try:
+            version, method_count = await reader.readexactly(2)
+            methods = await reader.readexactly(method_count)
+            if self.user is not None:
+                if 2 not in methods:
+                    writer.write(b"\x05\xff")
+                    await writer.drain()
+                    return
+                writer.write(b"\x05\x02")
+                await writer.drain()
+                await reader.readexactly(1)  # auth version
+                user_length = (await reader.readexactly(1))[0]
+                user = (await reader.readexactly(user_length)).decode()
+                password_length = (await reader.readexactly(1))[0]
+                password = (await reader.readexactly(password_length)).decode()
+                if user != self.user or password != self.password:
+                    self.rejected += 1
+                    writer.write(b"\x01\x01")
+                    await writer.drain()
+                    return
+                writer.write(b"\x01\x00")
+                await writer.drain()
+            else:
+                writer.write(b"\x05\x00")
+                await writer.drain()
+            version, command, reserved, address_type = await reader.readexactly(4)
+            if address_type == 1:
+                host = socket.inet_ntoa(await reader.readexactly(4))
+            elif address_type == 3:
+                host_length = (await reader.readexactly(1))[0]
+                host = (await reader.readexactly(host_length)).decode()
+            else:
+                host = socket.inet_ntop(socket.AF_INET6, await reader.readexactly(16))
+            port = int.from_bytes(await reader.readexactly(2), "big")
+            if command != 1:
+                writer.write(b"\x05\x07\x00\x01" + b"\x00" * 6)
+                await writer.drain()
+                return
+            try:
+                target_reader, target_writer = await asyncio.open_connection(host, port)
+            except OSError:
+                writer.write(b"\x05\x05\x00\x01" + b"\x00" * 6)
+                await writer.drain()
+                return
+            self.connections += 1
+            writer.write(b"\x05\x00\x00\x01" + b"\x00" * 6)
+            await writer.drain()
+
+            async def pipe(source, sink):
+                try:
+                    while True:
+                        data = await source.read(65536)
+                        if not data:
+                            break
+                        sink.write(data)
+                        await sink.drain()
+                except Exception:
+                    pass
+                finally:
+                    try:
+                        sink.close()
+                    except Exception:
+                        pass
+
+            await asyncio.gather(
+                pipe(reader, target_writer), pipe(target_reader, writer)
+            )
+        except Exception:
+            pass
+        finally:
+            try:
+                writer.close()
+            except Exception:
+                pass
+
+
 class TestWebSocketLibrary(unittest.TestCase):
     """
     `websocket_library` switch: `websockets` (default) vs. the optional `picows`
@@ -2095,6 +2204,106 @@ class TestWebSocketLibrary(unittest.TestCase):
                     time.sleep(0.2)
                     expected = sum(len(m) for m in received)
                     self.assertEqual(ubwa.get_total_received_bytes(), expected)
+                finally:
+                    ubwa.stop_manager()
+
+    # --- SOCKS5 proxy -------------------------------------------------------
+
+    def test_socks5_proxy_roundtrip(self):
+        # `websockets`: pre-connected PySocks socket; `picows`: its native
+        # `proxy="socks5://..."` path. Both must tunnel through a SOCKS5 proxy
+        # with user/password auth (credentials with URL-special characters).
+        print(f"test_socks5_proxy_roundtrip():")
+        proxy = _LocalSocks5Proxy(user="alice", password="s3cret:@/")
+        proxy.start()
+        for library in self.libraries:
+            with self.subTest(library=library):
+                proxy.connections = 0
+                received = []
+                ubwa = self._manager(
+                    library,
+                    scenario="bytes",
+                    process_stream_data=received.append,
+                    socks5_proxy_server=f"127.0.0.1:{proxy.port}",
+                    socks5_proxy_user="alice",
+                    socks5_proxy_pass="s3cret:@/",
+                )
+                try:
+                    stream_id = ubwa.create_stream(["trade"], ["bytes"])
+                    self.assertTrue(
+                        self._wait_for(lambda: len(self._trades(received)) >= 3)
+                    )
+                    self.assertEqual(proxy.connections, 1)
+                    self.assertEqual(ubwa.get_stream_info(stream_id)["reconnects"], 0)
+                finally:
+                    ubwa.stop_manager()
+
+    def test_socks5_proxy_rejected_credentials_keeps_restarting(self):
+        # Rejected login must surface as `Socks5ProxyConnectionError` and a
+        # restarting stream for both libraries - not as a silently dead
+        # stream thread (PySocks raises `SOCKS5AuthError`, python-socks
+        # `ProxyError`).
+        print(f"test_socks5_proxy_rejected_credentials_keeps_restarting():")
+        proxy = _LocalSocks5Proxy(user="alice", password="right")
+        proxy.start()
+        for library in self.libraries:
+            with self.subTest(library=library):
+                proxy.rejected = 0
+                ubwa = self._manager(
+                    library,
+                    scenario="bytes",
+                    restart_timeout=1,
+                    high_performance=True,
+                    socks5_proxy_server=f"127.0.0.1:{proxy.port}",
+                    socks5_proxy_user="alice",
+                    socks5_proxy_pass="wrong",
+                )
+                try:
+                    with self.assertLogs(
+                        "unicorn_binance_websocket_api", level="ERROR"
+                    ) as logs:
+                        stream_id = ubwa.create_stream(["trade"], ["bytes"])
+                        self.assertTrue(self._wait_for(lambda: proxy.rejected >= 3, 20))
+                    self.assertEqual(
+                        ubwa.get_stream_info(stream_id)["status"], "restarting"
+                    )
+                    self.assertTrue(
+                        any(
+                            "Socks5ProxyConnectionError" in line for line in logs.output
+                        )
+                    )
+                finally:
+                    ubwa.stop_manager()
+
+    def test_socks5_proxy_unreachable_keeps_restarting(self):
+        print(f"test_socks5_proxy_unreachable_keeps_restarting():")
+        for library in self.libraries:
+            with self.subTest(library=library):
+                ubwa = self._manager(
+                    library,
+                    scenario="bytes",
+                    restart_timeout=1,
+                    high_performance=True,
+                    socks5_proxy_server="127.0.0.1:1",
+                )
+                try:
+                    with self.assertLogs(
+                        "unicorn_binance_websocket_api", level="ERROR"
+                    ) as logs:
+                        stream_id = ubwa.create_stream(["trade"], ["bytes"])
+                        self.assertTrue(
+                            self._wait_for(
+                                lambda: sum(
+                                    "Socks5ProxyConnectionError" in line
+                                    for line in logs.output
+                                )
+                                >= 2,
+                                20,
+                            )
+                        )
+                    self.assertEqual(
+                        ubwa.get_stream_info(stream_id)["status"], "restarting"
+                    )
                 finally:
                     ubwa.stop_manager()
 

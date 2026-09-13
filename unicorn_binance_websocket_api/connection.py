@@ -39,7 +39,12 @@
 # IN THE SOFTWARE.
 
 from .exceptions import *
-from .websocket_library import WEBSOCKET_LIBRARY_PICOWS, get_connect
+from .websocket_library import (
+    PROXY_EXCEPTIONS,
+    WEBSOCKET_LIBRARY_PICOWS,
+    build_socks5_proxy_url,
+    get_connect,
+)
 from urllib.parse import urlparse
 import asyncio
 import copy
@@ -158,52 +163,86 @@ class BinanceWebSocketApiConnection(object):
                 f", {self.markets}) - No proxy used! (websocket_library: {self.websocket_library})"
             )
         else:
-            websocket_socks5_proxy = socks.socksocket()
-            websocket_socks5_proxy.set_proxy(
-                proxy_type=socks.SOCKS5,
-                addr=self.manager.socks5_proxy_address,
-                port=int(self.manager.socks5_proxy_port),
-                username=self.manager.socks5_proxy_user,
-                password=self.manager.socks5_proxy_pass,
-            )
             # Use the actual stream URI, not `websocket_base_uri`: for WebSocket API
             # streams and the WS API userData subscription flow, `uri` resolves to
             # `websocket_api_base_uri`, a different host (see connection_settings.py).
-            netloc = urlparse(str(uri)).netloc
-            try:
-                host, port = netloc.split(":")
-            except ValueError as error_msg:
-                logger.debug(f"'netloc' split error: {netloc} - {error_msg}")
-                host = netloc
-                port = 443
-            try:
+            parsed_uri = urlparse(str(uri))
+            secure = parsed_uri.scheme == "wss"
+            host = parsed_uri.hostname
+            port = parsed_uri.port or (443 if secure else 80)
+            # TLS only for wss:// - the manager's context is for the Binance
+            # endpoint, it must not be applied to a plain ws:// URI (local test
+            # servers), and `server_hostname` is meaningless without TLS.
+            tls_kwargs = {"ssl": self.manager.websocket_ssl_context} if secure else {}
+            if self.websocket_library == WEBSOCKET_LIBRARY_PICOWS:
+                # picows' native proxy path (picows >= 2.3.0, python-socks): the
+                # SOCKS5 handshake runs inside the event loop instead of on a
+                # blocking PySocks socket; errors surface when the connection is
+                # entered and are mapped below.
+                proxy_url = build_socks5_proxy_url(
+                    self.manager.socks5_proxy_address,
+                    self.manager.socks5_proxy_port,
+                    self.manager.socks5_proxy_user,
+                    self.manager.socks5_proxy_pass,
+                )
                 logger.info(
                     f"BinanceWebSocketApiConnection.__aenter__({self.stream_id}, {self.channels}"
-                    f", {self.markets}) - Connect to socks5 proxy {host}:{port} (ssl_verification: "
-                    f"{self.manager.socks5_proxy_ssl_verification})"
+                    f", {self.markets}) - Connect to {host}:{port} via socks5 proxy "
+                    f"{self.manager.socks5_proxy_address}:{self.manager.socks5_proxy_port} "
+                    f"(ssl_verification: {self.manager.socks5_proxy_ssl_verification})"
                 )
-                websocket_socks5_proxy.connect((host, int(port)))
-                websocket_server_hostname = netloc
-            except socks.ProxyConnectionError as error_msg:
-                error_msg = f"{error_msg} ({host}:{port})"
-                logger.critical(error_msg)
-                raise Socks5ProxyConnectionError(error_msg)
-            except socks.GeneralProxyError as error_msg:
-                error_msg = f"{error_msg} ({host}:{port})"
-                logger.critical(error_msg)
-                raise Socks5ProxyConnectionError(error_msg)
-
-            self._conn = self.connect(
-                str(uri),
-                ssl=self.manager.websocket_ssl_context,
-                sock=websocket_socks5_proxy,
-                server_hostname=websocket_server_hostname,
-                ping_interval=self.ping_interval,
-                ping_timeout=self.ping_timeout,
-                close_timeout=self.close_timeout,
-                additional_headers={"User-Agent": str(self.manager.get_user_agent())},
-                **self._library_specific_connect_kwargs(proxy_socket=True),
-            )
+                self._conn = self.connect(
+                    str(uri),
+                    proxy=proxy_url,
+                    ping_interval=self.ping_interval,
+                    ping_timeout=self.ping_timeout,
+                    close_timeout=self.close_timeout,
+                    additional_headers={
+                        "User-Agent": str(self.manager.get_user_agent())
+                    },
+                    **tls_kwargs,
+                    **self._library_specific_connect_kwargs(),
+                )
+            else:
+                websocket_socks5_proxy = socks.socksocket()
+                websocket_socks5_proxy.set_proxy(
+                    proxy_type=socks.SOCKS5,
+                    addr=self.manager.socks5_proxy_address,
+                    port=int(self.manager.socks5_proxy_port),
+                    username=self.manager.socks5_proxy_user,
+                    password=self.manager.socks5_proxy_pass,
+                )
+                try:
+                    logger.info(
+                        f"BinanceWebSocketApiConnection.__aenter__({self.stream_id}, {self.channels}"
+                        f", {self.markets}) - Connect to socks5 proxy {host}:{port} (ssl_verification: "
+                        f"{self.manager.socks5_proxy_ssl_verification})"
+                    )
+                    websocket_socks5_proxy.connect((host, int(port)))
+                except socks.ProxyError as error_msg:
+                    # Base class of PySocks' errors: proxy unreachable
+                    # (ProxyConnectionError), protocol errors
+                    # (GeneralProxyError) and rejected credentials
+                    # (SOCKS5AuthError, previously uncaught).
+                    error_msg = f"{error_msg} ({host}:{port})"
+                    logger.critical(error_msg)
+                    raise Socks5ProxyConnectionError(error_msg)
+                if secure:
+                    # The pre-connected socket carries no hostname; SNI and
+                    # certificate matching need the bare host (no port).
+                    tls_kwargs["server_hostname"] = host
+                self._conn = self.connect(
+                    str(uri),
+                    sock=websocket_socks5_proxy,
+                    ping_interval=self.ping_interval,
+                    ping_timeout=self.ping_timeout,
+                    close_timeout=self.close_timeout,
+                    additional_headers={
+                        "User-Agent": str(self.manager.get_user_agent())
+                    },
+                    **tls_kwargs,
+                    **self._library_specific_connect_kwargs(),
+                )
             logger.info(
                 f'BinanceWebSocketApiConnection.__aenter__("{self.stream_id}, {self.channels}'
                 f', {self.markets}") - Using proxy: {self.manager.socks5_proxy_address} '
@@ -215,26 +254,30 @@ class BinanceWebSocketApiConnection(object):
         except asyncio.TimeoutError:
             self.manager.set_socket_is_ready(stream_id=self.stream_id)
             raise StreamIsRestarting(stream_id=self.stream_id, reason=f"timeout error")
+        except PROXY_EXCEPTIONS as error_msg:
+            # picows' native proxy path (python-socks): proxy unreachable,
+            # authentication rejected, CONNECT refused, handshake timeout.
+            error_msg = (
+                f"{error_msg} ({self.manager.socks5_proxy_address}:"
+                f"{self.manager.socks5_proxy_port})"
+            )
+            logger.critical(error_msg)
+            raise Socks5ProxyConnectionError(error_msg)
         return self
 
-    def _library_specific_connect_kwargs(self, proxy_socket: bool = False) -> dict:
+    def _library_specific_connect_kwargs(self) -> dict:
         """
         Extra `connect()` kwargs that only one of the libraries needs.
 
         picows: `picows.websockets.connect()` appends its own `User-Agent`
         header on top of `additional_headers` unless `user_agent_header` is
-        `None`, and its `proxy=True` default would pick up `wss_proxy`/
-        `https_proxy` environment variables. The SOCKS5 tunnel is already
-        established by PySocks on the pre-connected socket, so a second proxy
-        hop must be disabled explicitly in that case. `websockets` (>=14.0)
-        neither duplicates the header nor is passed a `proxy` kwarg (that
-        parameter only exists since websockets 15.0), so it gets nothing here.
+        `None`. `websockets` (>=14.0) does not duplicate the header, so it
+        gets nothing here. Proxies are not handled here: in picows mode the
+        SOCKS5 proxy is passed as `proxy=` URL (native path), in websockets
+        mode as pre-connected PySocks socket (`sock=`), see `__aenter__()`.
         """
         if self.websocket_library == WEBSOCKET_LIBRARY_PICOWS:
-            kwargs = {"user_agent_header": None}
-            if proxy_socket is True:
-                kwargs["proxy"] = None
-            return kwargs
+            return {"user_agent_header": None}
         return {}
 
     async def __aexit__(self, *args, **kwargs):

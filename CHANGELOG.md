@@ -35,13 +35,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   restarting), a WebSocket API request/response roundtrip and the
   keepalive ping timeout (server that never pongs -> reconnect).
 ### Changed
-- The `picows` extra requires `picows>=2.2.0` (was 2.1.0): 2.2.0 fixes
+- The `picows` extra requires `picows>=2.3.0` (was 2.1.0): 2.2.0 fixes
   [tarasko/picows#108](https://github.com/tarasko/picows/issues/108)
   (`InvalidStatus.response` is now the `websockets`-shaped `Response` with
   `status_code`), so `websocket_library.get_http_status_code()` reads
-  `status_code` only again. Scenario suite and a 24 h soak against binance.com
-  (both libraries in parallel, 0 errors, picows ~26 % less CPU) documented in
+  `status_code` only again; 2.3.0 brings the proxy support used below.
+  Scenario suite and a 24 h soak against binance.com (both libraries in
+  parallel, 0 errors, picows ~26 % less CPU) documented in
   [`context/websocket-library.md`](context/websocket-library.md).
+- `websocket_library="picows"` with `socks5_proxy_server`: the SOCKS5 tunnel is
+  now built by picows' native proxy support (`connect(proxy="socks5://...")`,
+  python-socks, async inside the event loop) instead of a blocking PySocks
+  socket. Same parameters, same `Socks5ProxyConnectionError` on failure.
+  `websockets` keeps the PySocks path. Both paths are covered by new scenario
+  tests against a local SOCKS5 stand-in (round trip with user/password,
+  rejected credentials, unreachable proxy).
 - Stream loop hot path slimmed down (per received message): removed 18
   `logger.debug()` f-string calls that were evaluated with debug logging off,
   5 of 7 lock cycles (per-stream counters have a single writer, the stream's
@@ -58,6 +66,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   received JSON text) instead of `sys.getsizeof(str(...))`, which included
   the Python object header (~49 bytes per message too many).
 ### Fixed
+- TLS through a SOCKS5 proxy was never verified: the proxy path built its
+  SSL context with `ssl.SSLContext()` (no protocol), whose defaults are
+  `CERT_NONE` / `check_hostname=False`, so `socks5_proxy_ssl_verification=True`
+  (the default) did not verify the Binance certificate. The proxy path now
+  uses `ssl.create_default_context()`, `False` still disables verification.
+  `server_hostname` on the PySocks path is the bare host, no longer
+  `host:port`.
+- Rejected SOCKS5 credentials (`SOCKS5AuthError`) and other PySocks errors
+  outside `ProxyConnectionError`/`GeneralProxyError` escaped the proxy error
+  handling and killed the stream thread silently; every `socks.ProxyError` is
+  now mapped to `Socks5ProxyConnectionError` and the stream restarts.
 - `websocket_library="picows"`: a rejected handshake (HTTP 429/404/...) killed
   the stream thread with `AttributeError: 'WSUpgradeResponse' object has no
   attribute 'status_code'` instead of crashing/restarting the stream: picows'

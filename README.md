@@ -528,12 +528,13 @@ ubwa = BinanceWebSocketApiManager(exchange="binance.com", websocket_library="pic
 ```
 
 Selecting `"picows"` without the package installed raises an `ImportError`, an unknown value raises a `ValueError` -
-there is no silent fallback. SOCKS5 proxies work with both libraries. The [conda-forge](https://anaconda.org/conda-forge/picows)
+there is no silent fallback. SOCKS5 proxies work with both libraries (`websockets` through a PySocks socket, `picows`
+through its native proxy support). The [conda-forge](https://anaconda.org/conda-forge/picows)
 package is `picows`.
 
 `picows` support is new and opt-in: `websockets` stays the default until picows has proven itself in real-world use
 and enough reports are in (the first upstream finding, [tarasko/picows#108](https://github.com/tarasko/picows/issues/108),
-is fixed in picows 2.2.0, the minimum version the extra requires). Questions,
+is fixed in picows 2.2.0; the extra requires picows 2.3.0 for its native proxy support). Questions,
 experiences and your own benchmark numbers:
 [issue #477 - WebSocket library: websockets vs. picows](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/477).
 

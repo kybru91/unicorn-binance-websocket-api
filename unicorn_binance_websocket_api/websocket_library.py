@@ -52,6 +52,7 @@ families. This module is the single place where that choice is made.
 """
 
 from typing import Callable, Optional, Tuple, Type
+from urllib.parse import quote
 import logging
 import websockets
 import websockets.exceptions
@@ -62,6 +63,13 @@ try:
 except ImportError:  # picows is an optional dependency
     picows = None
     picows_websockets = None
+
+try:
+    # Dependency of picows; carries the proxy errors of picows' native proxy
+    # path (`connect(proxy="socks5://...")`).
+    import python_socks
+except ImportError:
+    python_socks = None
 
 __logger__: logging.getLogger = logging.getLogger("unicorn_binance_websocket_api")
 
@@ -92,6 +100,40 @@ CONNECTION_CLOSED_EXCEPTIONS = _exception_tuple("ConnectionClosed")
 INVALID_STATUS_EXCEPTIONS = _exception_tuple("InvalidStatus")
 INVALID_MESSAGE_EXCEPTIONS = _exception_tuple("InvalidMessage")
 NEGOTIATION_ERROR_EXCEPTIONS = _exception_tuple("NegotiationError")
+
+# Raised by picows' native proxy path (python-socks) while the connection is
+# entered; UBWA maps them to `Socks5ProxyConnectionError` like the PySocks
+# errors of the `websockets` path.
+PROXY_EXCEPTIONS: Tuple[Type[BaseException], ...] = (
+    (
+        python_socks.ProxyError,
+        python_socks.ProxyConnectionError,
+        python_socks.ProxyTimeoutError,
+    )
+    if python_socks is not None
+    else ()
+)
+
+
+def build_socks5_proxy_url(
+    address: str,
+    port: int,
+    user: Optional[str] = None,
+    password: Optional[str] = None,
+) -> str:
+    """
+    `socks5://[user:password@]address:port` for `connect(proxy=...)` of
+    `picows.websockets` (picows >= 2.3.0, python-socks underneath). User and
+    password are percent-encoded so that `@`, `:` or `/` in credentials
+    survive the URL round trip.
+    """
+    auth = ""
+    if user is not None:
+        auth = quote(str(user), safe="")
+        if password is not None:
+            auth += ":" + quote(str(password), safe="")
+        auth += "@"
+    return f"socks5://{auth}{address}:{int(port)}"
 
 
 def get_http_status_code(error: BaseException) -> Optional[int]:

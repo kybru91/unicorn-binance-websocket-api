@@ -223,7 +223,9 @@ class BinanceWebSocketApiManager(threading.Thread):
     :type socks5_proxy_user:  str
     :param socks5_proxy_pass: Set this to activate the usage of a socks5 proxy password.
     :type socks5_proxy_pass:  str
-    :param socks5_proxy_ssl_verification: Set to `False` to disable SSL server verification. Default is `True`.
+    :param socks5_proxy_ssl_verification: Set to `False` to disable the TLS certificate verification of the Binance
+                                          endpoint when connecting through the proxy. Default is `True`.
+    :type socks5_proxy_ssl_verification:  bool
     :param ubra_manager: Provide a shared unicorn_binance_rest_api.manager instance
     :type ubra_manager: BinanceRestApiManager
     :param websocket_library: The WebSocket client library to use for all streams of this manager instance.
@@ -369,10 +371,15 @@ class BinanceWebSocketApiManager(threading.Thread):
             self.socks5_proxy_address, self.socks5_proxy_port = (
                 socks5_proxy_server.split(":")
             )
-            websocket_ssl_context = ssl.SSLContext()
+            # TLS to Binance through the proxy: verify the certificate like the
+            # direct path does (`ssl.SSLContext()` without protocol, used until
+            # 2.15.2, never verified regardless of `socks5_proxy_ssl_verification`).
             if self.socks5_proxy_ssl_verification is False:
-                websocket_ssl_context.verify_mode = ssl.CERT_NONE
+                websocket_ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
                 websocket_ssl_context.check_hostname = False
+                websocket_ssl_context.verify_mode = ssl.CERT_NONE
+            else:
+                websocket_ssl_context = ssl.create_default_context()
             self.websocket_ssl_context = websocket_ssl_context
 
         self.asyncio_queue = {}

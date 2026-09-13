@@ -75,7 +75,7 @@ per-message work - see `stream-loop.md`.
 **Status:** active
 **Evidence:** confirmed
 **Source:** maintainer decisions 2026-09-10 (opt-in after the scenario suite of PR #479 and the upstream report [tarasko/picows#108](https://github.com/tarasko/picows/issues/108); soak requested the same day, release only after it)
-**Revisit when:** the soak result is in (see below) and picows has fixed and released #108 - then decide about promoting picows beyond opt-in
+**Revisit when:** picows has fixed and released #108 and the first opt-in users have reported back in #477 - then decide about promoting picows beyond opt-in (the soak gate below is passed)
 
 picows support ships as an optional extra (`pip install
 unicorn-binance-websocket-api[picows]`), selected explicitly per manager,
@@ -97,8 +97,22 @@ opt in.
 **Not covered by the soak:** userData streams and the WebSocket API against
 real credentials (no testnet key on the soak host), macOS/Windows.
 
-**Soak result:** pending (started 2026-09-10 16:19 CEST, results under the
-soak output directory, to be summarized here).
+**Soak result (measured 2026-09-10 22:41 → 2026-09-11 22:41 CEST, 8 cores /
+12 GB VM, Python 3.13.5, picows 2.1.3, websockets 16.0):** clean for both
+libraries, no picows-specific finding. picows 138.8 M messages (avg 1.6 k/s,
+peak 8.3 k/s, 49.9 GB), RSS 62 → 126 MB, CPU avg 9.5 %; websockets 137.9 M
+messages, RSS 63 → 149 MB, CPU avg 12.8 %. Zero errors, zero stalls (max
+5 s without data), zero unrepairable streams, zero ERROR/WARNING lines.
+Reconnects: 2 / 80 / 2 (picows) vs 2 / 88 / 2 (websockets) on the
+arr / markets / depth streams, every one back in 5-6 s with subscriptions
+re-queued. 90 % of them were `keepalive ping timeout` on the 250-subscription
+markets connection during a 14:29-18:21 CEST window in which the rate rose
+to 3-8 k msgs/s; both libraries dropped in the same seconds, so the cause is
+Binance/network under load against UBWA's `ping_interval=5` /
+`ping_timeout=10` defaults, not the library. RSS stepped up at rate peaks and
+was flat for the final 4.5 h despite further reconnects - buffer high-water
+mark, not a per-reconnect leak (pattern evidence, no tracemalloc). Full
+tables in the soak output directory (`REPORT.md`).
 
 ## Why the picows exception classes are caught separately
 

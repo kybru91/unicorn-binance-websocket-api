@@ -35,7 +35,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   `pip install unicorn-binance-websocket-api[picows]`. Selecting `"picows"`
   without the package raises `ImportError`, unknown values raise `ValueError`.
   Benchmark script and results: `dev/test_websocket_library_benchmark.py`,
-  [`context/websocket-library.md`](context/websocket-library.md).
+  [`context/websocket-library.md`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/context/websocket-library.md).
   Discussion and user reports:
   [issue #477](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/477).
 - `dev/profile_stream_loop.py`: cProfile of a stream thread against the local
@@ -56,7 +56,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   `status_code` only again; 2.3.0 brings the proxy support used below.
   Scenario suite and a 24 h soak against binance.com (both libraries in
   parallel, 0 errors, picows ~26 % less CPU) documented in
-  [`context/websocket-library.md`](context/websocket-library.md).
+  [`context/websocket-library.md`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/context/websocket-library.md).
 - Proxies are passed to the WebSocket library as URL (`connect(proxy=...)`,
   native in `websockets` >= 15.0 and `picows` >= 2.3.0) instead of a
   blocking PySocks socket handed over via `sock=`. The SOCKS handshake now
@@ -78,7 +78,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   `start_socket()` already performs. Measured through the full stack with
   0.2 KB messages: `websockets` 116,314 -> 201,912 msgs/s, `picows`
   163,406 -> 403,316 msgs/s, all statistics preserved. Details and
-  ablation: [`context/stream-loop.md`](context/stream-loop.md).
+  ablation: [`context/stream-loop.md`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/context/stream-loop.md).
 - Received-bytes statistics (`total_received_bytes`,
   `transfer_rate_per_second`) now count the payload size (`len()` of the
   received JSON text) instead of `sys.getsizeof(str(...))`, which included

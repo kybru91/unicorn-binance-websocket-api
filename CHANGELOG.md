@@ -9,7 +9,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
-## 2.15.2.dev (development stage/unreleased/unstable)
+## 2.16.0.dev (development stage/unreleased/unstable)
+
+## 2.16.0
 ### Added
 - `BinanceWebSocketApiManager(proxy="...")`: one proxy URL for all WebSocket
   connections of the instance - `http://`, `https://` (TLS to the proxy

@@ -17,4 +17,4 @@ websocket-client
 websockets>=14.0
 # Optional (extra `picows`): alternative WebSocket client library, select with
 # BinanceWebSocketApiManager(websocket_library="picows")
-# picows>=2.1.0
+# picows>=2.2.0

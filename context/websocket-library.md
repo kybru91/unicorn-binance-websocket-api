@@ -22,11 +22,16 @@ its own thread/event loop. Reusing that path means zero duplicated stream
 logic and no second code path to keep in sync. Chosen as the first step
 explicitly; a native integration was to be *assessed*, not built (next entry).
 
-**Version floor `picows>=2.1.0`** rather than 2.0.0 (where `picows.websockets`
-first appeared): 2.1.0 completed the compat surface (`open`/`closed`
-attributes, `protocol.State`, `WebSocketClientProtocol` alias). UBWA does not
-use those today; the floor buys the complete API in case it does. Evidence
-for this sub-choice: inferred from the picows release notes.
+**Version floor `picows>=2.2.0`**: 2.2.0 is the first release whose
+`InvalidStatus.response` is the `websockets`-shaped `Response` with
+`status_code` ([tarasko/picows#108](https://github.com/tarasko/picows/issues/108),
+fixed 2026-09-11, verified against 2.2.0 by the scenario suite). Before that
+the floor was 2.1.0 rather than 2.0.0 (where `picows.websockets` first
+appeared) because 2.1.0 completed the compat surface (`open`/`closed`
+attributes, `protocol.State`, `WebSocketClientProtocol` alias) - UBWA does
+not use those today, the floor bought the complete API in case it does.
+Raising to 2.2.0 keeps that and removes the need to handle two response
+shapes.
 
 ## Native picows core API (`ws_connect()` + `WSListener`) - measured, not built
 
@@ -75,7 +80,7 @@ per-message work - see `stream-loop.md`.
 **Status:** active
 **Evidence:** confirmed
 **Source:** maintainer decisions 2026-09-10 (opt-in after the scenario suite of PR #479 and the upstream report [tarasko/picows#108](https://github.com/tarasko/picows/issues/108); soak requested the same day, release only after it)
-**Revisit when:** picows has fixed and released #108 and the first opt-in users have reported back in #477 - then decide about promoting picows beyond opt-in (the soak gate below is passed)
+**Revisit when:** the first opt-in users have reported back in #477 - then decide about promoting picows beyond opt-in (the soak gate below is passed, #108 is fixed in picows 2.2.0 and the floor raised)
 
 picows support ships as an optional extra (`pip install
 unicorn-binance-websocket-api[picows]`), selected explicitly per manager,
@@ -89,7 +94,7 @@ minute) before the release that ships picows support.
 
 **Reason:** the remaining risk sits with users who opt in knowingly, the
 default path is untouched, and picows' compat layer itself is still moving
-(#108). Real usage is expected to surface the next issues; the community
+(#108, fixed upstream within a day). Real usage is expected to surface the next issues; the community
 channel is [issue #477](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/477). The
 soak is the minimum evidence for "runs for a day" before telling anyone to
 opt in.
@@ -127,13 +132,18 @@ restart logic therefore catches tuples
 (`CONNECTION_CLOSED_EXCEPTIONS`, ...) built in `websocket_library.py`; the
 picows classes are appended only when the package is importable.
 
-## `InvalidStatus.response` differs between the families
+## `InvalidStatus.response` differed between the families (picows < 2.2.0)
 
 **Type:** workaround
-**Status:** active
+**Status:** superseded
 **Evidence:** confirmed
-**Source:** picows 2.1.3 `picows/websockets/asyncio/client.py` (`raise InvalidStatus(exc.response)` with the raw `WSUpgradeResponse`); found by `TestWebSocketLibrary.test_handshake_429_crashes_stream`
-**Revisit when:** [tarasko/picows#108](https://github.com/tarasko/picows/issues/108) is fixed and released (picows wraps the response in its compat `Response`, which has `status_code`) - then the helper can go back to reading `status_code` only
+**Source:** picows 2.1.3 `picows/websockets/asyncio/client.py` (`raise InvalidStatus(exc.response)` with the raw `WSUpgradeResponse`); found by `TestWebSocketLibrary.test_handshake_429_crashes_stream`; superseded by picows 2.2.0 ([tarasko/picows#108](https://github.com/tarasko/picows/issues/108) fixed 2026-09-11) and the version floor `picows>=2.2.0`
+
+Superseded: since the extra requires picows 2.2.0, both families attach a
+`Response` with `status_code` and `get_http_status_code()` reads that
+attribute only. The helper stays as the single place the manager gets the
+code from (returns `None` instead of raising when the shape is unexpected),
+the `status` fallback is gone. History below.
 
 The manager decides on a rejected handshake by HTTP status (429 -> crash the
 stream, anything else -> restart). `websockets` puts a `Response` with

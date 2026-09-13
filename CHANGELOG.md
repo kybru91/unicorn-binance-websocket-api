@@ -35,6 +35,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   restarting), a WebSocket API request/response roundtrip and the
   keepalive ping timeout (server that never pongs -> reconnect).
 ### Changed
+- The `picows` extra requires `picows>=2.2.0` (was 2.1.0): 2.2.0 fixes
+  [tarasko/picows#108](https://github.com/tarasko/picows/issues/108)
+  (`InvalidStatus.response` is now the `websockets`-shaped `Response` with
+  `status_code`), so `websocket_library.get_http_status_code()` reads
+  `status_code` only again. Scenario suite and a 24 h soak against binance.com
+  (both libraries in parallel, 0 errors, picows ~26 % less CPU) documented in
+  [`context/websocket-library.md`](context/websocket-library.md).
 - Stream loop hot path slimmed down (per received message): removed 18
   `logger.debug()` f-string calls that were evaluated with debug logging off,
   5 of 7 lock cycles (per-stream counters have a single writer, the stream's

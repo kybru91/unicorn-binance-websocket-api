@@ -76,7 +76,7 @@ and deliberately not part of `BINANCE_FUTURES_EXCHANGES`:
 Managed in `requirements.txt`, `setup.py`, and `pyproject.toml` — **all three must be kept in sync manually** (IDE find/replace):
 
 - `websocket-client`, `websockets>=14.0` — WebSocket connections
-- `picows>=2.1.0` — **optional** (extra `picows`), alternative WebSocket library via its
+- `picows>=2.2.0` — **optional** (extra `picows`), alternative WebSocket library via its
   `websockets`-compatible API; selected with `BinanceWebSocketApiManager(websocket_library="picows")`,
   see [`context/websocket-library.md`](context/websocket-library.md). Benchmark:
   `dev/test_websocket_library_benchmark.py`, profile of the stream thread:

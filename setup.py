@@ -102,7 +102,7 @@ setup(
     ],
     extras_require={
         # Optional alternative WebSocket client library, see README "WebSocket library"
-        "picows": ["picows>=2.1.0"],
+        "picows": ["picows>=2.2.0"],
     },
     keywords="binance, asyncio, async, asynchronous, concurrent, websocket-api, webstream-api, "
     "binance-websocket, binance-webstream, webstream, websocket, api, binance-dex, "

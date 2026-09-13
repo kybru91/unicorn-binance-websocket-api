@@ -96,18 +96,16 @@ NEGOTIATION_ERROR_EXCEPTIONS = _exception_tuple("NegotiationError")
 
 def get_http_status_code(error: BaseException) -> Optional[int]:
     """
-    HTTP status of a rejected handshake (`InvalidStatus` of either family).
+    HTTP status of a rejected handshake (`InvalidStatus` of either family),
+    `None` when the exception carries no usable response.
 
-    `websockets` attaches a `Response` with `status_code`; `picows.websockets`
-    (2.1.x) attaches picows' raw `WSUpgradeResponse`, which only has
-    `status` (an `HTTPStatus`). Reading `.status_code` blindly killed the
-    stream thread with an `AttributeError` on picows - a silent death instead
-    of the crash/restart decision the manager makes from the code.
+    Both families attach a `Response` with `status_code` (picows since 2.2.0,
+    the version floor of the extra; 2.1.x attached the raw `WSUpgradeResponse`
+    without it, see tarasko/picows#108). The manager decides crash vs.
+    restart from this code and must never die on the shape of the exception.
     """
     response = getattr(error, "response", None)
     code = getattr(response, "status_code", None)
-    if code is None:
-        code = getattr(response, "status", None)
     if code is None:
         return None
     try:

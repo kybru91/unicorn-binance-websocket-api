@@ -189,17 +189,40 @@ def check_proxy_credentials(websocket_library: str, proxy: Optional[str]) -> Non
             )
 
 
+def proxy_display(
+    scheme: str,
+    user: Optional[str],
+    host: str,
+    port: Optional[int],
+    has_credentials: bool,
+) -> str:
+    """
+    Display form of a proxy for logs and summaries, built from the non-secret
+    parts only: `scheme://[user:***@]host[:port]`. Takes no password argument
+    on purpose - nothing derived from one may end up in a log line.
+    """
+    auth = (
+        f"{quote(str(user), safe='') if user is not None else ''}:***@"
+        if has_credentials
+        else ""
+    )
+    port_part = f":{int(port)}" if port is not None else ""
+    return f"{scheme}://{auth}{host}{port_part}"
+
+
 def mask_proxy_url(proxy: str) -> str:
     """
-    Display form of a proxy URL for logs and summaries: rebuilt from scheme,
-    user, host and port only, the password (if any) replaced by `***`.
+    `proxy_display()` for a proxy URL; whether credentials are present is
+    read from the netloc, the password itself is never touched.
     """
     parsed = urlparse(proxy)
-    auth = ""
-    if parsed.username is not None or parsed.password is not None:
-        auth = f"{parsed.username or ''}:***@"
-    port = f":{parsed.port}" if parsed.port is not None else ""
-    return f"{parsed.scheme}://{auth}{parsed.hostname}{port}"
+    return proxy_display(
+        parsed.scheme,
+        parsed.username,
+        parsed.hostname,
+        parsed.port,
+        "@" in parsed.netloc,
+    )
 
 
 def proxy_connect_kwargs(websocket_library: str, proxy: Optional[str]) -> dict:

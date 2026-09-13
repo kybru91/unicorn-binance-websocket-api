@@ -57,6 +57,7 @@ from .websocket_library import (
     build_socks5_proxy_url,
     check_proxy_credentials,
     mask_proxy_url,
+    proxy_display,
     get_http_status_code,
     get_websocket_library_version,
     validate_proxy_url,
@@ -401,14 +402,14 @@ class BinanceWebSocketApiManager(threading.Thread):
             self.socks5_proxy_user = socks5_proxy_user
             self.socks5_proxy_pass = socks5_proxy_pass
             # Display form without the password, built from the non-secret
-            # parts only (never derived from the password-carrying URL).
-            self._proxy_display: Optional[str] = mask_proxy_url(
-                build_socks5_proxy_url(
-                    self.socks5_proxy_address,
-                    self.socks5_proxy_port,
-                    self.socks5_proxy_user,
-                    "***" if self.socks5_proxy_pass is not None else None,
-                )
+            # parts only (never derived from the password or the URL that
+            # carries it).
+            self._proxy_display: Optional[str] = proxy_display(
+                "socks5",
+                self.socks5_proxy_user,
+                self.socks5_proxy_address,
+                int(self.socks5_proxy_port),
+                self.socks5_proxy_user is not None,
             )
             proxy = build_socks5_proxy_url(
                 self.socks5_proxy_address,

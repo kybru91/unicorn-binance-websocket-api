@@ -444,11 +444,18 @@ rich media, shell syntax, tab completion, and history."
 - Choice of the WebSocket engine: [`websockets`](https://websockets.readthedocs.io) (default) or
   [`picows`](https://github.com/tarasko/picows), see [WebSocket library](#websocket-library-websockets-or-picows).
 
-- *Socks5 Proxy* support:
+- *Proxy* support (HTTP, HTTPS, SOCKS4, SOCKS5), passed natively to the WebSocket library:
 
   ```
-  ubwa = BinanceWebSocketApiManager(exchange="binance.com", socks5_proxy_server="127.0.0.1:9050") 
+  ubwa = BinanceWebSocketApiManager(exchange="binance.com", proxy="socks5://user:pass@127.0.0.1:9050")
+  ubwa = BinanceWebSocketApiManager(exchange="binance.com", proxy="http://127.0.0.1:3128")
   ```
+
+  The legacy `socks5_proxy_server`/`socks5_proxy_user`/`socks5_proxy_pass` parameters keep working. REST requests
+  (listenKey handling) follow a `socks5://` proxy only. Credentials containing `@`, `:`, `/` or `%` need
+  percent-encoding in the URL; `websockets` sends them without decoding
+  ([python-websockets/websockets#1761](https://github.com/python-websockets/websockets/issues/1761)), so UBWA rejects
+  such credentials for `websocket_library="websockets"` at construction - use plain credentials or `picows`.
   
   Read the [docs](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager)
   or this [how to](https://medium.com/@oliverzehentleitner/how-to-connect-to-binance-com-websockets-using-python-via-a-socks5-proxy-3c5a3e063f12) 
@@ -528,8 +535,8 @@ ubwa = BinanceWebSocketApiManager(exchange="binance.com", websocket_library="pic
 ```
 
 Selecting `"picows"` without the package installed raises an `ImportError`, an unknown value raises a `ValueError` -
-there is no silent fallback. SOCKS5 proxies work with both libraries (`websockets` through a PySocks socket, `picows`
-through its native proxy support). The [conda-forge](https://anaconda.org/conda-forge/picows)
+there is no silent fallback. Proxies (`proxy="http://..."`, `https://`, `socks4://`, `socks5://`) are passed to both
+libraries natively. The [conda-forge](https://anaconda.org/conda-forge/picows)
 package is `picows`.
 
 `picows` support is new and opt-in: `websockets` stays the default until picows has proven itself in real-world use

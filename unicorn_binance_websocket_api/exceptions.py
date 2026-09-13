@@ -54,12 +54,17 @@ class MaximumSubscriptionsExceeded(Exception):
         super().__init__(self.message)
 
 
-class Socks5ProxyConnectionError(Exception):
+class ProxyConnectionError(Exception):
     """
-    Exception if the manager class is not able to establish a connection to the socks5 proxy.
+    Raised inside a stream when the connection through the configured proxy (`proxy=` or the legacy `socks5_proxy_*`
+    parameters) fails: proxy unreachable, credentials rejected, CONNECT refused, handshake timeout. The stream restarts.
     """
 
     pass
+
+
+# Name used before the generic `proxy` parameter existed (SOCKS5 was the only option); same class.
+Socks5ProxyConnectionError = ProxyConnectionError
 
 
 class StreamIsCrashing(Exception):

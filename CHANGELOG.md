@@ -11,6 +11,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 2.15.2.dev (development stage/unreleased/unstable)
 ### Added
+- `BinanceWebSocketApiManager(proxy="...")`: one proxy URL for all WebSocket
+  connections of the instance - `http://`, `https://` (TLS to the proxy
+  itself), `socks4://`, `socks4a://`, `socks5://`, `socks5h://`, credentials
+  in the URL (percent-encoded). Unsupported schemes, missing host or
+  combining it with `socks5_proxy_server` raise `ValueError` at construction.
+  REST requests (listenKey handling) follow `socks5://` proxies only; with
+  `http(s)://` proxies they are sent directly and a warning is logged.
+  `get_proxy_info()` returns the URL with the password masked. Credentials
+  that need percent-encoding (`@`, `:`, `/`, `%`) are refused for
+  `websocket_library="websockets"` because `websockets` sends them
+  undecoded ([python-websockets/websockets#1761](https://github.com/python-websockets/websockets/issues/1761));
+  `picows` decodes them.
 - Optional support for [`picows`](https://github.com/tarasko/picows) as WebSocket
   client library, selected per manager instance with
   `BinanceWebSocketApiManager(websocket_library="picows")` (default stays
@@ -43,13 +55,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   Scenario suite and a 24 h soak against binance.com (both libraries in
   parallel, 0 errors, picows ~26 % less CPU) documented in
   [`context/websocket-library.md`](context/websocket-library.md).
-- `websocket_library="picows"` with `socks5_proxy_server`: the SOCKS5 tunnel is
-  now built by picows' native proxy support (`connect(proxy="socks5://...")`,
-  python-socks, async inside the event loop) instead of a blocking PySocks
-  socket. Same parameters, same `Socks5ProxyConnectionError` on failure.
-  `websockets` keeps the PySocks path. Both paths are covered by new scenario
-  tests against a local SOCKS5 stand-in (round trip with user/password,
-  rejected credentials, unreachable proxy).
+- Proxies are passed to the WebSocket library as URL (`connect(proxy=...)`,
+  native in `websockets` >= 15.0 and `picows` >= 2.3.0) instead of a
+  blocking PySocks socket handed over via `sock=`. The SOCKS handshake now
+  runs inside the event loop. `websockets` floor raised from 14.0 to 15.0,
+  dependency `PySocks` replaced by `python-socks` (the SOCKS backend of both
+  libraries; `unicorn-binance-rest-api` keeps PySocks for REST). The legacy
+  `socks5_proxy_*` parameters keep working (converted to a `socks5://` URL).
+  Failures raise `ProxyConnectionError` (`Socks5ProxyConnectionError` is an
+  alias of the same class) and restart the stream. Covered by scenario
+  tests against local SOCKS5 and HTTP CONNECT stand-ins for both libraries
+  (round trips with user/password, rejected credentials, unreachable proxy).
 - Stream loop hot path slimmed down (per received message): removed 18
   `logger.debug()` f-string calls that were evaluated with debug logging off,
   5 of 7 lock cycles (per-stream counters have a single writer, the stream's

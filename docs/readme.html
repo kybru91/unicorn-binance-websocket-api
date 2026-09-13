@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>UNICORN Binance WebSocket API &#8212; unicorn-binance-websocket-api 2.15.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNICORN Binance WebSocket API &#8212; unicorn-binance-websocket-api 2.16.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
     <link rel="stylesheet" type="text/css" href="_static/pydoctheme.css?v=fdf8e9ae" />
@@ -88,6 +88,10 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#conda">conda</a></li>
+<li><a class="reference internal" href="#websocket-library-websockets-or-picows">WebSocket library: <code class="docutils literal notranslate"><span class="pre">websockets</span></code> or <code class="docutils literal notranslate"><span class="pre">picows</span></code></a><ul>
+<li><a class="reference internal" href="#is-picows-faster-measured-not-assumed">Is <code class="docutils literal notranslate"><span class="pre">picows</span></code> faster? Measured, not assumed</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#from-source-of-the-latest-release-with-pip-from-github">From source of the latest release with PIP from GitHub</a><ul>
 <li><a class="reference internal" href="#linux-macos">Linux, macOS, …</a></li>
 <li><a class="reference internal" href="#windows">Windows</a></li>
@@ -236,6 +240,7 @@
 <a class="reference external" href="https://codecov.io/gh/oliver-zehentleitner/unicorn-binance-websocket-api"><img alt="codecov" src="https://codecov.io/gh/oliver-zehentleitner/unicorn-binance-websocket-api/branch/master/graph/badge.svg?token=5I03AZ3F5S" /></a>
 <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/codeql-analysis.yml"><img alt="CodeQL" src="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/codeql-analysis.yml/badge.svg" /></a>
 <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml"><img alt="Unit Tests" src="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml/badge.svg" /></a>
+<a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/ktw-lint.yml"><img alt="ktw-lint" src="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/ktw-lint.yml/badge.svg" /></a>
 <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml"><img alt="Build and Publish GH+PyPi" src="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml/badge.svg" /></a>
 <a class="reference external" href="https://github.com/conda-forge/unicorn-binance-websocket-api-feedstock"><img alt="Conda-Forge Build" src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/unicorn-binance-websocket-api-feedstock?branchName=main" /></a>
 <a class="reference external" href="https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api"><img alt="Read the Docs" src="https://img.shields.io/badge/read-%20docs-yellow" /></a>
@@ -710,10 +715,18 @@ rich media, shell syntax, tab completion, and history.”
 <li><p>Also, nice to use with the <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/tree/master/ipynb">Jupyter Notebook</a> :)</p></li>
 <li><p>Integration of <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml">test cases</a> and <a class="reference internal" href="#examples">examples</a>.</p></li>
 <li><p>Customizable base URL.</p></li>
-<li><p><em>Socks5 Proxy</em> support:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ubwa</span> <span class="o">=</span> <span class="n">BinanceWebSocketApiManager</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;binance.com&quot;</span><span class="p">,</span> <span class="n">socks5_proxy_server</span><span class="o">=</span><span class="s2">&quot;127.0.0.1:9050&quot;</span><span class="p">)</span> 
+<li><p>Choice of the WebSocket engine: <a class="reference external" href="https://websockets.readthedocs.io"><code class="docutils literal notranslate"><span class="pre">websockets</span></code></a> (default) or
+<a class="reference external" href="https://github.com/tarasko/picows"><code class="docutils literal notranslate"><span class="pre">picows</span></code></a>, see <a class="reference internal" href="#websocket-library-websockets-or-picows">WebSocket library</a>.</p></li>
+<li><p><em>Proxy</em> support (HTTP, HTTPS, SOCKS4, SOCKS5), passed natively to the WebSocket library:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ubwa</span> <span class="o">=</span> <span class="n">BinanceWebSocketApiManager</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;binance.com&quot;</span><span class="p">,</span> <span class="n">proxy</span><span class="o">=</span><span class="s2">&quot;socks5://user:pass@127.0.0.1:9050&quot;</span><span class="p">)</span>
+<span class="n">ubwa</span> <span class="o">=</span> <span class="n">BinanceWebSocketApiManager</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;binance.com&quot;</span><span class="p">,</span> <span class="n">proxy</span><span class="o">=</span><span class="s2">&quot;http://127.0.0.1:3128&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The legacy <code class="docutils literal notranslate"><span class="pre">socks5_proxy_server</span></code>/<code class="docutils literal notranslate"><span class="pre">socks5_proxy_user</span></code>/<code class="docutils literal notranslate"><span class="pre">socks5_proxy_pass</span></code> parameters keep working. REST requests
+(listenKey handling) follow a <code class="docutils literal notranslate"><span class="pre">socks5://</span></code> proxy only. Credentials containing <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>, <code class="docutils literal notranslate"><span class="pre">:</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code> or <code class="docutils literal notranslate"><span class="pre">%</span></code> need
+percent-encoding in the URL; <code class="docutils literal notranslate"><span class="pre">websockets</span></code> sends them without decoding
+(<a class="reference external" href="https://github.com/python-websockets/websockets/issues/1761">python-websockets/websockets#1761</a>), so UBWA rejects
+such credentials for <code class="docutils literal notranslate"><span class="pre">websocket_library=&quot;websockets&quot;</span></code> at construction - use plain credentials or <code class="docutils literal notranslate"><span class="pre">picows</span></code>.</p>
 <p>Read the <a class="reference external" href="https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager">docs</a>
 or this <a class="reference external" href="https://medium.com/&#64;oliverzehentleitner/how-to-connect-to-binance-com-websockets-using-python-via-a-socks5-proxy-3c5a3e063f12">how to</a>
 for more information or try
@@ -775,6 +788,123 @@ this may take some time!</p>
 </pre></div>
 </div>
 </section>
+<section id="websocket-library-websockets-or-picows">
+<h3>WebSocket library: <code class="docutils literal notranslate"><span class="pre">websockets</span></code> or <code class="docutils literal notranslate"><span class="pre">picows</span></code><a class="headerlink" href="#websocket-library-websockets-or-picows" title="Link to this heading">¶</a></h3>
+<p>UBWA uses the <a class="reference external" href="https://websockets.readthedocs.io"><code class="docutils literal notranslate"><span class="pre">websockets</span></code></a> library by default. Alternatively it can run on
+<a class="reference external" href="https://github.com/tarasko/picows"><code class="docutils literal notranslate"><span class="pre">picows</span></code></a>, a Cython implementation of the WebSocket protocol that ships a
+drop-in replacement of the <code class="docutils literal notranslate"><span class="pre">websockets</span></code> client API (<code class="docutils literal notranslate"><span class="pre">picows.websockets</span></code>). <code class="docutils literal notranslate"><span class="pre">picows</span></code> is an optional dependency:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">unicorn</span><span class="o">-</span><span class="n">binance</span><span class="o">-</span><span class="n">websocket</span><span class="o">-</span><span class="n">api</span><span class="p">[</span><span class="n">picows</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Select the library per manager instance, everything else stays the same:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ubwa</span> <span class="o">=</span> <span class="n">BinanceWebSocketApiManager</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;binance.com&quot;</span><span class="p">,</span> <span class="n">websocket_library</span><span class="o">=</span><span class="s2">&quot;picows&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Selecting <code class="docutils literal notranslate"><span class="pre">&quot;picows&quot;</span></code> without the package installed raises an <code class="docutils literal notranslate"><span class="pre">ImportError</span></code>, an unknown value raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> -
+there is no silent fallback. Proxies (<code class="docutils literal notranslate"><span class="pre">proxy=&quot;http://...&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">https://</span></code>, <code class="docutils literal notranslate"><span class="pre">socks4://</span></code>, <code class="docutils literal notranslate"><span class="pre">socks5://</span></code>) are passed to both
+libraries natively. The <a class="reference external" href="https://anaconda.org/conda-forge/picows">conda-forge</a>
+package is <code class="docutils literal notranslate"><span class="pre">picows</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">picows</span></code> support is new and opt-in: <code class="docutils literal notranslate"><span class="pre">websockets</span></code> stays the default until picows has proven itself in real-world use
+and enough reports are in (the first upstream finding, <a class="reference external" href="https://github.com/tarasko/picows/issues/108">tarasko/picows#108</a>,
+is fixed in picows 2.2.0; the extra requires picows 2.3.0 for its native proxy support). Questions,
+experiences and your own benchmark numbers:
+<a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/477">issue #477 - WebSocket library: websockets vs. picows</a>.</p>
+<section id="is-picows-faster-measured-not-assumed">
+<h4>Is <code class="docutils literal notranslate"><span class="pre">picows</span></code> faster? Measured, not assumed<a class="headerlink" href="#is-picows-faster-measured-not-assumed" title="Link to this heading">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">dev/test_websocket_library_benchmark.py</span></code> replays Binance shaped messages from a local server (separate process)
+through the complete UBWA stack (connection → stream loop → <code class="docutils literal notranslate"><span class="pre">process_stream_data</span></code> callback), 3 runs, median.
+Python 3.13, websockets 16.0, picows 2.1.3, x86_64 Linux, <code class="docutils literal notranslate"><span class="pre">output_default=&quot;raw_data&quot;</span></code>:</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Scenario</th>
+<th>~msg size</th>
+<th>msgs</th>
+<th>websockets msgs/s</th>
+<th>picows msgs/s</th>
+<th>picows speedup</th>
+<th>websockets CPU µs/msg</th>
+<th>picows CPU µs/msg</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>small_aggtrade</td>
+<td>0.2 KB</td>
+<td>300,000</td>
+<td>201,912</td>
+<td>403,316</td>
+<td>2.00x</td>
+<td>5.1</td>
+<td>2.5</td>
+</tr>
+<tr>
+<td>medium_kline</td>
+<td>0.3 KB</td>
+<td>150,000</td>
+<td>195,460</td>
+<td>371,019</td>
+<td>1.90x</td>
+<td>5.2</td>
+<td>2.9</td>
+</tr>
+<tr>
+<td>large_depth20</td>
+<td>1.0 KB</td>
+<td>60,000</td>
+<td>153,187</td>
+<td>259,960</td>
+<td>1.70x</td>
+<td>6.8</td>
+<td>4.1</td>
+</tr>
+<tr>
+<td>xlarge_depth_diff</td>
+<td>9.1 KB</td>
+<td>30,000</td>
+<td>64,172</td>
+<td>67,972</td>
+<td>1.06x</td>
+<td>16.3</td>
+<td>15.4</td>
+</tr>
+<tr>
+<td>huge_ticker_arr</td>
+<td>453.9 KB</td>
+<td>600</td>
+<td>1,768</td>
+<td>1,662</td>
+<td>0.94x</td>
+<td>608.7</td>
+<td>641.0</td>
+</tr>
+<tr>
+<td>multiplex_mix</td>
+<td>0.2 KB</td>
+<td>120,000</td>
+<td>180,406</td>
+<td>334,188</td>
+<td>1.85x</td>
+<td>5.7</td>
+<td>3.2</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Up to ~1 KB per message (aggTrade, kline, bookTicker, depth20, …) picows delivers <strong>1.7x-2x</strong> the throughput at
+about half the CPU per message. From ~10 KB upwards (full <code class="docutils literal notranslate"><span class="pre">depth</span></code> diffs, <code class="docutils literal notranslate"><span class="pre">!ticker&#64;arr</span></code>) both are on par - the
+cost there is UTF-8 decoding and JSON handling, not the WebSocket framing.</p></li>
+<li><p>With <code class="docutils literal notranslate"><span class="pre">output_default=&quot;dict&quot;</span></code> (orjson parsing included) the gap is 1.4x-1.7x for messages up to 1 KB.</p></li>
+<li><p>Against live binance.com with a 20 symbol multiplex (a few hundred msgs/s) the choice makes no measurable
+difference: the CPU load is dominated by UBWA’s fixed per-manager overhead, not by the transport.</p></li>
+<li><p>So: pick <code class="docutils literal notranslate"><span class="pre">picows</span></code> for high-throughput consumers (many streams, <code class="docutils literal notranslate"><span class="pre">depth&#64;100ms</span></code> on hundreds of symbols, CPU-bound
+hosts), stay on <code class="docutils literal notranslate"><span class="pre">websockets</span></code> if you need the default, its broader ecosystem or PyPy. Full tables including the
+raw-library baseline and the live run: <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/context/websocket-library.md"><code class="docutils literal notranslate"><span class="pre">context/websocket-library.md</span></code></a>;
+what UBWA itself costs per message and how that was cut:
+<a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/context/stream-loop.md"><code class="docutils literal notranslate"><span class="pre">context/stream-loop.md</span></code></a>.</p></li>
+</ul>
+</section>
+</section>
 <section id="from-source-of-the-latest-release-with-pip-from-github">
 <h3>From source of the latest release with PIP from <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api">GitHub</a><a class="headerlink" href="#from-source-of-the-latest-release-with-pip-from-github" title="Link to this heading">¶</a></h3>
 <section id="linux-macos">
@@ -784,9 +914,9 @@ this may take some time!</p>
 </section>
 <section id="windows">
 <h4>Windows<a class="headerlink" href="#windows" title="Link to this heading">¶</a></h4>
-<p>Use the below command with the version (such as 2.15.2) you determined
+<p>Use the below command with the version (such as 2.16.0) you determined
 <a class="reference external" href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest">here</a>:</p>
-<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.15.2.tar.gz</span> <span class="pre">--upgrade</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.16.0.tar.gz</span> <span class="pre">--upgrade</span></code></p>
 </section>
 </section>
 <section id="from-the-latest-source-dev-stage-with-pip-from-github">
@@ -964,6 +1094,10 @@ companies from the US analyze binance.com market data - as long as they do not t
 </ul>
 </li>
 <li><a class="reference internal" href="#conda">conda</a></li>
+<li><a class="reference internal" href="#websocket-library-websockets-or-picows">WebSocket library: <code class="docutils literal notranslate"><span class="pre">websockets</span></code> or <code class="docutils literal notranslate"><span class="pre">picows</span></code></a><ul>
+<li><a class="reference internal" href="#is-picows-faster-measured-not-assumed">Is <code class="docutils literal notranslate"><span class="pre">picows</span></code> faster? Measured, not assumed</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#from-source-of-the-latest-release-with-pip-from-github">From source of the latest release with PIP from GitHub</a><ul>
 <li><a class="reference internal" href="#linux-macos">Linux, macOS, …</a></li>
 <li><a class="reference internal" href="#windows">Windows</a></li>
@@ -1097,7 +1231,7 @@ companies from the US analyze binance.com market data - as long as they do not t
     <a href="https://oliver-zehentleitner.github.io/unicorn-binance-suite/docs_index.html">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Aug 26 2026 at 16:12 (CET).
+    Last updated on Sep 13 2026 at 16:47 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
     Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.

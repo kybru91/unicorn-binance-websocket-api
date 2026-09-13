@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unicorn_binance_websocket_api.sockets &#8212; unicorn-binance-websocket-api 2.15.1 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unicorn_binance_websocket_api.sockets &#8212; unicorn-binance-websocket-api 2.16.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
     <link rel="stylesheet" type="text/css" href="../../_static/pydoctheme.css?v=fdf8e9ae" />
@@ -488,10 +488,6 @@
                                 <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                             <span class="p">):</span>
                                 <span class="c1"># if create_stream() got a asyncio consumer task for the asyncio queue -&gt; use it</span>
-                                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                                    <span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiSocket.start_socket() - Received data set from &quot;</span>
-                                    <span class="sa">f</span><span class="s2">&quot;stream_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="si">}</span><span class="s2"> transferred to `asyncio_queue`!&quot;</span>
-                                <span class="p">)</span>
                                 <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">asyncio_queue</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="p">]</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
                                     <span class="n">received_stream_data</span>
                                 <span class="p">)</span>
@@ -502,10 +498,6 @@
                                 <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                             <span class="p">):</span>
                                 <span class="c1"># if create_stream() got a callback function -&gt; use it</span>
-                                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                                    <span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiSocket.start_socket() - Received data set from &quot;</span>
-                                    <span class="sa">f</span><span class="s2">&quot;stream_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="si">}</span><span class="s2"> transferred to `process_stream_data`!&quot;</span>
-                                <span class="p">)</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">specific_process_stream_data</span><span class="p">[</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span>
                                 <span class="p">](</span><span class="n">received_stream_data</span><span class="p">)</span>
@@ -516,49 +508,27 @@
                                 <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                             <span class="p">):</span>
                                 <span class="c1"># if create_stream() got an asynchronous callback function -&gt; use it</span>
-                                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                                    <span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiSocket.start_socket() - Received data set from &quot;</span>
-                                    <span class="sa">f</span><span class="s2">&quot;stream_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="si">}</span><span class="s2"> transferred to &quot;</span>
-                                    <span class="sa">f</span><span class="s2">&quot;`process_stream_data_async`!&quot;</span>
-                                <span class="p">)</span>
                                 <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">specific_process_stream_data_async</span><span class="p">[</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span>
                                 <span class="p">](</span><span class="n">received_stream_data</span><span class="p">)</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">process_asyncio_queue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                                     <span class="c1"># if global asyncio consumer task for the asyncio queue -&gt; use it</span>
-                                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                                        <span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiSocket.start_socket() - Received data set from &quot;</span>
-                                        <span class="sa">f</span><span class="s2">&quot;stream_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="si">}</span><span class="s2"> transferred to `asyncio_queue`!&quot;</span>
-                                    <span class="p">)</span>
                                     <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">asyncio_queue</span><span class="p">[</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span>
                                     <span class="p">]</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">received_stream_data</span><span class="p">)</span>
                                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">process_stream_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                                     <span class="c1"># if global callback function -&gt; use it</span>
-                                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                                        <span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiSocket.start_socket() - Received data set from &quot;</span>
-                                        <span class="sa">f</span><span class="s2">&quot;stream_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="si">}</span><span class="s2"> transferred to `process_stream_data`!&quot;</span>
-                                    <span class="p">)</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">process_stream_data</span><span class="p">(</span>
                                         <span class="n">received_stream_data</span>
                                     <span class="p">)</span>
                                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">process_stream_data_async</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                                     <span class="c1"># if global async callback function -&gt; use it</span>
-                                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                                        <span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiSocket.start_socket() - Received data set from &quot;</span>
-                                        <span class="sa">f</span><span class="s2">&quot;stream_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="si">}</span><span class="s2"> transferred to &quot;</span>
-                                        <span class="sa">f</span><span class="s2">&quot;`process_stream_data_async`!&quot;</span>
-                                    <span class="p">)</span>
                                     <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">process_stream_data_async</span><span class="p">(</span>
                                         <span class="n">received_stream_data</span>
                                     <span class="p">)</span>
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="c1"># If nothing else is used, write to global stream_buffer</span>
-                                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                                        <span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiSocket.start_socket() - Received data set from &quot;</span>
-                                        <span class="sa">f</span><span class="s2">&quot;stream_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="si">}</span><span class="s2"> transferred to `stream_buffer`!&quot;</span>
-                                    <span class="p">)</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">add_to_stream_buffer</span><span class="p">(</span>
                                         <span class="n">received_stream_data</span>
                                     <span class="p">)</span>
@@ -732,7 +702,7 @@
     <a href="https://oliver-zehentleitner.github.io/unicorn-binance-suite/docs_index.html">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Aug 01 2026 at 14:43 (CET).
+    Last updated on Sep 13 2026 at 16:45 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
     Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.

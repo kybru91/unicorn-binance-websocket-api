@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unicorn_binance_websocket_api.exceptions &#8212; unicorn-binance-websocket-api 2.15.1 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unicorn_binance_websocket_api.exceptions &#8212; unicorn-binance-websocket-api 2.16.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
     <link rel="stylesheet" type="text/css" href="../../_static/pydoctheme.css?v=fdf8e9ae" />
@@ -186,15 +186,20 @@
 
 
 
-<div class="viewcode-block" id="Socks5ProxyConnectionError">
-<a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.exceptions.Socks5ProxyConnectionError">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Socks5ProxyConnectionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="ProxyConnectionError">
+<a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.exceptions.ProxyConnectionError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProxyConnectionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception if the manager class is not able to establish a connection to the socks5 proxy.</span>
+<span class="sd">    Raised inside a stream when the connection through the configured proxy (`proxy=` or the legacy `socks5_proxy_*`</span>
+<span class="sd">    parameters) fails: proxy unreachable, credentials rejected, CONNECT refused, handshake timeout. The stream restarts.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">pass</span></div>
 
+
+
+<span class="c1"># Name used before the generic `proxy` parameter existed (SOCKS5 was the only option); same class.</span>
+<span class="n">Socks5ProxyConnectionError</span> <span class="o">=</span> <span class="n">ProxyConnectionError</span>
 
 
 <div class="viewcode-block" id="StreamIsCrashing">
@@ -344,7 +349,7 @@
     <a href="https://oliver-zehentleitner.github.io/unicorn-binance-suite/docs_index.html">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Aug 01 2026 at 14:43 (CET).
+    Last updated on Sep 13 2026 at 16:45 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
     Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.

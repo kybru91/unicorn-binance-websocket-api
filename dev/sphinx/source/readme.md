@@ -11,6 +11,7 @@
 [![codecov](https://codecov.io/gh/oliver-zehentleitner/unicorn-binance-websocket-api/branch/master/graph/badge.svg?token=5I03AZ3F5S)](https://codecov.io/gh/oliver-zehentleitner/unicorn-binance-websocket-api)
 [![CodeQL](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/codeql-analysis.yml)
 [![Unit Tests](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/unit-tests.yml)
+[![ktw-lint](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/ktw-lint.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/ktw-lint.yml)
 [![Build and Publish GH+PyPi](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml/badge.svg)](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/actions/workflows/build_wheels.yml)
 [![Conda-Forge Build](https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/unicorn-binance-websocket-api-feedstock?branchName=main)](https://github.com/conda-forge/unicorn-binance-websocket-api-feedstock)
 [![Read the Docs](https://img.shields.io/badge/read-%20docs-yellow)](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api)
@@ -440,11 +441,21 @@ rich media, shell syntax, tab completion, and history."
 
 - Customizable base URL.
 
-- *Socks5 Proxy* support:
+- Choice of the WebSocket engine: [`websockets`](https://websockets.readthedocs.io) (default) or
+  [`picows`](https://github.com/tarasko/picows), see [WebSocket library](#websocket-library-websockets-or-picows).
+
+- *Proxy* support (HTTP, HTTPS, SOCKS4, SOCKS5), passed natively to the WebSocket library:
 
   ```
-  ubwa = BinanceWebSocketApiManager(exchange="binance.com", socks5_proxy_server="127.0.0.1:9050") 
+  ubwa = BinanceWebSocketApiManager(exchange="binance.com", proxy="socks5://user:pass@127.0.0.1:9050")
+  ubwa = BinanceWebSocketApiManager(exchange="binance.com", proxy="http://127.0.0.1:3128")
   ```
+
+  The legacy `socks5_proxy_server`/`socks5_proxy_user`/`socks5_proxy_pass` parameters keep working. REST requests
+  (listenKey handling) follow a `socks5://` proxy only. Credentials containing `@`, `:`, `/` or `%` need
+  percent-encoding in the URL; `websockets` sends them without decoding
+  ([python-websockets/websockets#1761](https://github.com/python-websockets/websockets/issues/1761)), so UBWA rejects
+  such credentials for `websocket_library="websockets"` at construction - use plain credentials or `picows`.
   
   Read the [docs](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.manager.BinanceWebSocketApiManager)
   or this [how to](https://medium.com/@oliverzehentleitner/how-to-connect-to-binance-com-websockets-using-python-via-a-socks5-proxy-3c5a3e063f12) 
@@ -508,6 +519,58 @@ this may take some time!
 conda install -c conda-forge unicorn-binance-websocket-api
 ```
 
+### WebSocket library: `websockets` or `picows`
+UBWA uses the [`websockets`](https://websockets.readthedocs.io) library by default. Alternatively it can run on
+[`picows`](https://github.com/tarasko/picows), a Cython implementation of the WebSocket protocol that ships a
+drop-in replacement of the `websockets` client API (`picows.websockets`). `picows` is an optional dependency:
+
+```
+pip install unicorn-binance-websocket-api[picows]
+```
+
+Select the library per manager instance, everything else stays the same:
+
+```
+ubwa = BinanceWebSocketApiManager(exchange="binance.com", websocket_library="picows")
+```
+
+Selecting `"picows"` without the package installed raises an `ImportError`, an unknown value raises a `ValueError` -
+there is no silent fallback. Proxies (`proxy="http://..."`, `https://`, `socks4://`, `socks5://`) are passed to both
+libraries natively. The [conda-forge](https://anaconda.org/conda-forge/picows)
+package is `picows`.
+
+`picows` support is new and opt-in: `websockets` stays the default until picows has proven itself in real-world use
+and enough reports are in (the first upstream finding, [tarasko/picows#108](https://github.com/tarasko/picows/issues/108),
+is fixed in picows 2.2.0; the extra requires picows 2.3.0 for its native proxy support). Questions,
+experiences and your own benchmark numbers:
+[issue #477 - WebSocket library: websockets vs. picows](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/477).
+
+#### Is `picows` faster? Measured, not assumed
+`dev/test_websocket_library_benchmark.py` replays Binance shaped messages from a local server (separate process)
+through the complete UBWA stack (connection → stream loop → `process_stream_data` callback), 3 runs, median.
+Python 3.13, websockets 16.0, picows 2.1.3, x86_64 Linux, `output_default="raw_data"`:
+
+| Scenario | ~msg size | msgs | websockets msgs/s | picows msgs/s | picows speedup | websockets CPU µs/msg | picows CPU µs/msg |
+|---|---|---|---|---|---|---|---|
+| small_aggtrade | 0.2 KB | 300,000 | 201,912 | 403,316 | 2.00x | 5.1 | 2.5 |
+| medium_kline | 0.3 KB | 150,000 | 195,460 | 371,019 | 1.90x | 5.2 | 2.9 |
+| large_depth20 | 1.0 KB | 60,000 | 153,187 | 259,960 | 1.70x | 6.8 | 4.1 |
+| xlarge_depth_diff | 9.1 KB | 30,000 | 64,172 | 67,972 | 1.06x | 16.3 | 15.4 |
+| huge_ticker_arr | 453.9 KB | 600 | 1,768 | 1,662 | 0.94x | 608.7 | 641.0 |
+| multiplex_mix | 0.2 KB | 120,000 | 180,406 | 334,188 | 1.85x | 5.7 | 3.2 |
+
+- Up to ~1 KB per message (aggTrade, kline, bookTicker, depth20, ...) picows delivers **1.7x-2x** the throughput at
+  about half the CPU per message. From ~10 KB upwards (full `depth` diffs, `!ticker@arr`) both are on par - the
+  cost there is UTF-8 decoding and JSON handling, not the WebSocket framing.
+- With `output_default="dict"` (orjson parsing included) the gap is 1.4x-1.7x for messages up to 1 KB.
+- Against live binance.com with a 20 symbol multiplex (a few hundred msgs/s) the choice makes no measurable
+  difference: the CPU load is dominated by UBWA's fixed per-manager overhead, not by the transport.
+- So: pick `picows` for high-throughput consumers (many streams, `depth@100ms` on hundreds of symbols, CPU-bound
+  hosts), stay on `websockets` if you need the default, its broader ecosystem or PyPy. Full tables including the
+  raw-library baseline and the live run: [`context/websocket-library.md`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/context/websocket-library.md);
+  what UBWA itself costs per message and how that was cut:
+  [`context/stream-loop.md`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/context/stream-loop.md).
+
 ### From source of the latest release with PIP from [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
 #### Linux, macOS, ...
 Run in bash:
@@ -515,10 +578,10 @@ Run in bash:
 `pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/$(curl -s https://api.github.com/repos/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")').tar.gz --upgrade`
 
 #### Windows
-Use the below command with the version (such as 2.15.2) you determined 
+Use the below command with the version (such as 2.16.0) you determined 
 [here](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/releases/latest):
 
-`pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.15.2.tar.gz --upgrade`
+`pip install https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/archive/2.16.0.tar.gz --upgrade`
 ### From the latest source (dev-stage) with PIP from [GitHub](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api)
 This is not a release version and can not be considered to be stable!
 

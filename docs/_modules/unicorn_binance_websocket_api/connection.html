@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unicorn_binance_websocket_api.connection &#8212; unicorn-binance-websocket-api 2.15.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unicorn_binance_websocket_api.connection &#8212; unicorn-binance-websocket-api 2.16.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
     <link rel="stylesheet" type="text/css" href="../../_static/pydoctheme.css?v=fdf8e9ae" />
@@ -168,18 +168,22 @@
 <span class="c1"># IN THE SOFTWARE.</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.websocket_library</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PROXY_EXCEPTIONS</span><span class="p">,</span>
+    <span class="n">WEBSOCKET_LIBRARY_PICOWS</span><span class="p">,</span>
+    <span class="n">get_connect</span><span class="p">,</span>
+    <span class="n">proxy_connect_kwargs</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlparse</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">socks</span>  <span class="c1"># PySocks https://pypi.org/project/PySocks/</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ssl</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">websockets</span>
 
 <span class="n">__logger__</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;unicorn_binance_websocket_api&quot;</span><span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">__logger__</span>
-<span class="n">connect</span><span class="p">:</span> <span class="n">websockets</span><span class="o">.</span><span class="n">connect</span> <span class="o">=</span> <span class="n">websockets</span><span class="o">.</span><span class="n">connect</span>
 
 
 <div class="viewcode-block" id="BinanceWebSocketApiConnection">
@@ -207,6 +211,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">markets</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">markets</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">symbols</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">websocket</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">websocket_library</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">websocket_library</span>
+        <span class="c1"># `websockets.connect()` and `picows.websockets.connect()` share the same</span>
+        <span class="c1"># signature, see websocket_library.py</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect</span> <span class="o">=</span> <span class="n">get_connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">websocket_library</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">api</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">stream_list</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="p">][</span><span class="s2">&quot;api&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_timeout</span> <span class="o">=</span> <span class="p">(</span>
             <span class="kc">True</span> <span class="k">if</span> <span class="s2">&quot;!userData&quot;</span> <span class="ow">in</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">channels</span><span class="si">}{</span><span class="n">markets</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="kc">False</span>
@@ -269,78 +277,79 @@
                 <span class="sa">f</span><span class="s2">&quot;KeyError: </span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;KeyError: </span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">connect_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">ping_interval</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ping_interval</span><span class="p">,</span>
+            <span class="n">ping_timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ping_timeout</span><span class="p">,</span>
+            <span class="n">close_timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">close_timeout</span><span class="p">,</span>
+            <span class="n">additional_headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_user_agent</span><span class="p">())},</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_library_specific_connect_kwargs</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="c1"># Proxies are passed to the library as URL (`websockets` &gt;= 15.0,</span>
+        <span class="c1"># `picows` &gt;= 2.3.0 handle http/https/socks4/socks5 natively, the SOCKS</span>
+        <span class="c1"># handshake runs inside the event loop); without a configured proxy the</span>
+        <span class="c1"># kwarg is not passed at all and the library keeps its own default.</span>
+        <span class="n">connect_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="n">proxy_connect_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">websocket_library</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">proxy</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># TLS to the Binance endpoint: the libraries&#39; default context verifies;</span>
+        <span class="c1"># a custom context is only needed to switch verification off, and only</span>
+        <span class="c1"># for wss:// (never for a plain ws:// URI, e.g. a local test server).</span>
         <span class="k">if</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">socks5_proxy_address</span> <span class="ow">is</span> <span class="kc">None</span>
-            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">socks5_proxy_port</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="n">urlparse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uri</span><span class="p">))</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;wss&quot;</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">websocket_ssl_context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="n">connect</span><span class="p">(</span>
-                <span class="nb">str</span><span class="p">(</span><span class="n">uri</span><span class="p">),</span>
-                <span class="n">ping_interval</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ping_interval</span><span class="p">,</span>
-                <span class="n">ping_timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ping_timeout</span><span class="p">,</span>
-                <span class="n">close_timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">close_timeout</span><span class="p">,</span>
-                <span class="n">additional_headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_user_agent</span><span class="p">())},</span>
-            <span class="p">)</span>
+            <span class="n">connect_kwargs</span><span class="p">[</span><span class="s2">&quot;ssl&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">websocket_ssl_context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uri</span><span class="p">),</span> <span class="o">**</span><span class="n">connect_kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">proxy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiConnection.__aenter__(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">markets</span><span class="si">}</span><span class="s2">) - No proxy used!&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">markets</span><span class="si">}</span><span class="s2">) - No proxy used! (websocket_library: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">websocket_library</span><span class="si">}</span><span class="s2">)&quot;</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">websocket_socks5_proxy</span> <span class="o">=</span> <span class="n">socks</span><span class="o">.</span><span class="n">socksocket</span><span class="p">()</span>
-            <span class="n">websocket_socks5_proxy</span><span class="o">.</span><span class="n">set_proxy</span><span class="p">(</span>
-                <span class="n">proxy_type</span><span class="o">=</span><span class="n">socks</span><span class="o">.</span><span class="n">SOCKS5</span><span class="p">,</span>
-                <span class="n">addr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">socks5_proxy_address</span><span class="p">,</span>
-                <span class="n">port</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">socks5_proxy_port</span><span class="p">),</span>
-                <span class="n">username</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">socks5_proxy_user</span><span class="p">,</span>
-                <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">socks5_proxy_pass</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="c1"># Use the actual stream URI, not `websocket_base_uri`: for WebSocket API</span>
-            <span class="c1"># streams and the WS API userData subscription flow, `uri` resolves to</span>
-            <span class="c1"># `websocket_api_base_uri`, a different host (see connection_settings.py).</span>
-            <span class="n">netloc</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uri</span><span class="p">))</span><span class="o">.</span><span class="n">netloc</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">host</span><span class="p">,</span> <span class="n">port</span> <span class="o">=</span> <span class="n">netloc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error_msg</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;netloc&#39; split error: </span><span class="si">{</span><span class="n">netloc</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">host</span> <span class="o">=</span> <span class="n">netloc</span>
-                <span class="n">port</span> <span class="o">=</span> <span class="mi">443</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiConnection.__aenter__(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">markets</span><span class="si">}</span><span class="s2">) - Connect to socks5 proxy </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2"> (ssl_verification: &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">socks5_proxy_ssl_verification</span><span class="si">}</span><span class="s2">)&quot;</span>
-                <span class="p">)</span>
-                <span class="n">websocket_socks5_proxy</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">port</span><span class="p">)))</span>
-                <span class="n">websocket_server_hostname</span> <span class="o">=</span> <span class="n">netloc</span>
-            <span class="k">except</span> <span class="n">socks</span><span class="o">.</span><span class="n">ProxyConnectionError</span> <span class="k">as</span> <span class="n">error_msg</span><span class="p">:</span>
-                <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">)&quot;</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
-                <span class="k">raise</span> <span class="n">Socks5ProxyConnectionError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">socks</span><span class="o">.</span><span class="n">GeneralProxyError</span> <span class="k">as</span> <span class="n">error_msg</span><span class="p">:</span>
-                <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">)&quot;</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
-                <span class="k">raise</span> <span class="n">Socks5ProxyConnectionError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="n">connect</span><span class="p">(</span>
-                <span class="nb">str</span><span class="p">(</span><span class="n">uri</span><span class="p">),</span>
-                <span class="n">ssl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">websocket_ssl_context</span><span class="p">,</span>
-                <span class="n">sock</span><span class="o">=</span><span class="n">websocket_socks5_proxy</span><span class="p">,</span>
-                <span class="n">server_hostname</span><span class="o">=</span><span class="n">websocket_server_hostname</span><span class="p">,</span>
-                <span class="n">ping_interval</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ping_interval</span><span class="p">,</span>
-                <span class="n">ping_timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ping_timeout</span><span class="p">,</span>
-                <span class="n">close_timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">close_timeout</span><span class="p">,</span>
-                <span class="n">additional_headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_user_agent</span><span class="p">())},</span>
-            <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;BinanceWebSocketApiConnection.__aenter__(&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="si">}</span><span class="s1">&#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">markets</span><span class="si">}</span><span class="s1">&quot;) - Using proxy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">socks5_proxy_address</span><span class="si">}</span><span class="s1"> &#39;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">socks5_proxy_port</span><span class="si">}</span><span class="s2"> SSL: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">socks5_proxy_ssl_verification</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiConnection.__aenter__(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">markets</span><span class="si">}</span><span class="s2">) - Using proxy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_proxy_info</span><span class="p">()</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(websocket_library: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">websocket_library</span><span class="si">}</span><span class="s2">)&quot;</span>
             <span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">websocket</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="fm">__aenter__</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">set_socket_is_ready</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">StreamIsRestarting</span><span class="p">(</span><span class="n">stream_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;timeout error&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">PROXY_EXCEPTIONS</span> <span class="k">as</span> <span class="n">error_msg</span><span class="p">:</span>
+            <span class="c1"># Proxy unreachable, credentials rejected, CONNECT refused, SOCKS</span>
+            <span class="c1"># handshake timeout - raised by the library or python-socks.</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2"> (proxy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_proxy_info</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ProxyConnectionError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLError</span><span class="p">:</span>
+            <span class="c1"># TLS to Binance (through the proxy or not): not a proxy error,</span>
+            <span class="c1"># the manager handles it.</span>
+            <span class="k">raise</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">error_msg</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">proxy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span>
+            <span class="c1"># With a proxy configured the client only ever connects to the</span>
+            <span class="c1"># proxy, so a socket-level failure here is the proxy hop (e.g.</span>
+            <span class="c1"># an `http://` proxy refusing the TCP connection).</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2"> (proxy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_proxy_info</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ProxyConnectionError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_library_specific_connect_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extra `connect()` kwargs that only one of the libraries needs.</span>
+
+<span class="sd">        picows: `picows.websockets.connect()` appends its own `User-Agent`</span>
+<span class="sd">        header on top of `additional_headers` unless `user_agent_header` is</span>
+<span class="sd">        `None`. `websockets` (&gt;=14.0) does not duplicate the header, so it</span>
+<span class="sd">        gets nothing here. Proxy kwargs come from</span>
+<span class="sd">        `websocket_library.proxy_connect_kwargs()`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">websocket_library</span> <span class="o">==</span> <span class="n">WEBSOCKET_LIBRARY_PICOWS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;user_agent_header&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{}</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="fm">__aexit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
@@ -360,8 +369,10 @@
 <div class="viewcode-block" id="BinanceWebSocketApiConnection.receive">
 <a class="viewcode-back" href="../../unicorn_binance_websocket_api.html#unicorn_binance_websocket_api.connection.BinanceWebSocketApiConnection.receive">[docs]</a>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BinanceWebSocketApiConnection.receive(</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raise_exceptions</span><span class="p">()</span>
+        <span class="c1"># Hot path, once per received message. No per-call debug log, no</span>
+        <span class="c1"># `raise_exceptions()` and no `set_heartbeat()` here: the loop in</span>
+        <span class="c1"># `BinanceWebSocketApiSocket.start_socket()` does both right before</span>
+        <span class="c1"># calling this. See context/stream-loop.md for the measurements.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_timeout</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">timeout</span> <span class="o">=</span> <span class="mf">0.1</span>
@@ -385,8 +396,9 @@
                 <span class="n">received_data_json</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">websocket</span><span class="o">.</span><span class="n">recv</span><span class="p">(),</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">1</span>
                 <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">set_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="p">)</span>
-        <span class="n">size</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">received_data_json</span><span class="p">))</span>
+        <span class="c1"># Payload size (characters of the JSON text = bytes for Binance&#39;s ASCII</span>
+        <span class="c1"># JSON), not `sys.getsizeof()` of the Python object.</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">received_data_json</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">add_total_received_bytes</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">increase_received_bytes_per_second</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">increase_processed_receives_statistic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_id</span><span class="p">)</span>
@@ -505,7 +517,7 @@
     <a href="https://oliver-zehentleitner.github.io/unicorn-binance-suite/docs_index.html">Index of all docs</a><br />
     &copy; <a href="/license.html">Copyright</a> 2019-2025, Oliver Zehentleitner All Rights Reserved..
     See <a href="/license.html">License</a> for more information.<br />
-    Last updated on Aug 26 2026 at 16:12 (CET).
+    Last updated on Sep 13 2026 at 16:45 (CET).
     <a href="https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/new/choose">Found a bug</a>?
     <br />
     Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.

@@ -544,6 +544,8 @@ and enough reports are in (the first upstream finding, [tarasko/picows#108](http
 is fixed in picows 2.2.0; the extra requires picows 2.3.0 for its native proxy support). Questions,
 experiences and your own benchmark numbers:
 [issue #477 - WebSocket library: websockets vs. picows](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/477).
+Background, benchmarks and the 24 h soak in the article
+[picows in UNICORN Binance WebSocket API: Up to 2× the Throughput, Opt-In for Now](https://blog.technopathy.club/picows-in-unicorn-binance-websocket-api-up-to-2-the-throughput-opt-in-for-now).
 
 #### Is `picows` faster? Measured, not assumed
 `dev/test_websocket_library_benchmark.py` replays Binance shaped messages from a local server (separate process)
@@ -606,6 +608,7 @@ This is not a release version and can not be considered to be stable!
 - [How to Connect to binance.com Websockets using Python via a Socks5 Proxy](https://blog.technopathy.club/binance-websocket-via-socks5)
 - [When IP Whitelisting Isn't What It Seems: A Real-World Case Study from the Binance API](https://blog.technopathy.club/when-ip-whitelisting-isn-t-what-it-seems-a-real-world-case-study-from-the-binance-api)
 - [UBDCC Deep Dive: Building a Trust Layer for Binance Order Books](https://blog.technopathy.club/ubdcc-deep-dive-building-a-trust-layer-for-binance-order-books)
+- [picows in UNICORN Binance WebSocket API: Up to 2× the Throughput, Opt-In for Now](https://blog.technopathy.club/picows-in-unicorn-binance-websocket-api-up-to-2-the-throughput-opt-in-for-now)
 - [UNICORN Binance Suite Article Series](https://blog.technopathy.club/series/unicorn-binance-suite)
 
 ## Project Homepage

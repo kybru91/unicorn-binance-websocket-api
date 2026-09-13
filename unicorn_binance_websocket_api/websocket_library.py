@@ -189,6 +189,19 @@ def check_proxy_credentials(websocket_library: str, proxy: Optional[str]) -> Non
             )
 
 
+def mask_proxy_url(proxy: str) -> str:
+    """
+    Display form of a proxy URL for logs and summaries: rebuilt from scheme,
+    user, host and port only, the password (if any) replaced by `***`.
+    """
+    parsed = urlparse(proxy)
+    auth = ""
+    if parsed.username is not None or parsed.password is not None:
+        auth = f"{parsed.username or ''}:***@"
+    port = f":{parsed.port}" if parsed.port is not None else ""
+    return f"{parsed.scheme}://{auth}{parsed.hostname}{port}"
+
+
 def proxy_connect_kwargs(websocket_library: str, proxy: Optional[str]) -> dict:
     """
     `connect()` kwargs for the configured proxy: the URL itself plus, for an

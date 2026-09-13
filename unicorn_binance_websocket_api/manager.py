@@ -56,6 +56,7 @@ from .websocket_library import (
     NEGOTIATION_ERROR_EXCEPTIONS,
     build_socks5_proxy_url,
     check_proxy_credentials,
+    mask_proxy_url,
     get_http_status_code,
     get_websocket_library_version,
     validate_proxy_url,
@@ -399,11 +400,25 @@ class BinanceWebSocketApiManager(threading.Thread):
                 )
             self.socks5_proxy_user = socks5_proxy_user
             self.socks5_proxy_pass = socks5_proxy_pass
+            # Display form without the password, built from the non-secret
+            # parts only (never derived from the password-carrying URL).
+            self._proxy_display: Optional[str] = mask_proxy_url(
+                build_socks5_proxy_url(
+                    self.socks5_proxy_address,
+                    self.socks5_proxy_port,
+                    self.socks5_proxy_user,
+                    "***" if self.socks5_proxy_pass is not None else None,
+                )
+            )
             proxy = build_socks5_proxy_url(
                 self.socks5_proxy_address,
                 self.socks5_proxy_port,
                 self.socks5_proxy_user,
                 self.socks5_proxy_pass,
+            )
+        else:
+            self._proxy_display = (
+                mask_proxy_url(proxy) if validate_proxy_url(proxy) is not None else None
             )
         self.proxy: Optional[str] = validate_proxy_url(proxy)
         check_proxy_credentials(self.websocket_library, self.proxy)
@@ -4242,12 +4257,7 @@ class BinanceWebSocketApiManager(threading.Thread):
 
         :return: str or None
         """
-        if self.proxy is None:
-            return None
-        parsed = urlparse(self.proxy)
-        if parsed.password is None:
-            return self.proxy
-        return self.proxy.replace(f":{parsed.password}@", ":***@", 1)
+        return self._proxy_display
 
     def get_user_agent(self):
         """

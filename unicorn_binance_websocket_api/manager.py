@@ -92,7 +92,7 @@ import uuid
 import orjson
 
 __app_name__: str = "unicorn-binance-websocket-api"
-__version__: str = "2.15.2.dev"
+__version__: str = "2.16.0"
 __logger__: logging.getLogger = logging.getLogger("unicorn_binance_websocket_api")
 
 logger = __logger__
@@ -450,8 +450,9 @@ class BinanceWebSocketApiManager(threading.Thread):
                 )
         # TLS to Binance through a proxy: the libraries' default context
         # verifies the certificate; a custom context exists only to switch
-        # verification off (`ssl.SSLContext()` without protocol, used until
-        # 2.15.2, never verified regardless of `socks5_proxy_ssl_verification`).
+        # verification off (`ssl.SSLContext()` without protocol, used before the
+        # generic `proxy` parameter, never verified regardless of
+        # `socks5_proxy_ssl_verification`).
         self.websocket_ssl_context: Optional[ssl.SSLContext] = None
         if self.proxy is not None and self.socks5_proxy_ssl_verification is False:
             websocket_ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)

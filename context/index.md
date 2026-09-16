@@ -72,7 +72,7 @@
 
 ## W
 
-- [websocket-library.md](websocket-library.md) — why `picows` is integrated via its `websockets`-compatible API and the core listener API was measured and not built, separate exception families (incl. the `InvalidStatus.response` shape difference), fail-loud selection, opt-in/non-default status plus the 24 h soak gate before the release, the proxy path (URL passed natively to both libraries since websockets 15.0 / picows 2.3.0, PySocks gone), the websockets credential-decoding gap (#1761) refused at construction, the unverified-TLS incident on that path, and the benchmark numbers behind it
+- [websocket-library.md](websocket-library.md) — why `picows` is integrated via its `websockets`-compatible API and the core listener API was measured and not built, separate exception families (incl. the `InvalidStatus.response` shape difference), fail-loud selection, opt-in/non-default status plus the 24 h soak gate before the release, the proxy path (URL passed natively to both libraries since websockets 15.0 / picows 2.3.0, PySocks gone), the websockets credential-decoding gap (#1761) refused at construction, the unverified-TLS incident on that path, the benchmark numbers behind it, and the big-message artifact of the loopback replay (firehose sender vs. `SO_RCVBUF`)
 
 ## X
 

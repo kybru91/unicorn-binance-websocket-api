@@ -562,8 +562,12 @@ Python 3.13, websockets 16.0, picows 2.1.3, x86_64 Linux, `output_default="raw_d
 | multiplex_mix | 0.2 KB | 120,000 | 180,406 | 334,188 | 1.85x | 5.7 | 3.2 |
 
 - Up to ~1 KB per message (aggTrade, kline, bookTicker, depth20, ...) picows delivers **1.7x-2x** the throughput at
-  about half the CPU per message. From ~10 KB upwards (full `depth` diffs, `!ticker@arr`) both are on par - the
-  cost there is UTF-8 decoding and JSON handling, not the WebSocket framing.
+  about half the CPU per message. From ~10 KB upwards (full `depth` diffs, `!ticker@arr`) both are on par, and on
+  the 450 KB `!ticker@arr` payload picows is a few percent behind. That row is an artifact of the local replay
+  (a loopback firehose feeding a consumer that is slower than the wire, so picows drains a multi-MB socket buffer
+  in one read): driven directly picows wins at every size, and with `--rcvbuf 131072` (client socket receive
+  buffer capped, closer to a WAN link) it is 1.3x-1.4x ahead at 450 KB through UBWA as well. Details in
+  [`context/websocket-library.md`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/context/websocket-library.md).
 - With `output_default="dict"` (orjson parsing included) the gap is 1.4x-1.7x for messages up to 1 KB.
 - Against live binance.com with a 20 symbol multiplex (a few hundred msgs/s) the choice makes no measurable
   difference: the CPU load is dominated by UBWA's fixed per-manager overhead, not by the transport.

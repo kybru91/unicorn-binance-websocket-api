@@ -51,10 +51,24 @@ Not part of CI (dev/ only). Two modes:
    `picows.websockets` are driven directly (`async for msg in ws`) without
    UBWA. The gap between this and mode 1 is UBWA's own per-message overhead.
 
+Known artifact of the local replay (see context/websocket-library.md,
+"Benchmark results"): the server is a firehose on loopback, it never paces.
+Once the client is slower than the wire (UBWA with messages >= ~32 KB), the
+kernel receive buffer autotunes into the megabytes and picows drains it in
+one multi-MB recv per loop iteration into its ever-growing read buffer,
+while websockets reads at most 256 KB per recv. That per-byte penalty makes
+picows 4-12 % slower than websockets through UBWA for big messages even
+though picows wins standalone at every size. `--rcvbuf BYTES` caps
+SO_RCVBUF on the client socket (both libraries) to approximate a WAN link
+where the socket buffer never fills like that; with 131072 picows is ahead
+at every size. The default stays the firehose so numbers remain comparable
+with earlier runs.
+
 Usage:
     python3 dev/test_websocket_library_benchmark.py
     python3 dev/test_websocket_library_benchmark.py --output dict --repeat 5
     python3 dev/test_websocket_library_benchmark.py --raw-libs
+    python3 dev/test_websocket_library_benchmark.py --rcvbuf 131072
     python3 dev/test_websocket_library_benchmark.py --live 120
     python3 dev/test_websocket_library_benchmark.py --markdown results.md
 """
@@ -73,12 +87,15 @@ import asyncio
 import logging
 import multiprocessing
 import random
+import socket
 import statistics
 import threading
 import time
 import urllib.parse
 
 import orjson
+
+import unicorn_binance_websocket_api.connection as ubwa_connection  # noqa: E402
 
 logging.getLogger("unicorn_binance_websocket_api").setLevel(logging.ERROR)
 
@@ -226,6 +243,35 @@ MULTIPLEX_WEIGHTS = (
     (msg_depth_diff, 2),
 )
 POOL_SIZE = 500  # distinct pre-serialized messages per scenario
+RCVBUF = None  # `--rcvbuf`: SO_RCVBUF for the client socket, None = kernel default
+
+
+def client_socket(port):
+    """Connected, non-blocking client socket with SO_RCVBUF set before connect
+    (after connect the kernel keeps autotuning). Passed as `sock=` to either
+    library's `connect()`."""
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, RCVBUF)
+    sock.connect(("127.0.0.1", port))
+    sock.setblocking(False)
+    return sock
+
+
+def install_rcvbuf_hook(port):
+    """Make UBWA's connections use `client_socket()`: the manager has no socket
+    hook, so the library `connect()` UBWA resolves via `get_connect()` is
+    wrapped here (dev script only)."""
+    original_get_connect = ubwa_connection.get_connect
+
+    def get_connect(websocket_library):
+        connect = original_get_connect(websocket_library)
+
+        def connect_with_rcvbuf(uri, **kwargs):
+            return connect(uri, sock=client_socket(port), **kwargs)
+
+        return connect_with_rcvbuf
+
+    ubwa_connection.get_connect = get_connect
 
 
 def build_pool(scenario):
@@ -388,10 +434,14 @@ def run_raw_library(library, scenario, port):
         from websockets import connect
     uri = f"ws://127.0.0.1:{port}/stream?streams={scenario}@bench"
 
+    connect_kwargs = {}
+    if RCVBUF is not None:
+        connect_kwargs["sock"] = client_socket(port)
+
     async def consume():
         received = 0
         first = None
-        async with connect(uri, ping_interval=None) as ws:
+        async with connect(uri, ping_interval=None, **connect_kwargs) as ws:
             async for _ in ws:
                 if first is None:
                     first = time.perf_counter()
@@ -542,7 +592,18 @@ def main():
     )
     parser.add_argument("--markdown", metavar="FILE", help="append the report to FILE")
     parser.add_argument("--port", type=int, default=PORT)
+    parser.add_argument(
+        "--rcvbuf",
+        type=int,
+        metavar="BYTES",
+        help="SO_RCVBUF of the client socket (local replay only), e.g. 131072; "
+        "see the module docstring for why",
+    )
     args = parser.parse_args()
+    if args.rcvbuf:
+        global RCVBUF
+        RCVBUF = args.rcvbuf
+        install_rcvbuf_hook(args.port)
 
     import platform, websockets, picows
     from unicorn_binance_websocket_api.manager import __version__ as ubwa_version
@@ -551,6 +612,7 @@ def main():
         f"Python {platform.python_version()} on {platform.system()} {platform.machine()}, "
         f"websockets {websockets.__version__}, picows {picows.__version__}, "
         f"UBWA {ubwa_version}"
+        + (f", client SO_RCVBUF {args.rcvbuf}" if args.rcvbuf else "")
     )
     print(header)
     reports = [header, ""]

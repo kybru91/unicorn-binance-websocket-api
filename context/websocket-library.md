@@ -375,16 +375,80 @@ excluded. 3 runs each, median.
 | websockets | 441 | 0.20 | 8.7 | 198.1 |
 | picows | 306 | 0.16 | 6.1 | 199.2 |
 
-**Reading (inferred):**
+**Big messages re-measured 2026-09-16** (same script, 8 cores, websockets
+16.0, picows 2.3.0 with aiofastnet 1.1.0, UBWA 2.16.0.dev): a size ladder of
+`!ticker@arr` payloads, 10 paired runs per size, medians, "wins" = paired
+runs in which picows had the higher throughput. Run-to-run spread 1-4 %.
+
+Libraries driven directly (no UBWA):
+
+| ~msg size | websockets msgs/s | picows msgs/s | picows speedup | websockets CPU µs/msg | picows CPU µs/msg | wins |
+|---|---|---|---|---|---|---|
+| 9.1 KB (depth diff) | 135,837 | 274,948 | 2.02x | 7.4 | 3.6 | 10/10 |
+| 32 KB | 61,155 | 95,351 | 1.56x | 16.6 | 10.6 | 10/10 |
+| 97 KB | 27,851 | 54,397 | 1.95x | 36.1 | 18.5 | 10/10 |
+| 227 KB | 12,420 | 25,921 | 2.09x | 80.9 | 39.0 | 10/10 |
+| 454 KB | 6,430 | 11,107 | 1.73x | 156.2 | 90.6 | 10/10 |
+| 908 KB | 2,710 | 3,151 | 1.16x | 370.8 | 319.1 | 10/10 |
+
+Through UBWA, `output_default="raw_data"`:
+
+| ~msg size | websockets msgs/s | picows msgs/s | picows speedup | websockets CPU µs/msg | picows CPU µs/msg | wins |
+|---|---|---|---|---|---|---|
+| 9.1 KB (depth diff) | 64,519 | 69,259 | 1.07x | 16.3 | 15.3 | 10/10 |
+| 32 KB | 23,855 | 21,101 | 0.88x | 44.7 | 50.6 | 0/10 |
+| 97 KB | 8,350 | 7,630 | 0.91x | 126.6 | 137.9 | 0/10 |
+| 227 KB | 3,495 | 3,361 | 0.96x | 300.5 | 316.7 | 3/10 |
+| 454 KB | 1,893 | 1,725 | 0.91x | 555.0 | 611.5 | 0/10 |
+| 908 KB | 866 | 822 | 0.95x | 1224.3 | 1276.3 | 1/10 |
+
+Through UBWA, `output_default="dict"`: 0.97x-1.11x, the JSON parse dominates
+and the receive-path difference is noise.
+
+Same 454 KB scenario through UBWA (`raw_data`) with one client-side change
+at a time, 4-5 paired runs:
+
+| Variant | websockets CPU µs/msg | picows CPU µs/msg | wins |
+|---|---|---|---|
+| default | 570.8 | 656.0 | 0/4 |
+| client socket `SO_RCVBUF` = 128 KB (`--rcvbuf 131072`) | 609.4 | 487.8 | 4/4 (1.27x) |
+| `max_queue=1` | 575.8 | 627.9 | 0/5 |
+| `max_queue=16` (both libraries' default) | 567.5 | 630.2 | 0/5 |
+| `max_queue=None` (no backpressure) | 651.2 | 598.1 | 5/5 |
+| picows `use_aiofastnet=False` | 567.3 | 668.9 | 0/4 |
+
+strace of the default variant (600 x 454 KB): websockets 1,060 `recvfrom`
+calls of ~256 KB (the asyncio transport's per-read cap), picows 79 calls of
+~3.4 MB. The `str` objects both libraries hand to UBWA are identical (type,
+size, ASCII flag, scan time), so UBWA's own per-message work is not the
+difference.
+
+**Reading (inferred; the `SO_RCVBUF` experiment above corroborates the
+big-message part):**
 
 - Small and medium messages (<= ~1 KB, the bulk of Binance traffic): picows
   ~1.4x throughput and ~30 % less CPU per message inside UBWA. Standalone the
   libraries are 1.5x-2x apart.
-- >= ~10 KB (full `depth` diffs, `!ticker@arr`): parity inside UBWA (0.9x-1.1x,
-  within run-to-run noise). Plausible cause, not profiled: UTF-8 decoding of
-  the payload plus UBWA's substring checks (`"error" in ...`,
-  `"result" in ...`) over the whole message dominate, and both libraries pay
-  the same for that.
+- >= ~32 KB through UBWA (full `depth` diffs are still below that,
+  `!ticker@arr` far above): picows is 4-12 % slower than websockets in
+  `raw_data` mode, systematically, not noise. It is an artifact of the local
+  replay, not a parsing weakness: the server is a firehose on loopback, and
+  UBWA's consumer costs ~0.3-0.4 ms per 454 KB message (the `"error" in` /
+  `"result" in` scans over the whole text), i.e. it is slower than the wire.
+  The kernel receive buffer then autotunes into the megabytes
+  (`net.ipv4.tcp_rmem` max 6 MB on the test VM), picows drains it in one
+  multi-MB `recv` per loop iteration into a read buffer that doubles on
+  > 90 % utilization and never shrinks, and the frames are copied out and
+  decoded one by one after the data has left the cache (plus a memmove of
+  the leftover partial frame per read, `_shrink_buffer()` in picows).
+  websockets reads at most 256 KB per `recv` and stays cache-friendly. Capping
+  `SO_RCVBUF` to 128 KB on the client socket removes the deficit entirely
+  (picows 1.27x-1.40x at 454 KB). Not pinned down: a bare receive loop with
+  the same per-message work shows the same 79-read pattern but picows stays
+  marginally ahead there, so UBWA's threaded layout (stream loop in its own
+  thread, monitoring threads on the same GIL) amplifies it. Irrelevant for
+  live Binance traffic: a WAN link at a few MB/s never fills the socket
+  buffer like that, and the 24 h soak showed picows with less CPU and RSS.
 - Before the stream-loop optimization UBWA added a constant ~5 µs per
   message on top of either library (3.1 -> 8.7 µs for websockets,
   2.0 -> 6.2 µs for picows). After it (`stream-loop.md`) the overhead is
@@ -418,3 +482,12 @@ Three choices a reader of the numbers should know, all deliberate:
   idle cost (monitoring loops, keepalive), which is why it is ~200 µs/msg at
   a few hundred msgs/s versus ~6-9 µs in the replay - it is not a per-message
   cost of the transport.
+- The sender is a **firehose** (no pacing, `await asyncio.sleep(0)` every 200
+  messages) and stays so by default, with `--rcvbuf BYTES` as an opt-in that
+  caps `SO_RCVBUF` on the client socket (decision 2026-09-16, after the
+  big-message re-measurement above). Rejected: making a capped receive buffer
+  or a paced sender the default. A paced sender would make the wall-clock
+  throughput column meaningless (rate set by the pacer, as in live mode), and
+  changing the default would break comparability with every number recorded
+  so far; the artifact is documented instead and the switch exists for
+  anyone who wants the WAN-like picture.

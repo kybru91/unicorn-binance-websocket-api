@@ -10,6 +10,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
 ## 2.16.0.dev (development stage/unreleased/unstable)
+### Changed
+- `dev/test_websocket_library_benchmark.py`: new `--rcvbuf BYTES` option that
+  caps `SO_RCVBUF` on the client socket (both libraries) and a docstring on
+  why picows looks slower than websockets on big messages in the default
+  loopback firehose replay (see `context/websocket-library.md`).
 
 ## 2.16.0
 ### Added

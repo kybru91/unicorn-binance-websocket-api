@@ -9,18 +9,30 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
   [How to upgrade to the latest version!](https://oliver-zehentleitner.github.io/unicorn-binance-websocket-api/readme.html#installation-and-upgrade)
 
-## 2.16.0.dev (development stage/unreleased/unstable)
+## 2.16.1.dev (development stage/unreleased/unstable)
+
+## 2.16.1
 ### Changed
 - Stream loop: endpoint responses (`result`, `error`, WS API request ids) are
   now detected in the first 256 characters of a received message instead of
-  by scanning the whole payload. Big messages (`!ticker@arr`, full `depth`
-  diffs) no longer pay two full-text scans per message, and a data payload
-  that happens to contain the word `error` or `result` is no longer copied
-  into the error/result ringbuffers. `RESPONSE_SCAN_CHARS` in `sockets.py`.
+  by scanning the whole payload (`RESPONSE_SCAN_CHARS` in `sockets.py`). Big
+  messages no longer pay two full-text scans each: through the full stack a
+  454 KB `!ticker@arr` message costs 282 instead of 626 µs CPU with
+  `websockets` (319 instead of 679 µs with `picows`), 9 KB `depth` diffs go
+  from 66k to 100k msgs/s (`picows`: 67k to 117k). Messages up to 1 KB are
+  unchanged. Reasoning and before/after tables in
+  [`context/stream-loop.md`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/context/stream-loop.md).
 - `dev/test_websocket_library_benchmark.py`: new `--rcvbuf BYTES` option that
   caps `SO_RCVBUF` on the client socket (both libraries) and a docstring on
   why picows looks slower than websockets on big messages in the default
-  loopback firehose replay (see `context/websocket-library.md`).
+  loopback firehose replay (see
+  [`context/websocket-library.md`](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/blob/master/context/websocket-library.md)).
+### Fixed
+- A data payload that contained the word `error` or `result` anywhere in its
+  text (a note field, a symbol description) was copied into the error/result
+  ringbuffers (`get_errors_from_endpoints()`, `get_results_from_endpoints()`)
+  on top of being delivered to the callback. Only the message head is
+  classified now; covered by `test_response_markers_scanned_in_head_only`.
 
 ## 2.16.0
 ### Added

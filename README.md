@@ -540,9 +540,11 @@ libraries natively. The [conda-forge](https://anaconda.org/conda-forge/picows)
 package is `picows`.
 
 `picows` support is new and opt-in: `websockets` stays the default until picows has proven itself in real-world use
-and enough reports are in (the first upstream finding, [tarasko/picows#108](https://github.com/tarasko/picows/issues/108),
-is fixed in picows 2.2.0; the extra requires picows 2.3.0 for its native proxy support). Questions,
-experiences and your own benchmark numbers:
+and enough reports are in. Two upstream findings so far, both from this integration:
+[tarasko/picows#108](https://github.com/tarasko/picows/issues/108) (`InvalidStatus.response` shape, fixed in
+picows 2.2.0) and [tarasko/picows#117](https://github.com/tarasko/picows/issues/117) (multi-MB reads when the
+consumer is slower than the socket, fix proposed in [#118](https://github.com/tarasko/picows/pull/118)). The extra
+requires picows 2.3.0 for its native proxy support. Questions, experiences and your own benchmark numbers:
 [issue #477 - WebSocket library: websockets vs. picows](https://github.com/oliver-zehentleitner/unicorn-binance-websocket-api/issues/477).
 Background, benchmarks and the 24 h soak in the article
 [picows in UNICORN Binance WebSocket API: Up to 2× the Throughput, Opt-In for Now](https://blog.technopathy.club/picows-in-unicorn-binance-websocket-api-up-to-2-the-throughput-opt-in-for-now).

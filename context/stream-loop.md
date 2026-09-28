@@ -41,6 +41,7 @@ because of the per-message overhead. Closing the websocket from
 **Status:** active
 **Evidence:** confirmed
 **Source:** profiling pass 2026-09-10: cProfile of the stream thread (300k aggTrade messages from the local replay server, picows) plus a cumulative ablation with lean replacements of the hot-path methods, both libraries, median of 3; benchmark harness `dev/test_websocket_library_benchmark.py`
+**See:** websocket-library.md#benchmark-results — b8a65cf6-d48b-42dd-8924-e5682ba6f947 — as of 2026-09-28
 
 The websocket-library benchmark showed a constant ~5 µs per message that
 UBWA spends on top of either library (raw libraries 2-3 µs/msg, through UBWA
@@ -127,6 +128,7 @@ and `increase_processed_receives_statistic()` need the lock back.
 **Evidence:** confirmed
 **Source:** big-message re-measurement 2026-09-16 (`websocket-library.md`, "Benchmark results"); `dev/test_websocket_library_benchmark.py` before/after on the same machine (8 cores, websockets 16.0, picows 2.3.0), median of 3; `RESPONSE_SCAN_CHARS` in `sockets.py`; unit test `test_response_markers_scanned_in_head_only`
 **Revisit when:** Binance changes a response envelope so that `result`, `error` or the request id can sit beyond the first 256 characters (a new leading field with variable-length content)
+**See:** websocket-library.md#benchmark-results — b8a65cf6-d48b-42dd-8924-e5682ba6f947 — as of 2026-09-28
 
 Every received message used to be scanned twice in full, `"error" in msg`
 and `"result" in msg`, to route endpoint responses into the error/result

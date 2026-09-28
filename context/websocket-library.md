@@ -44,6 +44,7 @@ shapes; 2.3.0 adds the proxy path.
 **Evidence:** confirmed
 **Source:** maintainer decision 2026-09-10 after the raw measurement below; benchmark `dev/test_websocket_library_benchmark.py` (`--raw-libs`) plus an ad-hoc core-API listener run against the same replay server
 **Revisit when:** picows changes how `picows.websockets` sits on the core API (e.g. a zero-copy or batched `recv()`), or UBWA's own per-message overhead has been cut so far that the transport dominates again
+**See:** stream-loop.md#per-message-work-in-the-loop-that-is-not-the-transport---profiled — 8a62fdfc-0fcb-4790-a8b9-efa1939a8967 — as of 2026-09-28
 
 The alternative to the compat layer was a push-model integration on picows'
 core API: `ws_connect()` with a `WSListener` whose `on_ws_frame()` does the
@@ -313,6 +314,7 @@ server). Users whose proxy setup relied on the missing verification
 **Status:** active
 **Evidence:** confirmed
 **Source:** `dev/test_websocket_library_benchmark.py`, run on the branch 2026-09-10
+**See:** stream-loop.md#per-message-work-in-the-loop-that-is-not-the-transport---profiled — 8a62fdfc-0fcb-4790-a8b9-efa1939a8967 — as of 2026-09-28
 
 The numbers below are measured (confirmed). The "Reading" section is the
 interpretation and is inferred, not separately measured - see the note there.

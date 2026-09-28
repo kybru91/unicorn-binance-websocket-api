@@ -2,6 +2,7 @@
 
 ## `recv()` runs without timeout after the first receives - `stop_stream()` waits for the next message
 
+**Id:** e1cc84dc-a9ff-495a-a8ac-916b3189fbe1
 **Type:** decision
 **Status:** active
 **Evidence:** confirmed
@@ -35,6 +36,7 @@ because of the per-message overhead. Closing the websocket from
 
 ## Per-message work in the loop that is not the transport - profiled
 
+**Id:** 8a62fdfc-0fcb-4790-a8b9-efa1939a8967
 **Type:** decision
 **Status:** active
 **Evidence:** confirmed
@@ -119,6 +121,7 @@ and `increase_processed_receives_statistic()` need the lock back.
 
 ## Endpoint responses are detected in the first 256 characters, not by scanning the payload
 
+**Id:** 2be4c0ef-a914-4ae8-880c-6e2c56473864
 **Type:** decision
 **Status:** active
 **Evidence:** confirmed

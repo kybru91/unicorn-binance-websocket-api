@@ -2,6 +2,7 @@
 
 ## Integrated via `picows.websockets`, not via the picows core API
 
+**Id:** acf166bd-4af3-484e-9491-738de65186eb
 **Type:** decision
 **Status:** active
 **Evidence:** confirmed
@@ -37,11 +38,13 @@ shapes; 2.3.0 adds the proxy path.
 
 ## Native picows core API (`ws_connect()` + `WSListener`) - measured, not built
 
+**Id:** 2bf2243d-ab9c-44ec-9334-25b20a0abebb
 **Type:** decision
 **Status:** active
 **Evidence:** confirmed
 **Source:** maintainer decision 2026-09-10 after the raw measurement below; benchmark `dev/test_websocket_library_benchmark.py` (`--raw-libs`) plus an ad-hoc core-API listener run against the same replay server
 **Revisit when:** picows changes how `picows.websockets` sits on the core API (e.g. a zero-copy or batched `recv()`), or UBWA's own per-message overhead has been cut so far that the transport dominates again
+**See:** stream-loop.md#per-message-work-in-the-loop-that-is-not-the-transport---profiled — 8a62fdfc-0fcb-4790-a8b9-efa1939a8967 — as of 2026-09-28
 
 The alternative to the compat layer was a push-model integration on picows'
 core API: `ws_connect()` with a `WSListener` whose `on_ws_frame()` does the
@@ -78,6 +81,7 @@ per-message work - see `stream-loop.md`.
 
 ## picows stays opt-in and non-default; 24 h soak before the release
 
+**Id:** 28dd9498-bb93-4747-90d0-1dce83520b31
 **Type:** decision
 **Status:** active
 **Evidence:** confirmed
@@ -123,6 +127,7 @@ tables in the soak output directory (`REPORT.md`).
 
 ## Why the picows exception classes are caught separately
 
+**Id:** 038dc904-f4df-488a-98fe-4933ec066873
 **Type:** constraint
 **Status:** active
 **Evidence:** confirmed
@@ -136,10 +141,12 @@ picows classes are appended only when the package is importable.
 
 ## `InvalidStatus.response` differed between the families (picows < 2.2.0)
 
+**Id:** 7bed2264-1212-4c6e-a50d-857e1ca0f60d
 **Type:** workaround
 **Status:** superseded
 **Evidence:** confirmed
 **Source:** picows 2.1.3 `picows/websockets/asyncio/client.py` (`raise InvalidStatus(exc.response)` with the raw `WSUpgradeResponse`); found by `TestWebSocketLibrary.test_handshake_429_crashes_stream`; superseded by picows 2.2.0 ([tarasko/picows#108](https://github.com/tarasko/picows/issues/108) fixed 2026-09-11) and the version floor `picows>=2.2.0`
+**Superseded by:** acf166bd-4af3-484e-9491-738de65186eb
 
 Superseded: since the extra requires picows 2.2.0, both families attach a
 `Response` with `status_code` and `get_http_status_code()` reads that
@@ -164,6 +171,7 @@ accessor that knows both shapes is the smaller surface.
 
 ## Fail loud on `picows` without the package
 
+**Id:** adfa99d2-63d7-4da7-9062-751e12688d27
 **Type:** decision
 **Status:** active
 **Evidence:** confirmed
@@ -175,11 +183,13 @@ picows but silently runs websockets is a hidden configuration bug.
 
 ## SOCKS5 proxy path was shared (picows < 2.3.0)
 
+**Id:** 2bd486ea-8ee1-489d-ba3a-462a46f43cef
 **Type:** decision
 **Status:** superseded
 **Evidence:** confirmed
 **Source:** maintainer confirmation 2026-09-10; picows 2.1.3 source (`picows/websockets/asyncio/client.py`, `picows/api.py`); [tarasko/picows#80](https://github.com/tarasko/picows/pull/80); superseded 2026-09-13 by the next entry after picows 2.3.0 shipped its proxy support; verified locally with a SOCKS5 server + TLS endpoint for both libraries
 **Revisit when:** (resolved) picows 2.3.0 shipped HTTP/HTTPS/SOCKS4/SOCKS5 proxy support with tests; the picows mode switched to it, see the next entry
+**Superseded by:** 27f66d23-a882-45d4-afe5-2be05a80efda
 
 Both libraries get the pre-connected PySocks socket via `sock=` +
 `server_hostname=` (UBWA's existing SOCKS5 handling). For picows the
@@ -201,6 +211,7 @@ on merit - deferred until picows' proxy support is stable.
 
 ## Proxies are passed to both libraries natively (`proxy=` URL)
 
+**Id:** 27f66d23-a882-45d4-afe5-2be05a80efda
 **Type:** decision
 **Status:** active
 **Evidence:** confirmed
@@ -244,6 +255,7 @@ connections only; UBWA logs a warning at construction in that case.
 
 ## `websockets` sends proxy credentials without percent-decoding - refused at construction
 
+**Id:** 56b42fed-ce14-48ab-9d66-8adb7cdd4037
 **Type:** workaround
 **Status:** active
 **Evidence:** confirmed
@@ -269,6 +281,7 @@ URL; raw reserved characters break `urlparse`.
 
 ## TLS through the SOCKS5 proxy was never verified (fixed)
 
+**Id:** 5cb53a0c-11f8-43a5-9126-09003f196435
 **Type:** incident
 **Status:** active
 **Evidence:** confirmed
@@ -296,10 +309,12 @@ server). Users whose proxy setup relied on the missing verification
 
 ## Benchmark results
 
+**Id:** b8a65cf6-d48b-42dd-8924-e5682ba6f947
 **Type:** constraint
 **Status:** active
 **Evidence:** confirmed
 **Source:** `dev/test_websocket_library_benchmark.py`, run on the branch 2026-09-10
+**See:** stream-loop.md#per-message-work-in-the-loop-that-is-not-the-transport---profiled — 8a62fdfc-0fcb-4790-a8b9-efa1939a8967 — as of 2026-09-28
 
 The numbers below are measured (confirmed). The "Reading" section is the
 interpretation and is inferred, not separately measured - see the note there.
@@ -467,6 +482,7 @@ big-message part):**
 
 ## Benchmark design choices
 
+**Id:** be0cd4b7-6992-4953-98f8-cb309933e2ed
 **Type:** decision
 **Status:** active
 **Evidence:** confirmed

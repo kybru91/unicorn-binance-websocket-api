@@ -4,10 +4,12 @@
 
 > Superseded — repo now lives under `oliver-zehentleitner`.
 
+**Id:** 4993b8f3-4704-40c4-abe7-29b2fbb8e41d
 **Type:** decision
 **Status:** superseded
 **Evidence:** confirmed
 **Source:** git history; earliest commits reference `github.com/LUCIT-Systems-and-Development/unicorn-binance-websocket-api`
+**Superseded by:** https://github.com/oliver-zehentleitner/unicorn-binance-suite — 2749fc08-cdca-456b-a8bd-fd4b646ff64c — as of 2026-09-28
 
 The repo was previously hosted under the `LUCIT-Systems-and-Development` GitHub org, with LUCIT branding, a LUCIT licensing/monitoring layer, and a contributor-copyright-assignment clause in `CONTRIBUTING.md`. It moved to `oliver-zehentleitner` and was cleaned up across many commits in 2026 (`remove LUCIT`, `Clean remaining LUCIT references outside the conda pipeline`, etc.) — same cleanup wave as the rest of the suite (see `unicorn-binance-suite`'s `context/history.md`).
 
@@ -17,6 +19,7 @@ The repo was previously hosted under the `LUCIT-Systems-and-Development` GitHub 
 
 ## Icinga/monitoring REST server removed, not just rebranded
 
+**Id:** e81332fd-b7e3-4a1b-8a4b-401ed4f1b6d3
 **Type:** decision
 **Status:** active
 **Evidence:** confirmed
@@ -32,10 +35,12 @@ The repo was previously hosted under the `LUCIT-Systems-and-Development` GitHub 
 
 > Superseded — fixed.
 
+**Id:** bc9e5969-01de-4dcf-ae3c-4854220191a2
 **Type:** incident
 **Status:** superseded
 **Evidence:** confirmed
 **Source:** commit `c2eb03ac`
+**Superseded by:** none — an incident, fixed in commit `c2eb03ac`; no decision replaced it
 
 After the repo moved from `LUCIT-Systems-and-Development` to `oliver-zehentleitner`, `get_latest_release_info()` still queried the GitHub API using the old org's URL, so the built-in "is an update available" check silently looked at the wrong (now-stale or gone) repo.
 

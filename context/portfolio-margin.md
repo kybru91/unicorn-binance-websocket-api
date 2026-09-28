@@ -2,6 +2,7 @@
 
 ## Scoped to listenKey/user-data only, no market-data or WS API support
 
+**Id:** 2e0e813a-696b-4160-a7a7-93157d71f556
 **Type:** constraint
 **Status:** active
 **Evidence:** confirmed
@@ -13,6 +14,7 @@
 
 ## Deliberately outside `BINANCE_FUTURES_EXCHANGES`
 
+**Id:** 2c3e3ab6-80f3-416d-b083-bba90f59c8d6
 **Type:** decision
 **Status:** active
 **Evidence:** confirmed
@@ -24,6 +26,7 @@
 
 ## Follow-up: graceful degradation for the not-yet-released dependency
 
+**Id:** 08498697-bc88-4c1d-b477-b2b392f5c337
 **Type:** workaround
 **Status:** active
 **Evidence:** confirmed
